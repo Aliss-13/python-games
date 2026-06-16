@@ -199,4 +199,13 @@ geese = attaquent les monstres -= 10 dégâts
 
 
 
-créer une 3e jauge
+
+créer.exe
+python -m PyInstaller --onefile main.py pour créer .Exe
+
+
+
+sauvegarder sur github
+git status
+git add .
+git push

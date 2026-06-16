@@ -11,8 +11,8 @@ class Player:
         self.mentalhealth = 100
         self.mentalhealth_max = 100
         self.flying_dutchman_parts = []
-        self.inventory = {"🪵" : 200, "🪨" : 200, "🌿" : 200, "🪢" : 200, "🟩" : 200, "💰": 200}
-        self.food = {"🥩" : 0, "🍖" : 3, "🥛" : 200, "🧀" : 200}
+        self.inventory = {"🪵" : 0, "🪨" : 0, "🌿" : 0, "🪢" : 0, "🟩" : 0, "💰": 0}
+        self.food = {"🥩" : 0, "🍖" : 0, "🥛" : 0, "🧀" : 3}
         self.stuff = {"tête" : None, "corps" : None, "mains" : None, "pieds" : None}
         self.tools = {"axe": False, "pickaxe": False, "knife": False, "scythe" : False}
         self.structures = {
