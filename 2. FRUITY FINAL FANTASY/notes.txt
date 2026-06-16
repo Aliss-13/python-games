@@ -1,0 +1,74 @@
+Séparer en plusieurs fichiers permet de rendre le code : 
+-plus lisible 
+-plus organisé : chaque fichier (module) a un rôle (combat, données, affichage...)
+-plus facile à modifier sans tout casser : on peut en modifier une partie plus facilement
+
+data.py contient uniquement les données du jeu (objets, effets, constantes). 
+Il ne contient pas de logique, seulement des informations utilisées par les autres modules.
+Il permet de séparer clairement les données et le comportement du programme.
+data.py = source de vérité
+
+L'affichage, les données et la logique du combat doivent être indépendants pour que chaque partie du programme ait un rôle clair.
+data.py : qu'est ce qui existe ?
+combat.py : que se passe t-il ?
+affichage.py : comment c'est montré ?
+
+L'inventaire stocke uniquement un identifiant d'objet, afin de récupérer ses propriétés dans data.objets.
+Cela évite de dupliquer les données et rend le système plus flexible.
+
+item_id : le nom/identifiant de l'objet (ex:"plume_phenix") = CLE
+data.objets[item_id] : le dictionnaire complet de l'objet stocké dans data.py = VERITE DES DONNEES
+item : = COPIE LOGIQUE UTILISEE DANS LE CODE
+-la variable qui contient ce dictionnaire récupéré depuis data.objets
+-le résultat de la recherche dans data.objets
+
+inventaire.pop(index) supprime un élément de la liste à la position indiquée par "index".
+index doit être un entier car les éléments d'une liste sont repérés par leur position numérique.
+
+combat => ordre initiative => tri des entités par vitesse => boucle des tours
+
+vivants = get_vivants(equipe)
+on filtre les personnages avec vie > 0 pour éviter que des personnages morts puissent agir, être ciblés ou provoquer 
+des erreurs dans les boucles de combat.
+
+Les effets sont des états appliqués à un personnage/plusieurs personnages qui persistent dans le temps. Ils sont stockés dans
+le dictionnaire du personnage sous forme de dictionnaires avec tous leurs paramètres (durée en tours, dégâts, soins ...).
+Ils sont réévalués à chaque tour afin que leur action soit appliquée tant que leur durée n'est pas terminée.
+
+get_item(inventaire, choix) transforme un index d'inventaire en objet exploitable en récupérant d'abord l'identifiant de la liste,
+puis les données correspondantes dans data.objets
+index (choix joueur) => inventaire[index] => item_id => data.objets[item_id] => item utilisable
+
+Un tuple est une structure de données immuable qui permet de stocker plusieurs valeurs ensemble.
+return (item_id, data.objets[item_id]) => tuple : c'est comme une boîte avec [ item_id | item_data ] dedans.
+item_id, item = get.item() => on déballe le tuple : 
+    1ère valeur : item_id (ex : "robe_brodee")
+    2e valeur : item_data (ex : {"type" : "equipement", "classe" : ["magie"]....})
+
+TypeError : utilisation d'un type de données incompatible avec l'opération effectuée.
+ex : "5" + 3 = (impossible car str + int)
+inventaire['item'] => si inventaire est une liste : erreur
+
+KeyError : la clé demandée n'existe pas dans le dictionnaire
+ex : d = {"a" : 1}
+print(d["b"]) => KeyError 'b'
+data_objets[item_id]
+si item_id = None
+data_objets[none] renvoie KeyError: None
+
+Chaîne de caractères : suite de caractères (lettres, chiffres, symboles) utilisée pour représenter du texte. 
+(ex : "Jupiter123**")
+La chaîne de caractères est immuable, c'est à dire qu'on ne peut pas changer la suite de caractères.
+
+Dictionnaire : structure de données qui associe des clés uniques à des valeurs
+(ex : {"nom" : "Marjane", "numero" : "06.25.34.35.52", "courriel" : "marjanelala@"})
+L'accès se fait par clé et non par position.
+
+Liste : collection ordonnée d'éléments modifiables, accessibles par leur index.
+(ex : ["Marjane", "R2D2", "4"])
+Elle est ordonnée, indexée (0, 1, 2...) et modifiable.
+
+l'inventaire est une structure dynamique (liste) qui évolue selon les actions du joueur :
+-ajout via loot
+-retrait lors de la consommation ou de l'équipement
+-retour d'objets lors du remplacement d'équipements

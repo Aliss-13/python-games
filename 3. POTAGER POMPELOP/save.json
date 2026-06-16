@@ -1,0 +1,72 @@
+{
+    "version": 1,
+    "joueur": {
+        "pieces": 250,
+        "xp": 12,
+        "niveau": 3,
+        "potager_max": 5,
+        "garde_manger": {
+            "melon 🍈": 1,
+            "salade 🥬": 6,
+            "concombre 🥒": 2
+        },
+        "inventaire": {},
+        "potager": [
+            {
+                "graine_id": 1,
+                "temps": 7
+            },
+            {
+                "graine_id": 1,
+                "temps": 7
+            },
+            {
+                "graine_id": 1,
+                "temps": 7
+            },
+            {
+                "graine_id": 1,
+                "temps": 7
+            },
+            {
+                "graine_id": 1,
+                "temps": 7
+            }
+        ]
+    },
+    "commandes_en_cours": [
+        {
+            "id": 4,
+            "demande": {
+                "salade 🥬": 2,
+                "patate 🥔": 2
+            },
+            "gain_xp": 18,
+            "pieces": 30,
+            "tier_max": 2,
+            "temps_restant": 10,
+            "temps_initial": 10,
+            "prioritaire": false
+        },
+        {
+            "id": 5,
+            "demande": {
+                "concombre 🥒": 4,
+                "maïs 🌽": 1
+            },
+            "gain_xp": 24,
+            "pieces": 80,
+            "tier_max": 2,
+            "temps_restant": 11,
+            "temps_initial": 11,
+            "prioritaire": true
+        }
+    ],
+    "next_commande_id": 5,
+    "tour": 0,
+    "graines_disponibles": [
+        1,
+        2,
+        3
+    ]
+}

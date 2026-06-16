@@ -1,0 +1,11 @@
+graines : dict[int, Graine]
+
+state.graines_debloquees : set[int]
+
+potager : list[Plante]
+
+garde_manger : dict[str, int]
+
+inventaire : dict[str, int]
+
+commandes_en_cours : list[Commande]

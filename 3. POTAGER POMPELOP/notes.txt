@@ -1,0 +1,369 @@
+PENSE-BÊTE : structures de données Python
+
+
+📦 1. LISTE [] → objets ordonnés, répétables
+
+👉 Quand l’utiliser
+ordre important
+tu ajoutes / suppr souvent
+potager, inventaire “simple”, commandes en cours
+
+🧾 Exemple
+potager = [plante1, plante2, plante3]
+
+🔧 Actions
+potager.append(plante)
+potager.pop(index)
+len(potager)
+
+🔁 Parcours
+for plante in potager:
+    print(plante.nom)
+
+
+🗝️ 2. DICTIONNAIRE {} → relation clé / valeur
+
+👉 Quand l’utiliser
+accès rapide par ID ou nom
+données type “base de données”
+graines, boutique, inventaire
+
+🧾 Exemple
+graines = {
+    1: graine_objet,
+    2: graine_objet
+}
+
+🔧 Actions
+graines[1]
+graines.get(1)
+graines[1] = nouvelle_graine
+del graines[1]
+
+🔁 Parcours
+for id_graine, graine in graines.items():
+    print(id_graine, graine.nom)
+
+🧲 3. SET {} → collection d’IDs uniques
+
+👉 Quand l’utiliser
+déblocages
+flags
+“déjà fait”
+aucune duplication possible
+
+🧾 Exemple
+graines_debloquees = {1, 2, 3}
+🔧 Actions
+graines_debloquees.add(4)
+graines_debloquees.remove(2)
+
+🔁 Parcours
+for id_graine in graines_debloquees:
+    print(id_graine)
+
+⚠️ ERREURS CLASSIQUES (tes futures douleurs)
+
+❌ list vs set
+append() ❌ sur set
+add() ❌ sur list
+
+❌ dict vs list
+for x in dict:        # donne les clés
+for k, v in list:     # crash
+
+❌ dict.items() sur autre chose
+set.items() ❌
+list.items() ❌
+dict.items() ✔
+
+
+🧩 Règle mentale simple (la vraie clé)
+
+“Qu’est-ce que je stocke ?”
+
+objets ordonnés → list
+accès par ID → dict
+juste des IDs uniques → set
+
+
+🎮 Application directe à TON jeu
+✔ bon modèle stable
+graines = {id: Graine}              # dict
+graines_debloquees = {1, 2, 3}      # set
+potager = [Plante]                  # list
+inventaire = {nom: quantite}        # dict
+
+
+🧱 bonus : lecture rapide des erreurs
+TypeError: object has no len() → tu as donné un int au lieu d’une list/dict
+KeyError → clé absente dans dict
+'set' has no attribute append → mauvais type de structure
+NoneType → ton retour de fonction est vide sans que tu le réalises
+
+
+🧱 Petit repère utile pour la suite
+
+Quand tu hésites, pose-toi juste 3 questions :
+
+Est-ce que j’ai besoin d’un ordre ? → list
+Est-ce que j’ai besoin d’un accès rapide par clé ? → dict
+Est-ce que je veux juste un ensemble unique ? → set
+
+Si tu arrives à répondre ça avant d’écrire la structure, tu supprimes la moitié des bugs futurs.
+____________________________________________________________________________________________________________
+
+La POO, c’est la Programmation Orientée Objet. 
+
+
+Avec POO
+POO = 👉 “je mets les données + les actions ensemble dans des objets”
+Tu fais :
+
+# des objets (Joueur, Plante)
+# chaque objet contient :
+# des données (ex: pieces, nom)
+# des actions (ex: planter(), pousser())
+
+👉 Le code ressemble à : “chaque chose sait ce qu’elle est et ce qu’elle fait”
+
+
+Image mentale simple
+
+# Objet = une chose dans ton jeu : 
+    joueur
+    plante
+    boutique
+
+# Classe = le plan de cette chose
+    “comment fonctionne une plante”
+    “comment fonctionne un joueur”
+________________________________________________________________________________________________
+
+game/
+│
+├── main.py
+├── save.json
+|
+├── core/
+│   ├── game.py
+│   |── state.py
+│   |── handlers.py
+│
+├── models/
+│   ├── joueur.py
+│   ├── plante.py
+│   ├── commande.py
+│   ├── graine.py
+│
+├── systems/
+│   ├── shop.py
+│   ├── inventory.py
+│   ├── farming.py
+│   ├── farming_ui.py
+│   ├── menu.py
+│   ├── commands.py
+│   ├── progression.py
+│   ├── time.py
+│   ├── unlock.py
+│
+├── data/
+│   ├── data.py
+│
+└── utils/
+    ├── save.py
+
+_____________________________________________________________________________________________________________
+
+Règle d’or (sinon tout redevient chaos)
+models = objets (Plante, Joueur, Commande)
+systems = logique métier
+core = boucle de jeu
+data = données statiques
+utils = sauvegarde / outils
+
+
+❌ models NE DOIVENT PAS :
+faire du print
+faire des input
+accéder à data.py
+
+👉 uniquement logique d’objet
+
+❌ systems NE DOIVENT PAS :
+définir des classes
+gérer la sauvegarde directement
+
+👉 uniquement gameplay
+
+❌ utils :
+
+👉 uniquement IO (fichiers)
+
+
+RÈGLE ABSOLUE (ton jeu doit obéir à ça)
+
+👉 il ne doit exister qu’un seul joueur réel :
+
+main.py → crée joueur
+main.py → charge joueur
+main.py → transmet joueur
+
+TOUS les modules doivent recevoir joueur en paramètre
+
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+pour que le cmd trouve le bon chemin
+
+règle d’or (très importante) : Un module SYSTEM ne doit jamais importer un autre SYSTEM
+
+
+
+main.py
+   ↓
+charger save
+   ↓
+GameState
+   ↓
+menu(state)
+   ↓
+systems/
+   ├── farming
+   ├── commands
+   ├── shop
+   ├── inventory
+   ├── progression
+   ├── time
+   ↓
+save.py
+
+
+_________________________________________________________________________________________________________________
+Les 4 couches à comprendre (version claire, sans blabla inutile)
+
+1. CORE = le monde (règles pures)
+
+👉 Ce qui existe, indépendamment de l’interface
+
+Joueur
+Plante
+Graine
+Commande
+
+✔ Rôle :
+
+stocker des données
+faire des règles simples
+aucune interaction
+
+❌ interdit :
+
+input()
+print()
+fichiers
+menus
+
+2. SYSTEMS = le cerveau du jeu
+
+👉 logique métier
+
+planter
+récolter
+générer commandes
+progression
+shop logic
+
+✔ Rôle :
+
+transformer l’état du jeu
+appliquer les règles
+
+❌ interdit :
+
+afficher
+demander des inputs
+dépendre de UI
+
+3. HANDLERS / UI = les mains du joueur
+
+👉 interface
+
+afficher potager
+demander choix
+afficher résultats
+
+✔ Rôle :
+
+input / output uniquement
+appeler les systèmes
+
+❌ interdit :
+
+logique complexe
+calculs métier
+
+4. DATA = le contenu brut
+
+👉 ce que tu peux changer sans casser le code
+
+graines
+boutique
+config
+
+✔ Rôle :
+
+être modifiable
+être passif
+
+❌ interdit :
+
+comportement
+logique
+🧩 Le point clé que tout le monde rate
+
+Architecture = pas “séparer des dossiers”
+
+👉 c’est décider où vit chaque décision
+
+
+UI
+input utilisateur
+↓
+appelle system
+↓
+retourne résultat brut
+↓
+handler transforme
+↓
+print final
+
+
+checkup
+□ créer nouvelle partie
+□ planter 1 graine
+□ planter 5 graines
+□ récolter
+□ récolter trop tôt
+□ récolter pourrie
+□ acheter engrais
+□ utiliser engrais
+□ valider commande
+□ sauvegarder
+□ recharger
+□ monter niveau 2
+□ débloquer nouvelle graine
+□ sauvegarder
+□ recharger
+
+
+
+Recherche globale : Ctrl + Shift + F (Windows/Linux)
+
+
+Mini règle mentale (très importante)
+
+Dans systems/ :
+
+si ça change l’état → OK
+si ça informe quelqu’un → event
+si ça affiche → interdit
