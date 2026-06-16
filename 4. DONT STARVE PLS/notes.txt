@@ -198,14 +198,13 @@ développement des évènements aléatoires
 geese = attaquent les monstres -= 10 dégâts
 
 
-
-
 créer.exe
+cd "chemin du dossier à transformer"
+ex : cd "4. DONT STARVE PLS" (les guillemets sont importants)
 python -m PyInstaller --onefile main.py pour créer .Exe
-
-
 
 sauvegarder sur github
 git status
 git add .
+git commit
 git push
