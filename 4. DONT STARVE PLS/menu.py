@@ -161,7 +161,7 @@ def menu(player, world):
             player.sleep(world)
 
         elif choix == "10":
-            menu_construire(player, choix)
+            menu_construire(player)
 
         elif choix == "11":
             display.display_objectifs(player, world)
