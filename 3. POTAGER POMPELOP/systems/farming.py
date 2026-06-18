@@ -1,7 +1,7 @@
 import random
 from models.plante import Plante
-from data.graine import graines_disponibles as GR
-from systems.graine import get_graine
+from data.seeds import graines_disponibles as GR
+from systems.seeds import get_seed
 
 def get_graines_disponibles():
     return GR
@@ -30,7 +30,7 @@ def planter(state, graine_id, quantite=1):
 
     events = []
 
-    graine = get_graine(state, graine_id)
+    graine = get_seed(graine_id)
 
     if not graine:
         return {

@@ -20,10 +20,10 @@ def afficher_9(state):
             return
 
 
-def menu(state):
+def menu(state, joueur):
     actions = {
         "1": [farming_ui.planter_multiple_ui],
-        "2": [lambda s: tour_suivant(s)],
+        "2": [lambda s: tour_suivant(s, joueur)],
         "3": [farming_ui.afficher_potager_ui],
         "4": [farming_ui.afficher_garde_manger_ui, farming_ui.afficher_bourse_ui, afficher_inventaire, farming_ui.utiliser_objet_ui],
         "5": [farming_ui.recolter_tout_ui],

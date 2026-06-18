@@ -17,6 +17,8 @@ class Joueur:
         self.garde_manger = {}
         self.inventaire = {}
         self.potager = []
+        self.prestige = 0
+        self.game_won = False
 
     def to_dict(self):
         return {
@@ -26,7 +28,8 @@ class Joueur:
             "potager_max": self.potager_max,
             "garde_manger": dict(self.garde_manger),
             "inventaire": dict(self.inventaire),
-            "potager": [plante.to_dict() for plante in self.potager]
+            "potager": [plante.to_dict() for plante in self.potager],
+            "prestige": self.prestige
         }
 
 

@@ -36,7 +36,7 @@ def acheter_recolte_ui(state):
         return
 
     result = shop.acheter_recolte(state, choix)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     item = RECOLTES[choix] if 0 <= choix < len(RECOLTES) else None
 
@@ -61,7 +61,7 @@ def acheter_engrais_ui(state):
         return
 
     result = shop.acheter_engrais(state, choix)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     if result == SHOP_OK:
         item = ENGRAIS[choix]
@@ -77,7 +77,7 @@ def acheter_engrais_ui(state):
 def agrandir_potager_ui(state):
 
     result = shop.agrandir_potager(state)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     if result == SHOP_OK:
         print(f"Potager agrandi ! Nouvelle capacité : {state.joueur.potager_max}")

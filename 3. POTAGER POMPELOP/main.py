@@ -31,7 +31,8 @@ def charger_ou_creer():
 def main():
     try:
         state = charger_ou_creer()
-        menu(state)
+        joueur = state.joueur
+        menu(state, joueur)
     except Exception as e:
         print("Crash critique :", e)
         traceback.print_exc()

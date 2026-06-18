@@ -43,6 +43,7 @@ def normalize_dict(data):
     joueur.setdefault("inventaire", {})
     joueur.setdefault("potager", [])
     joueur.setdefault("graines_disponibles", [1])
+    joueur.setdefault("prestige", 0)
 
     data.setdefault("commandes_en_cours", [])
     data.setdefault("next_commande_id", 0)

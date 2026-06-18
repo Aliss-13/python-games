@@ -35,7 +35,7 @@ def nouvelle_commande_ui(state):
         print("⚠️ Erreur génération commande")
         return
 
-    handle_events(result.get("events", []))
+    handle_events(result.get("events", []), state)
 
     if result.get("priority_command"):
         print("⚠️ COMMANDE PRIORITAIRE !")
@@ -73,7 +73,7 @@ def demander_int(message):
 def commandes_lv(state, id_choisi):
     liste_commandes(state)
     result = commands.valider_commande(state, id_choisi)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     if result["status"] == "ok":
         print("Commande validée ✔")
@@ -85,7 +85,7 @@ def commandes_lv(state, id_choisi):
 
 def gerer_commandes_ui(state):
     result = commands.gerer_commandes(state)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
 
 def valider_commande_ui(state):
@@ -97,7 +97,7 @@ def valider_commande_ui(state):
         return
 
     result = commands.valider_commande(state, id_choisi)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     if result["status"] == "ok":
         print("Commande validée ✔")

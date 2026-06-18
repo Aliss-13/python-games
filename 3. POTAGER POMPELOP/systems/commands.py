@@ -1,6 +1,7 @@
 import random
 from models.commande import Commande
-from data.graine import graines
+from systems.seeds import get_all_seeds
+from systems.progression import verifier_level_up, update_prestige
 
 def generer_commande(state):
 
@@ -17,35 +18,36 @@ def generer_commande(state):
     commande.tier_max = tier_max
 
     taille = random.randint(1, 3)
-
     temps_total = 0
 
+    all_seeds = get_all_seeds(state)
+
     for _ in range(taille):
+
         candidates = [
-        graine
-        for graine in graines.values()
-        if graine.tier <= tier_max
+            g for g in all_seeds.values()
+            if g.tier <= tier_max
         ]
 
         if not candidates:
             raise ValueError("Aucune graine disponible pour ce tier")
 
         graine = random.choice(candidates)
-        quantite = random.randint(1, 3)
 
         if not graine.loot:
             continue
 
+        quantite = random.randint(1, 3)
         nom = random.choice(graine.loot)["nom"]
 
-        commande.demande[nom] = (commande.demande.get(nom, 0) + quantite)
+        commande.demande[nom] = commande.demande.get(nom, 0) + quantite
 
         commande.gain_xp += graine.tier * 6
         commande.pieces += graine.tier * 10
 
         temps_total += graine.croissance * quantite
 
-        commande.temps_restant = temps_total
+    commande.temps_restant = max(temps_total, 1)
 
     return commande
 
@@ -69,8 +71,6 @@ def nouvelle_commande(state):
     commande.temps_restant = max(commande.temps_restant, 3)
     commande.temps_initial = commande.temps_restant
 
-    event = None
-
     if random.random() < 0.25:
         commande.prioritaire = True
         commande.pieces *= 2
@@ -78,7 +78,7 @@ def nouvelle_commande(state):
 
     state.commandes_en_cours.append(commande)
 
-    return {"status": "ok", "events": event}
+    return {"status": "ok", "events": events}
     
 
 def gerer_commandes(state):
@@ -94,10 +94,7 @@ def gerer_commandes(state):
                 "id": commande.id
             })
 
-    return {
-        "status": "ok",
-        "events": events
-    }
+    return {"status": "ok", "events": events}
 
 
 def trouver_commande_par_id(state, id_choisi):
@@ -121,7 +118,7 @@ def valider_commande(state, id_choisi):
             "status": "not_found",
             "events": []
         }
-
+    
     for legume, quantite in commande.demande.items():
         if state.joueur.garde_manger.get(legume, 0) < quantite:
             return {
@@ -134,22 +131,34 @@ def valider_commande(state, id_choisi):
         if state.joueur.garde_manger[legume] <= 0:
             del state.joueur.garde_manger[legume]
 
+    valeur_prestige = commande.gain_xp + int(commande.pieces * 0.5)
+
+    if commande.prioritaire:
+        valeur_prestige = int(valeur_prestige * 1.5)
+    
     state.joueur.ajouter_xp(commande.gain_xp)
     state.joueur.ajouter_pieces(commande.pieces)
+    state.joueur.prestige += valeur_prestige
+    update_prestige(state)
 
     state.commandes_en_cours.remove(commande)
 
     events.append({
         "type": "command_completed",
-        "id": commande.id,
-        "xp": commande.gain_xp,
-        "pieces": commande.pieces
+        "data": {
+            "id": commande.id,
+            "xp": commande.gain_xp,
+            "pieces": commande.pieces,
+            "prioritaire": commande.prioritaire
+        }
     })
 
-    from systems.progression import verifier_level_up
+    
+    
     events += verifier_level_up(state)
-
+    
     return {
-        "status": "ok",
-        "events": events
+            "status": "ok",
+            "events": events
     }
+    

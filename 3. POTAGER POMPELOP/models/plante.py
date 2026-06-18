@@ -1,4 +1,4 @@
-from data.graine import graines
+from data.seeds import SEEDS
 
 class Plante:
 
@@ -17,8 +17,8 @@ class Plante:
         
 
         return cls(
-            graine=graines[d["graine_id"]],
-            temps=d["temps"]
+            graine = SEEDS[d["graine_id"]],
+            temps = d["temps"]
         )
 
     @classmethod

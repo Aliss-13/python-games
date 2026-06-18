@@ -11,6 +11,7 @@ class GameState:
         self.next_commande_id = 0
         self.tour = 0
         self.graines_disponibles = set([1])
+        
 
     def to_dict(self):
         return {
@@ -39,5 +40,6 @@ class GameState:
         state.next_commande_id = data.get("next_commande_id", 0)
         state.tour = data.get("tour", 0)
         state.graines_disponibles = set(data.get("graines_disponibles", [1]))
-
+        state.joueur.prestige = joueur_data.get("prestige", 0)
+        
         return state

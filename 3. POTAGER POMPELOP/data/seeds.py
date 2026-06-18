@@ -3,7 +3,7 @@ from models.graine import Graine
 graines_disponibles = {1}
     
 
-graines = {
+SEEDS = {
     1: Graine(
         1, 
         "graine_verte 🟢", 

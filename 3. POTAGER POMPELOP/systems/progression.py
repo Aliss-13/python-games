@@ -1,6 +1,6 @@
-from data.graine import graines, graines_disponibles
+from data.seeds import graines_disponibles, SEEDS
 from systems.unlock import verifier_deblocage
-from core.event_handler import handle_events
+import sys
 
 def debloquer_graine(nom, tier, croissance, prix, loot):
  
@@ -16,7 +16,7 @@ def debloquer_graine(nom, tier, croissance, prix, loot):
         "croissance": croissance,
         "tier" : tier,
         "prix": prix,
-        "loot" : graines.get(loot, [])
+        "loot" : SEEDS.get(loot, [])
     }
 
 def verifier_level_up(state):
@@ -41,3 +41,14 @@ def verifier_level_up(state):
     events += unlock_events
 
     return events
+
+
+def update_prestige(state):
+
+    if state.joueur.prestige >= 500:
+        print("Votre potager est le plus prestigieux de la région 🥇 !")
+        print("Vous avez gagné 🥳 !")
+        input("Appuie sur entrée pour quitter")
+        
+
+    

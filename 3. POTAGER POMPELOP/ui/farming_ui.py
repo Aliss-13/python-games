@@ -1,7 +1,7 @@
 from systems.farming import planter, recolter, recolter_tout, appliquer_engrais
 from data.data import boutique
 from systems.inventory import retirer_item, afficher_inventaire
-from systems.graine import get_all_graines
+from systems.seeds import get_all_seeds
 from core.event_handler import handle_events
 
 RECOLTES = boutique["recoltes"]
@@ -20,7 +20,7 @@ def etat_plante(plante):
 
 def planter_ui(state):
 
-    graines = get_all_graines(state)
+    graines = get_all_seeds(state)
 
     print("Graines disponibles :")
 
@@ -55,7 +55,7 @@ def planter_ui(state):
 
 def planter_multiple_ui(state):
     
-    graines = get_all_graines(state)
+    graines = get_all_seeds(state)
 
     print("Graines disponibles :")
 
@@ -104,14 +104,14 @@ def recolter_ui(state):
         return
 
     result = recolter(state, choix)
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
 
 def recolter_tout_ui(state):
 
     result = recolter_tout(state)
 
-    handle_events(result["events"])
+    handle_events(result["events"], state)
 
     summary = result["summary"]
 
