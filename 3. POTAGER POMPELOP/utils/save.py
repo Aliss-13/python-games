@@ -2,7 +2,15 @@ import json
 import os
 from core.state import GameState
 
-SAVE_PATH = os.path.join(os.path.dirname(__file__), "..", "save.json")
+SAVE_DIR = os.path.join(
+    os.path.expanduser("~"),
+    "Parties enregistrées"
+)
+
+os.makedirs(SAVE_DIR, exist_ok=True)
+
+SAVE_PATH = os.path.join(SAVE_DIR, "sauvegarde potager.json")
+
 
 def load_state():
 
@@ -53,6 +61,8 @@ def normalize_dict(data):
 
 
 def sauvegarder(state: GameState):
+
+    print("Sauvegarde vers :", SAVE_PATH)
 
     with open(SAVE_PATH, "w", encoding="utf-8") as f:
 
