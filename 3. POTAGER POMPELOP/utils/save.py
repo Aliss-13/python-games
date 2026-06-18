@@ -2,14 +2,15 @@ import json
 import os
 from core.state import GameState
 
-SAVE_DIR = os.path.join(
-    os.path.expanduser("~"),
-    "Parties enregistrées"
-)
+import os
+import sys
 
-os.makedirs(SAVE_DIR, exist_ok=True)
+if getattr(sys, "frozen", False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-SAVE_PATH = os.path.join(SAVE_DIR, "sauvegarde potager.json")
+SAVE_PATH = os.path.join(BASE_DIR, "save potager.json")
 
 
 def load_state():
