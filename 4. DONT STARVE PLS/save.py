@@ -10,7 +10,8 @@ else:
 SAVE_PATH = os.path.join(BASE_DIR, "save dont starve.json")
 
 def save_game(player, world):
-    os.makedirs(SAVE_PATH, exist_ok=True)
+
+    print("Sauvegarde vers :", SAVE_PATH)
 
     data = {
         "player": player.to_dict(),
