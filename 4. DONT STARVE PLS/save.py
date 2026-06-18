@@ -1,12 +1,16 @@
 import json
 import os
+import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SAVE_DIR = os.path.join(BASE_DIR, "saves")
-SAVE_PATH = os.path.join(SAVE_DIR, "save.json")
+if getattr(sys, "frozen", False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+SAVE_PATH = os.path.join(BASE_DIR, "save dont starve.json")
 
 def save_game(player, world):
-    os.makedirs(SAVE_DIR, exist_ok=True)
+    os.makedirs(SAVE_PATH, exist_ok=True)
 
     data = {
         "player": player.to_dict(),
