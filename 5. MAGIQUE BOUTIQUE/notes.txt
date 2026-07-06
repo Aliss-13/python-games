@@ -1,0 +1,120 @@
+🧙 Le truc important à retenir (vraiment important)
+
+Dans ton jeu, tu utilises :
+
+📦 Dicts pour :
+inventaire
+shop_stock
+items
+ingrédients
+
+👉 parce que tu as des noms + quantités
+
+📜 Listes pour :
+menus
+affichage numéroté
+choix utilisateur
+
+👉 parce que tu veux un ordre + index
+
+
+🧪 Mini règle mentale utile
+si tu dis : “le premier, le deuxième” → liste
+si tu dis : “la potion de mana, les herbes lunaires” → dict
+
+
+
+
+🧨 Le vrai problème dans ton code global
+
+Tu as 3 “types de variables” que tu mélanges encore :
+
+item → clé ("mana_potion")
+item_data → dict complet (ITEMS[...])
+meta → UI décorative
+
+⚡ Bonus mental model
+
+Tu peux te répéter ça :
+
+ITEMS[item] = objet complet
+item = juste un nom
+meta = décoration
+
+
+🧠 Astuce mentale (ça va t’éviter 80% des bugs)
+
+Imagine toujours :
+
+shop_stock = {"mana_potion": 3}
+ITEMS = {"mana_potion": {...}}
+
+Donc :
+
+shop_stock → “combien”
+ITEMS → “quoi”
+
+
+
+
+
+
+⚙️ Donc si ton dict est :
+{
+    "gold_shell": True,
+    "left_wing": False
+}
+
+Alors boucle =
+
+part = "gold_shell"
+owned = True
+
+part = "left_wing"
+owned = False
+🎯 “owned correspond à True ?”
+
+👉 Non.
+
+owned n’est pas “interprété”.
+
+C’est juste la valeur brute stockée dans le dictionnaire.
+
+🧠 Comment Python décide alors ?
+
+C’est toi qui décides dans le if :
+
+if owned:
+
+👉 Là seulement Python fait une évaluation logique :
+
+True → passe
+False → passe pas
+⚠️ point subtil (important pour ton jeu)
+
+En Python :
+
+True = vrai
+False = faux
+
+Mais aussi :
+
+1 = vrai
+0 = faux
+"" = faux
+"texte" = vrai
+
+Donc if owned: marche tant que ta valeur est “truthy”.
+
+🎮 dans ton cas
+
+Tu es clean :
+
+"scarabac": {
+    "gold_shell": False,
+}
+
+Donc parfait pour :
+
+if owned:
+    print("✔")

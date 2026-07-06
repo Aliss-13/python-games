@@ -1,0 +1,156 @@
+{
+    "witch": {
+        "level": 1,
+        "xp": 0,
+        "money": 0,
+        "inventory": {
+            "herbe_lunaire": 1,
+            "champignon_sombre": 1,
+            "poussiere_etoile": 0
+        },
+        "shop_stock": {
+            "item_id": {
+                "quantity": 0,
+                "last_sell": 1783367211.7322547
+            }
+        },
+        "sales": {},
+        "crafted_once": {
+            "healing_potion": false,
+            "mana_potion": false,
+            "love_potion": false,
+            "empowerment": false,
+            "polyjuice": false,
+            "bbl": false,
+            "ass_worms": false,
+            "pebble_in_shoe": false,
+            "hr_optimization": false,
+            "knock_pinky": false,
+            "flatulences": false,
+            "tax_audit": false,
+            "murphys_laws": false,
+            "cakes_and_politics": false,
+            "tax_haven_from_hell_to_hell_yeah": false,
+            "sexy_djinns_and_pentagrams": false,
+            "agile": false,
+            "the_devils_best_breakfast_recipes": false
+        },
+        "scarabac": {
+            "gold_shell": false,
+            "left_wing": false,
+            "right_wing": false,
+            "ruby_eye": false,
+            "sharp_mandible": false,
+            "mechanical_heart": false
+        },
+        "victory_objectives": {
+            "craft_all": false,
+            "level_20": false,
+            "scarabac_complete": false
+        },
+        "side_quests": {
+            "gringotts": false,
+            "dat_ass": false,
+            "steve_carrell": false,
+            "jeff_bezos": false,
+            "severus_snape": false,
+            "flitwick": false
+        }
+    },
+    "garden": {
+        "level": 1,
+        "garden_levels": {
+            "1": [
+                "herbe_lunaire",
+                "champignon_sombre",
+                "poussiere_etoile"
+            ],
+            "2": [
+                "ecorce_ancienne",
+                "eau_enchantee"
+            ],
+            "3": [
+                "croc_feroce",
+                "aile_de_fee"
+            ],
+            "4": [],
+            "5": [
+                "pierre_noire",
+                "aconit"
+            ],
+            "6": [],
+            "7": [
+                "bezoard",
+                "ecaille_dragon"
+            ]
+        },
+        "ingredients": {
+            "herbe_lunaire": {
+                "count": 0,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1783367216.7322738
+            },
+            "champignon_sombre": {
+                "count": 0,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1783367219.7322745
+            },
+            "poussiere_etoile": {
+                "count": 0,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322748
+            },
+            "ecorce_ancienne": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322686
+            },
+            "eau_enchantee": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322688
+            },
+            "croc_feroce": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322693
+            },
+            "aile_de_fee": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322695
+            },
+            "pierre_noire": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.73227
+            },
+            "aconit": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322705
+            },
+            "bezoard": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322712
+            },
+            "ecaille_dragon": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1783367211.7322714
+            }
+        }
+    }
+}

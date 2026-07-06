@@ -230,7 +230,7 @@ class World:
 
         if part not in player.flying_dutchman_parts:
             player.flying_dutchman_parts.append(part)
-            print("⚓ Une énergie étrange flotte dans l'air...Le Hollandais Volant semble plus proche !")
+            print("⚓ Une énergie étrange flotte dans l'air... Le Hollandais Volant semble plus proche !")
             print(f"🎉Tu trouves : {part}")
             return part
 

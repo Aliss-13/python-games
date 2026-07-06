@@ -1,0 +1,76 @@
+Construire
+    ↓
+Augmenter la population
+    ↓
+Créer de nouveaux besoins
+    ↓
+Construire pour satisfaire ces besoins
+    ↓
+Attirer encore plus de population
+
+
+20	hygiène
+50	soins
+100	espaces verts
+200	loisirs
+300	enseignement
+500	culture
+
+
+😊 Bonheur
+
+Le bonheur pourrait devenir une moyenne :
+
+nourriture
++ eau
++ air
++ santé
++ culture
++ loisirs
++ hygiène
++ savoirs
+
+
+🏆 Condition de victoire
+
+Exemple :
+
+if city["population"] >= 1000:
+    print("Votre civilisation prospère !")
+    game_over = True
+
+Ou même :
+
+Difficulté	Population cible
+Facile	500
+Moyen	1000
+Difficile	5000
+
+
+
+
+
+
+
+📌 “opérations autorisées”
+
+Exemple :
+
+Liste :
+append
+remove
+iteration
+Dict compté :
++1
+lire quantité
+initialiser si absent
+
+👉 Ça t’évite de chercher des syntaxes au hasard.
+
+
+
+
+Pour un projet comme ton city builder, je te conseillerais soit :
+
+mettre "production": {} partout ;
+ou utiliser .get("production", {}).

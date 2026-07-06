@@ -1,6 +1,5 @@
 from data.seeds import graines_disponibles, SEEDS
 from systems.unlock import verifier_deblocage
-import sys
 
 def debloquer_graine(nom, tier, croissance, prix, loot):
  
