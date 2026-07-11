@@ -1,6 +1,6 @@
 from witch import harvest, game_tick, display_shop_stock, display_inventory
 from recipes_actions import upgrade_recipe_menu, available_crafts, put_on_shelf
-from progression import display_scarabac_parts, display_crafted_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory
+from progression import display_scarabac_parts, display_remaining_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory
 from garden import Garden, garden_levels, display_garden
 from save import save_game
 
@@ -73,7 +73,7 @@ def menu(witch, garden):
             display_victory(witch)
 
             display_scarabac_parts(witch)
-            display_crafted_recipes(witch)
+            display_remaining_recipes(witch)
             display_side_quests(witch)
 
 

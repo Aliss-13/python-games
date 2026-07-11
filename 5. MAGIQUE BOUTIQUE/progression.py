@@ -17,8 +17,6 @@ def level_up(witch, garden):
         witch.xp -= witch.level * 50
         witch.level += 1
         improve_garden(garden)
-        print("Niveau sorcière :", witch.level)
-        print("Niveau jardin :", garden.level)
         check_victory(witch)
         print(f"Vous passez au niveau {witch.level} ! ")
 
@@ -59,11 +57,6 @@ def update_scarabac_objective(witch):
 
 def check_victory(witch):
 
-    if witch.has_won:
-        print("\n🏆 VICTOIRE !")
-        print("Vous êtes devenue la plus grande sorcière commerçante du BHV !")
-        return True
-
     if (
         all(witch.crafted_once.values())
         and witch.level >= 20
@@ -93,18 +86,19 @@ def display_scarabac_parts(witch):
         
     
         
-def display_crafted_recipes(witch):
-    print("\n💫 Crafts déjà réalisés :")
+def display_remaining_recipes(witch):
+    print("\n💫 Crafts restants :")
+    print("")
 
-    any_crafted = False
+    any_remaining = False
 
     for recipe, crafted in witch.crafted_once.items():
-        if crafted:
+        if not crafted:
             name = recipes.ITEMS[recipe]["name"]
-            print(f"✔ {name}")
-            any_crafted = True
+            print(f"❌ {name}")
+            any_remaining = True
 
-    if not any_crafted:
+    if not any_remaining:
         print("Aucune recette craftée pour le moment.")
 
 

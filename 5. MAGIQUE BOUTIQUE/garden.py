@@ -76,18 +76,12 @@ class Garden:
     def unlock_up_to_level(self, level):
         
         self.level = level
-        print("Déblocage jusqu'au niveau :", level)
 
         for lvl in range(1, level + 1):
 
             if lvl in self.garden_levels:
 
-                print("Traitement niveau", lvl)
-
                 for ingredient in self.garden_levels[lvl]:
-
-                    print("Déblocage :", ingredient)
-
                     self.ingredients[ingredient]["unlocked"] = True
                     self.ingredients[ingredient]["last_update"] = time.time()
     
