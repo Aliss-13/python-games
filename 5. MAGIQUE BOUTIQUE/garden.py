@@ -1,14 +1,6 @@
 import time
-import random
-
-RED = "\033[91m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-CYAN = "\033[96m"
-BLUE = "\033[94m"
-DIM = "\033[2m"
-LIGHT_PINK = "\033[38;5;218m"
-RESET = "\033[0m"
+from colors_and_names import DIM, YELLOW, RESET, LIGHT_PINK
+from garden_ingredients import INGREDIENTS
 
 
 garden_levels = {
@@ -80,6 +72,9 @@ class Garden:
 
 
     def unlock_up_to_level(self, level):
+        
+        self.level = level
+
         for lvl in range(1, level + 1):
             if lvl in self.garden_levels:
                 for ingredient in self.garden_levels[lvl]:
@@ -144,66 +139,3 @@ class Garden:
                 data["last_update"] = now - (elapsed % effective_rate)
 
         return self
-
-
-          
-    
-
-INGREDIENTS = {
-
-    "herbe_lunaire": {
-        "name": "Herbe lunaire", 
-        "base_rate": 5
-        },
-
-    "champignon_sombre": {
-        "name": "Champignon sombre", 
-        "base_rate": 8
-        },
-
-    "poussiere_etoile": {
-        "name": "Poussière d'étoile",
-        "base_rate": 30
-        },
-
-    "ecorce_ancienne": {
-        "name": "Ecorce ancienne",
-        "base_rate": 15
-        },
-
-    "eau_enchantee": {
-        "name": "Eau enchantée", 
-        "base_rate": 10
-        },
-
-    "croc_feroce": {
-        "name": "Croc féroce",
-        "base_rate": 20
-        },
-
-    "aile_de_fee": {
-        "name": "Aile de fée", 
-        "base_rate": 30
-        },
-
-    "pierre_noire": {
-        "name": "Pierre noire", 
-        "base_rate": 40
-        },
-
-    "aconit": {
-        "name": "Aconit", 
-        "base_rate": 50
-        },
-
-    "bezoard": {
-        "name": "Bézoard", 
-        "base_rate": 60
-        },
-
-    "ecaille_dragon": {
-        "name": "Ecaille de dragon", 
-        "base_rate": 70
-        }
-
-    }

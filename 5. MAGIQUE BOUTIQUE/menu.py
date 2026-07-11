@@ -1,5 +1,6 @@
-from witch import upgrade_recipe_menu, available_crafts, game_tick, display_shop_stock, display_inventory, display_victory, update_victory
-from witch import display_scarabac_parts, display_crafted_recipes, display_side_quests, SIDE_QUESTS, harvest
+from witch import harvest, game_tick, display_shop_stock, display_inventory
+from recipes_actions import upgrade_recipe_menu, available_crafts
+from progression import display_scarabac_parts, display_crafted_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory
 from garden import Garden, garden_levels
 from save import save_game
 
@@ -33,7 +34,7 @@ def menu(witch, garden):
         if choix == "1":
             display_inventory(witch)
             print("")
-            available_crafts(witch)
+            available_crafts(witch, garden)
             game_tick(witch, garden)
 
 
@@ -106,11 +107,13 @@ def debug_menu(witch, garden):
         choice = input("> ")
 
         if choice == "1":
-            witch.level += 10
+            witch.level = 10
+            garden.unlock_up_to_level(witch.level)
+
 
         elif choice == "2":
             witch.level = 20
-            garden.unlock_up_to_level(20)
+            garden.unlock_up_to_level(witch.level)
 
         elif choice == "3":
             for k in witch.crafted_once:

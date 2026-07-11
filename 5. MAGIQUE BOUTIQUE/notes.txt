@@ -118,3 +118,61 @@ Donc parfait pour :
 
 if owned:
     print("✔")
+
+
+
+
+
+    🌱 La boucle "gestion"
+
+C'est ton système actuel :
+
+Jardin
+ ↓
+Récolte
+ ↓
+Craft
+ ↓
+Mise en stock
+ ↓
+Ventes automatiques
+ ↓
+Argent + XP
+ ↓
+Améliorations
+
+
+
+
+La boucle "aventure"
+
+Ce qu'on vient d'imaginer :
+
+Boutique active
+ ↓
+Client spécial arrive
+ ↓
+Interaction
+ ↓
+Choix du joueur
+ ↓
+Affaire résolue
+ ↓
+Récompense
+ ↓
+Nouveaux contenus
+
+
+
+
+main.py
+
+witch.py
+
+garden.py
+
+items.py
+
+clients.py        ← les personnages
+events.py         ← les scènes/affaires étranges
+rewards.py        ← les récompenses
