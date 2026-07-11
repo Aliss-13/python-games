@@ -2,7 +2,7 @@ import random
 from clients_queue import WaitingClient
 from clients_choices import CHOICES
 from clients_results import RESULTS
-from progression import level_up, gain_rewards
+from progression import level_up, gain_rewards, register_sale
 import time
 
 
@@ -108,7 +108,20 @@ CLIENTS = {
         ],
         level_required=7,
         patience=600
-    )
+    ),
+
+    "poltergeist": Client(
+        id="poltergeist",
+        name="Esprit frappeur",
+        dialogue="Salutations. J'ai besoin de nouvelles idées pour emmerder les humains qui visitent mon château.",
+        choices=[
+            CHOICES["choice_poltergeist.tax_audit"],
+            CHOICES["choice_poltergeist.knock_pinky_flatulences"],
+            CHOICES["choice_poltergeist.banana_boat"]
+        ],
+        level_required=10,
+        patience=600
+    ),
 
 }
 
@@ -217,13 +230,13 @@ def client(witch, garden):
 
     result_id = choice.result
 
-    give_client_reward(witch, garden, result_id)
+    give_client_reward(witch, garden, result_id, choice.items)
     level_up(witch, garden)
 
 
 # ========================================== RECOMPENSE =======================================================
 
-def give_client_reward(witch, garden, result_id):
+def give_client_reward(witch, garden, result_id, sold_items):
 
     result = RESULTS[result_id]
 
@@ -232,13 +245,15 @@ def give_client_reward(witch, garden, result_id):
     if result.title:
         print(result.title)
 
+    register_sale(witch, sold_items)
+
     gain_rewards(witch, garden, result)
 
 # ========================================== WAITING CLIENTS =======================================================
 
 def display_waiting_clients(witch):
 
-    print("=== CLIENTS EN ATTENTE ===")
+    print("\n=== CLIENTS EN ATTENTE ===")
 
     if not witch.waiting_clients:
         print("Personne n'attend.")
@@ -267,14 +282,6 @@ def check_waiting_clients(witch):
 
 def serve_waiting_clients(witch, garden, item_name):
 
-    print("DEBUG attente :", len(witch.waiting_clients))
-
-    for waiting in witch.waiting_clients[:]:
-
-        print("DEBUG client :", waiting.client.name)
-        print("DEBUG cherche :", waiting.choice.items)
-        print("DEBUG crafté :", item_name)
-
     for waiting in witch.waiting_clients[:]:
 
         if not waiting.is_waiting_for(item_name):
@@ -286,8 +293,7 @@ def serve_waiting_clients(witch, garden, item_name):
         print(f"\n🔔 {waiting.client.name} revient récupérer sa commande !")
 
         remove_items(witch, waiting.choice.items)
-
-        give_client_reward(witch, garden, waiting.choice.result)
+        give_client_reward(witch, garden, waiting.choice.result, waiting.choice.items)
         level_up(witch, garden)
 
         witch.waiting_clients.remove(waiting)

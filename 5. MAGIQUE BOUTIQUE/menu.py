@@ -1,7 +1,7 @@
 from witch import harvest, game_tick, display_shop_stock, display_inventory
-from recipes_actions import upgrade_recipe_menu, available_crafts
+from recipes_actions import upgrade_recipe_menu, available_crafts, put_on_shelf
 from progression import display_scarabac_parts, display_crafted_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory
-from garden import Garden, garden_levels
+from garden import Garden, garden_levels, display_garden
 from save import save_game
 
 garden = Garden(garden_levels)
@@ -24,9 +24,10 @@ def menu(witch, garden):
         print("[3] Améliorations")
         print("[4] Ingrédients - Stock magasin - Bourse - Niveau")
         print("[5] Jardin")
-        print("[6] Progression")
-        print("[7] Sauvegarder")
-        print("[8] Quitter")
+        print("[6] Récupérer des articles en réserve")
+        print("[7] Progression")
+        print("[8] Sauvegarder")
+        print("[9] Quitter")
     
         choix = input("> ").lower()
     
@@ -59,11 +60,15 @@ def menu(witch, garden):
 
 
         elif choix == "5":
-            garden.display_garden()
+            display_garden(garden)
             game_tick(witch, garden)
-    
+
 
         elif choix == "6":
+            put_on_shelf(witch)
+    
+
+        elif choix == "7":
             update_victory(witch)
             display_victory(witch)
 
@@ -72,7 +77,7 @@ def menu(witch, garden):
             display_side_quests(witch)
 
 
-        elif choix == "7":
+        elif choix == "8":
             save_game(witch, garden)
 
 
@@ -80,7 +85,7 @@ def menu(witch, garden):
             debug_menu(witch, garden)
 
 
-        elif choix == "8":
+        elif choix == "9":
             print("Au revoir.")
             return False
         

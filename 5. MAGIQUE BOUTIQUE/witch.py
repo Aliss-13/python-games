@@ -7,13 +7,15 @@ from recipes_actions import get_recipe_price, get_recipe_xp
 from colors_and_names import RESET, TYPE_META, SCARABAC_NAMES
 from garden_ingredients import INGREDIENTS
 
-from progression import level_up, check_victory, update_victory, check_all
+from progression import level_up, check_victory, update_victory, register_sale
 
 from sale_dialogues import random_sale_dialogue
 
-from clients import CLIENTS, check_client_event, check_waiting_clients
+from clients import CLIENTS, check_client_event
 
-from garden import Garden, garden_levels
+from clients_queue import WaitingClient
+
+from garden import Garden, garden_levels, update_garden
 garden = Garden(garden_levels)
 
 class Witch:
@@ -28,14 +30,9 @@ class Witch:
 
         self.recipes_upgrades = {item: 0 for item in recipes.ITEMS}
 
-        self.shop_stock = {"item_id": {"quantity": 0,}}
+        self.shop_stock = {item_id: {"quantity": 0} for item_id in recipes.ITEMS}
 
-        self.shop_shelves = {
-            "item_id": {
-            "quantity": 0,
-            "last_sell": time.time()
-            }
-        }
+        self.shop_shelves = {item_id: {"quantity": 0, "last_sell": time.time()} for item_id in recipes.ITEMS}
 
         self.sales = {}
 
@@ -104,7 +101,16 @@ class Witch:
         self.inventory = data.get("inventory", {})
         self.recipes = data.get("recipes", {})
         self.recipes_upgrades = data.get("recipes_upgrades", {})
-        self.shop_stock = data.get("shop_stock", {})
+        
+        # self.shop_stock
+        saved_shop_stock = data.get("shop_stock", {})
+
+        self.shop_stock = {
+            item_id: {
+                "quantity": saved_shop_stock.get(item_id, {}).get("quantity", 0)
+                } 
+        for item_id in recipes.ITEMS
+        }
 
         # self.shop_shelves
         saved_shop_shelves = data.get("shop_shelves", {})
@@ -126,22 +132,27 @@ class Witch:
         self.waiting_clients = []
 
         for waiting in data.get("waiting_clients", []):
+            client_id = waiting.get("client_id")
 
-            client = CLIENTS[waiting.client.id]
+            if client_id not in CLIENTS:
+                continue
 
-            for choice in client.choices:
-                if choice.result == waiting.choice_result:
-                    selected_choice = choice
-                    break
+            client = CLIENTS[client_id]
 
-            self.waiting_clients.append(
-                {
-                    "client": client,
-                    "choice": selected_choice,
-                    "arrival_time": waiting.arrival_time,
-                    "patience": client.patience
-                }
+            choice_index = waiting.get("choice_index")
+
+            if choice_index is None or choice_index >= len(client.choices):
+                continue
+
+        selected_choice = client.choices[choice_index]
+
+        self.waiting_clients.append(
+            WaitingClient(
+                client,
+                selected_choice
             )
+        )
+
         
         # self.crafted_once
         saved_crafted_once = data.get("crafted_once", {})
@@ -184,7 +195,7 @@ crafted_once = {
 
 def harvest(witch, garden):
 
-        chance = 0.09 + (garden.level *0.02)
+        chance = 0.002 + (garden.level *0.02)
         if random.random() < chance:  # exemple : 0.05%
             try_drop_scarabac(witch)
 
@@ -239,9 +250,10 @@ def auto_sell(witch, garden):
 
             witch.money += get_recipe_price(witch, item_id)
             witch.xp += get_recipe_xp(witch, item_id)
-            witch.sales[item_id] = witch.sales.get(item_id, 0) + 1
+            
+            register_sale(witch, [item_id])
 
-            print(f"Vous avez vendu {recipes.ITEMS[item_id]["name"]} !")
+            print(f"\nVous avez vendu {recipes.ITEMS[item_id]["name"]} !")
             print(random_sale_dialogue(recipes.ITEMS[item_id]["name"]))
             print(
                 f"XP +{get_recipe_xp(witch, item_id)} - "
@@ -249,15 +261,12 @@ def auto_sell(witch, garden):
             )
 
             level_up(witch, garden)
-            check_all(witch)
-
-
 
 #============================= GAME TICK ====================================
 
 def game_tick(witch, garden):
 
-    garden.update_garden()
+    update_garden(garden)
     auto_sell(witch, garden)
     check_client_event(witch, garden)
 

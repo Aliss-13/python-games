@@ -92,6 +92,21 @@ ITEMS = {
     },
 
 
+    "banana_boat": {
+        "name": "Bananier day-o", 
+        "type": "potion",
+        "tags": [],
+        "ingredients": {"champignon_sombre": 5, "ecorce_ancienne": 5, "eau_enchantee": 5, "croc_feroce": 3, "pierre_noire": 2},
+        "level_required": 10,
+        "source" : "level",
+        "demand": 0.8,
+        "price": 100, 
+        "xp": 80,
+        "upgrade_level": 0,
+        "upgrade_cost": 140
+    },
+
+
     #===================== SORTS ============================
     
     "ass_worms": {
@@ -258,6 +273,20 @@ ITEMS = {
     },
 
 
+    "mimi_the_restroom_queen": {
+        "name": "Mimi sur le trône", 
+        "type": "spell_book",
+        "tags": [],
+        "ingredients": {"herbe_lunaire": 5, "champignon_sombre": 2, "ecorce_ancienne": 4, "eau_enchantee": 6, "aile_de_fee": 3},
+        "level_required": None,
+        "demand": 0.8,
+        "price": 60, 
+        "xp": 45,
+        "upgrade_level": 0,
+        "upgrade_cost": 80
+    },
+
+
     "sexy_djinns_and_pentagrams": {
         "name": "Djinns sexy et pentagrammes", 
         "type": "spell_book",
@@ -276,7 +305,7 @@ ITEMS = {
         "name": "La Méthode à Gilles", 
         "type": "spell_book",
         "tags": ["corporate"],
-        "ingredients": {"poussiere_etoile": 2, "ecorce_ancienne": 5, "eau_enchantee": 4, "pierre_noire": 3, "aconit": 5},
+        "ingredients": {"poussiere_etoile": 2, "ecorce_ancienne": 5, "eau_enchantee": 4, "pierre_noire": 3, "aconit": 3},
         "level_required": 6,
         "demand": 0.6,
         "price": 70, 
@@ -284,6 +313,20 @@ ITEMS = {
         "upgrade_level": 0,
         "upgrade_cost": 110
     }, 
+
+
+    "jean_marc_synergie_all_songs_lyrics": {
+        "name": "Les grands succès de Jean-Marc Synergie : Coworking sentimental, Mergeons nos vies, Confcall me now, Organigramme de nos amours...", 
+        "type": "spell_book",
+        "tags": ["corporate"],
+        "ingredients": {"poussiere_etoile": 2, "ecorce_ancienne": 5, "eau_enchantee": 4, "pierre_noire": 1, "aconit": 1},
+        "level_required": None,
+        "demand": 0.9,
+        "price": 80, 
+        "xp": 70,
+        "upgrade_level": 0,
+        "upgrade_cost": 110
+    },
 
     
     "the_devils_best_breakfast_recipes": {

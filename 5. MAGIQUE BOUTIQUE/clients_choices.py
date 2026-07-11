@@ -88,8 +88,8 @@ CHOICES = {
     ),
 
     "choice_corinne_hr.megapack": Choice(
-        text="Lui proposer de lui offrir La Méthode à Gilles, Empouvoirment et Optimisation des ressources humaines en "
-            "échange d'une grosse cylindrée à vil prix.",
+        text="Lui proposer en chuchotant de lui offrir La Méthode à Gilles, Empouvoirment et Optimisation des ressources humaines en "
+            "échange de cette recette de grimoire très rare qu'elle a utilisé l'an dernier...",
         result="result_corinne_hr.megapack",
         items=["agile", "empowerment", "hr_optimization"]
     ),
@@ -136,5 +136,28 @@ CHOICES = {
         text="Lui dire avec un soupir que le traiteur algérien, c'est au 15 et pas au 15bis, ca arrive tout le temps.",
         result="result_the_feminist_witch.harissa",
         items=None
+    ),
+
+
+    # L'esprit frappeur
+    "choice_poltergeist.tax_audit": Choice(
+        text="Vendre Contrôle fiscal - classique mais efficace !",
+        result="result_poltergeist.tax_audit",
+        items=["tax_audit"]
+    ),
+
+    "choice_poltergeist.knock_pinky_flatulences": Choice(
+        text="Vendre Pan le petit orteil et Flatulences - Vous regrettez de ne plus avoir la recette de l'excellente autobiographie de Mimi Geignarde "
+        "qui parvint brillamment à une fréquentation nulle de ses toilettes en racontant avec insistance et moults détails "
+        "toute sa vie aux visiteurs ayant eu le malheur de pousser la porte. Sacrée Mimi !",
+        result="result_poltergeist.knock_pinky_flatulences",
+        items=["knock_pinky", "flatulences"]
+    ),
+
+    "choice_poltergeist.banana_boat": Choice(
+        text="Vendre Bananier day-o - 🎶 Come, mister tally man, tally me bananaaaaaa.... Daylight come and me wan' go home... 🎵 - "
+        "Un must pour tout esprit frappeur un peu sérieux.",
+        result="result_poltergeist.banana_boat",
+        items=["banana_boat"]
     ),
 }

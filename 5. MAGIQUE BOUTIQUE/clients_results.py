@@ -15,8 +15,17 @@ class Result:
         self.title = title
         self.xp = xp
         self.money = money
-        self.items = items or []
-        self.recipes = recipes or []
+
+        if isinstance(items, str):
+            self.items = [items]
+        else:
+            self.items = items or []
+
+        if isinstance(items, str):
+            self.recipes = [recipes]
+        else:
+            self.recipes = recipes or []
+            
         self.achievements = achievements or []
         self.unlocks = unlocks or []
 
@@ -97,9 +106,9 @@ RESULTS = {
     ),
 
     "result_corinne_hr.megapack": Result(
-        text="Corinne regarde à gauche, à droite et derrière et vous chuchote « Ca peut s'arranger...»",
-        title="🎁 Objet obtenu !",
-        items=["broom_o_matik"]
+        text="Corinne regarde à gauche, à droite et derrière et vous chuchote : « Ca peut s'arranger...»",
+        title="📜 Nouvelle recette !",
+        recipes=["jean_marc_synergie_all_songs_lyrics"]
     ),
 
 
@@ -143,4 +152,24 @@ RESULTS = {
         recipes=["harissa_revenge"]
     ),
 
+
+    # L'esprit frappeur
+    "result_poltergeist.tax_audit": Result(
+        text="L'esprit frappeur est extatiquement horrifié par votre sadisme.",
+        title="Récompense : 100 XP et 150 pièces",
+        xp=100,
+        money=150,
+    ),
+
+    "result_poltergeist.knock_pinky_flatulences": Result(
+        text="L'esprit frappeur vous fait un immense sourire jusqu'aux oreilles. Lui aussi est un grand fan de Mimi !",
+        title="📜 Nouvelle recette !",
+        recipes=["mimi_the_restroom_queen"]
+    ),
+
+    "result_poltergeist.banana_boat": Result(
+        text="L'esprit frappeur est emballé. Il repart en fredonnant : « 🎶 Hide the deadly black tarantula... Daylight come and me wan' go home... 🎵 »",
+        xp=200,
+        money=200
+    )
 }

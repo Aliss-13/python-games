@@ -134,6 +134,62 @@ def stock_gestion(witch, item_name):
             print("Choix invalide.")
 
 
+def put_on_shelf(witch):
+    print("\n--- STOCK DISPONIBLE ---")
+
+    objets_disponibles = []
+
+    numero = 1  
+
+    for item_id, value in witch.shop_stock.items():
+        for value, quantity in value.items():
+            
+            if quantity > 0:
+                item_name = ITEMS[item_id]["name"]
+                print(f"{numero} - {item_name} ({quantity})")
+                objets_disponibles.append((item_id, quantity))
+                numero += 1
+
+    if not objets_disponibles:
+        print("Le stock est vide.")
+        return
+
+    try:
+        choix = int(input("\nQuel objet voulez-vous mettre en rayon ? "))
+    except ValueError:
+        print("Veuillez entrer un numéro.")
+        return
+
+    if choix < 1 or choix > len(objets_disponibles):
+        print("Ce choix n'existe pas.")
+        return
+
+    item_id, quantity = objets_disponibles[choix - 1]
+    item_name = ITEMS[item_id]["name"]
+
+    print(f"\nVous avez choisi : {item_name}")
+
+    try:
+        quantity = int(input("Combien voulez-vous en mettre en rayon ? "))
+    except ValueError:
+        print("Veuillez entrer un nombre.")
+        return
+
+    if quantity <= 0:
+        print("La quantité doit être positive.")
+        return
+
+    if quantity > witch.shop_stock[item_id]["quantity"]:
+        print("Vous n'avez pas assez de stock.")
+        return
+
+    witch.shop_stock[item_id]["quantity"] -= quantity
+    witch.shop_shelves[item_id]["quantity"] += quantity
+
+    print(f"{item_name} x {quantity} ajouté(s) au rayon !")
+
+
+
 def recipe_unlocked(witch, item_id):
 
     data = ITEMS[item_id]

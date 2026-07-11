@@ -9,13 +9,16 @@
 
 from colors_and_names import YELLOW, RESET, SCARABAC_NAMES
 import recipes
+from garden import improve_garden
 
 
 def level_up(witch, garden):
-    while witch.xp >= witch.level * 10:
-        witch.xp -= witch.level * 10
+    while witch.xp >= witch.level * 50:
+        witch.xp -= witch.level * 50
         witch.level += 1
-        garden.improve_garden()
+        improve_garden(garden)
+        print("Niveau sorcière :", witch.level)
+        print("Niveau jardin :", garden.level)
         check_victory(witch)
         print(f"Vous passez au niveau {witch.level} ! ")
 
@@ -29,7 +32,9 @@ def gain_rewards(witch, garden, result):
         witch.inventory[item] = witch.inventory.get(item, 0) + 1
 
     for recipe in result.recipes:
-        witch.recipes[recipe] = True
+        if not witch.recipes.get(recipe):
+            witch.recipes[recipe] = True
+            print(f"✧.*{recipes.ITEMS[recipe]['name']}✧.*")
 
     level_up(witch, garden)
     update_victory(witch)
@@ -50,7 +55,6 @@ def update_level_objective(witch):
 
 def update_scarabac_objective(witch):
     witch.victory_objectives["scarabac_complete"] = all(witch.scarabac.values())
-
 
 
 def check_victory(witch):
@@ -107,6 +111,16 @@ def display_crafted_recipes(witch):
 def crafted_everything(witch):
     return all(witch.crafted_once.values())
 
+
+def register_sale(witch, items):
+
+    if isinstance(items, str):
+        items = [items]
+
+    for item in items:
+        witch.sales[item] = witch.sales.get(item, 0) + 1
+
+    check_all(witch)
 
 
 def display_victory(witch):

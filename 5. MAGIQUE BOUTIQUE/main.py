@@ -23,6 +23,7 @@ def main():
     
     
 print("\n★ ·. · ´¯` ·. · ★ LA MAGIQUE BOUTIQUE ★ ·. · ´¯` ·. ★")
-print("\n« What sorcery is this ???? »")
+print("\n·. · ★ « What sorcery is this ???? » ★ ·. · ")
 print("")
+print("DEBUG : godmode123")
 main()

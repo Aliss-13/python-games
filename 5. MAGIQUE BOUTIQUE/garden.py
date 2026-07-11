@@ -51,7 +51,9 @@ class Garden:
 
     def from_dict(self, data):
         self.level = data.get("level", 1)
-        self.garden_levels = data.get("garden_levels", self.garden_levels)
+        self.garden_levels = self.garden_levels.update(data.get("garden_levels", {}))
+
+        print(self.garden_levels)
 
         saved = data.get("ingredients", {})
 
@@ -74,68 +76,77 @@ class Garden:
     def unlock_up_to_level(self, level):
         
         self.level = level
+        print("Déblocage jusqu'au niveau :", level)
 
         for lvl in range(1, level + 1):
+
             if lvl in self.garden_levels:
+
+                print("Traitement niveau", lvl)
+
                 for ingredient in self.garden_levels[lvl]:
+
+                    print("Déblocage :", ingredient)
+
                     self.ingredients[ingredient]["unlocked"] = True
                     self.ingredients[ingredient]["last_update"] = time.time()
     
 
-    def display_garden(self):
+def display_garden(garden):
 
-        print("\n=== JARDIN MAGIQUE ===")
-        print(f"{LIGHT_PINK}Niveau : {self.level}{RESET}")
+    print("\n=== JARDIN MAGIQUE ===")
+    print(f"{LIGHT_PINK}Niveau : {garden.level}{RESET}")
 
-        for ingredient, data in self.ingredients.items():
+    for ingredient, data in garden.ingredients.items():
 
-            if not data["unlocked"]:
-                continue
+        if not data["unlocked"]:
+            continue
 
-            base_rate = INGREDIENTS[ingredient]["base_rate"]
-            rate_modifier = data["rate_modifier"]
+        base_rate = INGREDIENTS[ingredient]["base_rate"]
+        rate_modifier = data["rate_modifier"]
 
-            effective_rate = max(0.5, base_rate / (rate_modifier ** 0.9))
+        effective_rate = max(0.5, base_rate / (rate_modifier ** 0.9))
 
-            print(
-                f"{YELLOW}{INGREDIENTS[ingredient]['name']}{RESET}"
-                f" : {int(data['count'])}"
-                f"{DIM} | {effective_rate:.1f}s{RESET}"
-            )
+        print(
+            f"{YELLOW}{INGREDIENTS[ingredient]['name']}{RESET}"
+            f" : {int(data['count'])}"
+            f"{DIM} | {effective_rate:.1f}s{RESET}"
+        )
 
 
-    def improve_garden(self):
+def improve_garden(garden):
 
-        for item, data in self.ingredients.items():
+    for item, data in garden.ingredients.items():
             if data["unlocked"]:
-                data["rate_modifier"] *= (1.01 + self.level * 0.001)
+                data["rate_modifier"] *= (1.01 + garden.level * 0.001)
 
-        self.level += 1
-        self.unlock_up_to_level(self.level)
+    garden.level += 1
 
-
-    def update_garden(self):
-
-        now = time.time()
-
-        for item, data in self.ingredients.items():
-
-            if not data["unlocked"]:
-                continue
-
-            elapsed = now - data["last_update"]
+    garden.unlock_up_to_level(garden.level)
 
 
-            base_rate = INGREDIENTS[item]["base_rate"]
-            rate_modifier = data["rate_modifier"]
-            effective_rate = max(0.5, base_rate / (rate_modifier ** 0.9))
+def update_garden(garden):
 
-            produced = int(elapsed // effective_rate)
+    now = time.time()
 
-            if produced > 0:
-                data["count"] += produced
+    for item, data in garden.ingredients.items():
 
-                # on conserve le "temps restant"
-                data["last_update"] = now - (elapsed % effective_rate)
+        if not data["unlocked"]:
+            continue
 
-        return self
+        elapsed = now - data["last_update"]
+
+
+        base_rate = INGREDIENTS[item]["base_rate"]
+        rate_modifier = data["rate_modifier"]
+        effective_rate = max(0.5, base_rate / (rate_modifier ** 0.9))
+
+        produced = int(elapsed // effective_rate)
+
+        if produced > 0:
+            data["count"] += produced
+
+            # on conserve le "temps restant"
+            data["last_update"] = now - (elapsed % effective_rate)
+
+    return garden
