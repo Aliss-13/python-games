@@ -247,7 +247,7 @@ def sew(player, key):
 
     
 #============================ Menu Construire, fabriquer, coudre ===========================================
-def menu_build(player, choix):
+def menu_build(player):
 
     options = [k for k in STRUCTURES if not player.structures[k]]
 
@@ -272,7 +272,7 @@ def menu_build(player, choix):
     build(player, options[choix])
 
 
-def menu_craft(player, choix):
+def menu_craft(player):
     options = [k for k in TOOLS if not player.tools[k]]
 
     if not options:
@@ -296,7 +296,7 @@ def menu_craft(player, choix):
     craft(player, options[choix])
 
 
-def menu_sew(player, choix):
+def menu_sew(player):
     options = [k for k in STUFF if not player.stuff[k]]
 
     if not options:

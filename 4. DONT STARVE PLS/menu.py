@@ -34,7 +34,7 @@ def menu_construire(player):
 
         else:
             print("Choix invalide")
-            return
+            continue
 
 
 def menu_manger(player):
