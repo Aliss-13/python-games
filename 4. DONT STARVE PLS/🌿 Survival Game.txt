@@ -1,0 +1,19 @@
+🌿 Survival Game
+Petit jeu de survie développé en Python.
+
+🎮 Description
+Dans ce jeu, le joueur doit survivre en gérant ses ressources, en explorant l’environnement et en construisant des éléments pour progresser.
+
+Le jeu est entièrement textuel et se joue dans le terminal.
+
+⚙️ Fonctionnalités
+Gestion des ressources (nourriture, matériaux, etc.)
+Actions de récolte et d’exploration
+Système de construction
+Événements aléatoires
+🚀 Lancer le jeu
+Option 1 : avec Python
+python main.py
+
+Option 2 : version jouable (recommandé)
+Télécharger la version .exe dans les Releases et double-cliquer dessus.

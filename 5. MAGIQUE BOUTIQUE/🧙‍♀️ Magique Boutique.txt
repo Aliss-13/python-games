@@ -1,0 +1,54 @@
+🧙‍♀️ Magique Boutique
+
+Magique Boutique est un jeu de gestion développé en Python dans lequel vous incarnez une jeune sorcière qui ouvre sa propre boutique d'objets magiques.
+
+Votre objectif : fabriquer des potions, parchemins et grimoires, gérer votre stock, satisfaire vos clients et développer votre jardin enchanté pour débloquer toujours plus de ressources et de recettes.
+
+Mais attention : la magie ne sert pas uniquement à sauver le monde... certains clients viennent aussi chercher des solutions légèrement plus discutables. Entre potions d'amour, sorts farceurs et objets aux effets parfois douteux, votre boutique devra répondre à toutes les demandes (ou presque).
+
+✨ Fonctionnalités
+🧪 Système de craft
+Création de potions, parchemins et objets magiques
+Déblocage progressif de nouvelles recettes
+Des créations allant du classique élixir de soin aux sorts beaucoup moins conventionnels
+🌱 Jardin magique
+Production automatique d'ingrédients
+Amélioration du jardin
+Déblocage de nouvelles ressources au fil de la progression
+🏪 Gestion de boutique
+Gestion du stock et des rayons
+Mise en vente des objets fabriqués
+Clients avec leurs propres demandes, personnalités et petites surprises
+🧙 Progression de la sorcière
+Gain d'expérience et montée de niveau
+Déblocage de nouveaux contenus
+Objectifs et quêtes secondaires
+😄 Un univers avec une touche d'humour
+Des clients parfois surprenants
+Des références décalées
+Une approche légère de la magie, où tous les problèmes ne nécessitent pas forcément un grand sortilège héroïque
+💾 Système de sauvegarde
+Sauvegarde et chargement de la partie
+Compatible avec la version Python et l'exécutable Windows
+🛠️ Technologies utilisées
+Python 3
+Programmation orientée objet (classes, objets)
+Gestion de données avec dictionnaires
+Système de sauvegarde JSON
+Création d'un exécutable Windows
+🎯 Objectif du projet
+
+Ce projet a été réalisé afin de mettre en pratique mes compétences en Python à travers la création d'un jeu complet mêlant programmation orientée objet, gestion de données, logique de gameplay et conception d'une boucle de progression.
+
+L'objectif était également de créer un univers original et amusant, en mélangeant développement informatique et créativité.
+
+Le projet continue d'évoluer avec l'ajout de nouvelles mécaniques et fonctionnalités.
+
+🚀 Lancement
+
+Le jeu peut être lancé :
+
+directement avec Python depuis main.py
+ou via l'exécutable Windows fourni dans les releases
+
+Bienvenue dans Magique Boutique, où la magie, le commerce et les idées parfois étranges se rencontrent. ✨
