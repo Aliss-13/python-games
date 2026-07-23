@@ -116,7 +116,6 @@ def get_stats(entite):
     return stats
     
 
-
 def calcul_stats(character):
     stats = character.base_stats.copy()
     for stat, val in character.bonus.items():

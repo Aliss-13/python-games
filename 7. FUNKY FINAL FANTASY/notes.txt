@@ -100,6 +100,7 @@ l'inventaire est une structure dynamique (liste) qui évolue selon les actions d
 
 
 
+TEMPORARY NOTES
 
 from enum import Enum
 
@@ -113,8 +114,102 @@ class Target(Enum):
     skill.target = Target.ALL_OPPONENTS
 
 
+------------------------------------progression de zone
+
+Découverte de symbole étrange
++1 progression
+
+Trouver une cabane abandonnée
++2 progression
+
+Vaincre un ennemi rare
++1 progression
+
+zone.progress >= 10
+zone.sub_boss_unlocked = True
 
 
+
+Et là, les quêtes deviennent naturelles
+
+Par exemple dans la forêt :
+
+Quête 1 : Les traces dans les bois
+
+Objectif :
+
+trouver 3 indices
+
+Événements :
+
+arbre étrange
+empreinte
+corbeau parlant
+
+Récompense :
+
+accès au sous-boss
+Quête 2 : Les chasseurs disparus
+
+Objectif :
+
+vaincre des loups
+retrouver un objet
+
+Récompense :
+
+équipement rare
+Quête 3 : La cabane de la sorcière
+
+Objectif :
+
+récupérer trois ingrédients
+
+Débloque :
+
+Boss : The VVitch
+
+
+
+══════════════════════
+      Forêt Maudite
+══════════════════════
+
+1. Explorer
+2. Équipe
+3. Inventaire
+4. Sauvegarder
+0. Quitter
+
+Types d'events:
+
+combat
+discovery
+loot
+quest
+merchant
+rest
+trap
+nothing
+
+
+début
+40 % combat
+25 % découverte
+15 % loot
+10 % rien
+10 % repos
+
+milieu
+60 % combat
+20 % découverte
+10 % piège
+10 % repos
+
+
+
+
+------------------------------------idées zones suivantes
     Zone(
         id="burning_desert",
         name="Désert brûlant",
@@ -123,6 +218,8 @@ class Target(Enum):
         unlock_requirement="the_vvitch",
 
         enemies=["coyote", "vulture", "skeleton"],
+
+        sub_boss="the_road"
 
         boss="the_hitcher"
     ),
@@ -136,22 +233,8 @@ class Target(Enum):
 
         enemies=["eagle", "wolf", "stone_elemental"],
 
+        sub_boss="big_foot"
         boss="missing_411"
     )
 
 ]
-
-
-
-
-créer.exe
-cd "chemin du dossier à transformer"
-ex : cd "4. DONT STARVE PLS" (les guillemets sont importants)
-python -m PyInstaller --onefile main.py pour créer .Exe
-
-sauvegarder sur github
-git status
-git add .
-git commit -m "Modif mineure"
-git push
-

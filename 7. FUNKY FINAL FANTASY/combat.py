@@ -1,16 +1,16 @@
 import random
-from display import display_opponent_light, display_opponent, display_loot
-from ui import separator, header
-from class_opponent import get_available_opponents
+from display import display_opponent_light, display_opponent, display_loot, display_equipment, display_inventory
+from ui import separator, header, section
+from class_opponent import create_opponent, get_opponent_by_id, OPPONENTS
 from class_character import get_live_characters
-from level import scale_opponent, generate_loot, add_loot, gain_xp
+from class_skill import SKILL_FUNCTIONS, get_target_name
+from skills import calculate_damage
 from class_effect import create_effect, apply_choose_target
 from effects import start_of_turn
-from menu import menu_tour
-from sac_a_dos import get_stats, calcul_stats
-from skills import calculate_damage
+from level import scale_enemy_team, gain_xp
+from loot_tables import generate_loot, add_loot
+from sac_a_dos import get_stats, calcul_stats, equip_from_inventory, use_item
 from save import save_game
-
 
 def speed_order(player_team, opponent):
     
@@ -24,6 +24,97 @@ def speed_order(player_team, opponent):
     reverse=True
 )
 
+#----------------------------------------- SOUS MENUS ----------------------------------------------
+
+def menu_inventory(character, player_team, inventory):
+    display_equipment(character)
+    while True:
+        
+        display_inventory(inventory)
+        print("")
+        print("[1] Équiper")
+        print("[2] Utiliser objet")
+        print("[3] Retour")
+
+        choix = input("> ")
+
+        if choix == "1":
+            equip_from_inventory(character, inventory)
+
+        elif choix == "2":
+            use_item(player_team, inventory)
+
+        elif choix == "3":
+            return
+
+        else:
+            print("Choix invalide")
+
+def menu_tour(character, player_team, enemies, inventory):
+
+    while True:
+
+        section("Actions")
+        print("[s] Skill")
+        print("[i] Inventaire")
+        print("[q] Fin du tour")
+
+        choix = input("> ").lower()
+       
+        # SKILL
+        if choix == "s":
+            menu_skill(character, player_team, enemies)
+            return "fin_tour"
+
+     
+        # INVENTAIRE
+        elif choix == "i":
+            menu_inventory(character, player_team, inventory)
+            # on reste dans le tour
+
+        # FIN VOLONTAIRE
+        elif choix == "q":
+            return "fin_tour"
+
+        else:
+            print("Choix invalide")
+
+
+def menu_skill(character, allies, enemies):
+
+    print(f"\nActions de {character.name}")
+
+    for i, skill in enumerate(character.skills, start=1):
+        print(f"{i}. {skill.name:<25} Coût : {skill.cost} - Cible {get_target_name(skill)}")
+   
+    print("0. Retour")
+
+    while True:
+
+        choix = input("> ")
+
+        if choix.isdigit():
+
+            choix = int(choix)
+
+            if choix == 0:
+                return None
+
+            skill = character.skills[choix - 1]
+
+            action = SKILL_FUNCTIONS.get(skill.id)
+
+            if action is None:
+                print(f"Compétence inconnue : {skill.id}")
+                return
+
+            action(character, allies, enemies, skill)
+            return
+
+        print("Choix invalide.")
+
+
+#----------------------------------------- Gestion des effets de début de tour ----------------------------------------------
 
 def manage_start_of_turn(entite):
 
@@ -35,7 +126,20 @@ def manage_start_of_turn(entite):
     start_of_turn(entite)
     return True
    
+def apply_opponent_effects(opponent, target):
 
+    for attack_effect in opponent.attack_effects:
+
+        if random.random() <= attack_effect.chance:
+            effect = create_effect(
+                    attack_effect.effect_id,
+                    source=opponent
+
+                )
+
+            target.effects.append(effect) 
+
+#----------------------------------------- Tours ----------------------------------------------
 
 def opponent_turn(player_team, opponent):
     separator()
@@ -73,20 +177,6 @@ def opponent_turn(player_team, opponent):
     # effets des attaques selon l'ennemi
     apply_opponent_effects(opponent, target)
 
-
-def apply_opponent_effects(opponent, target):
-
-    for attack_effect in opponent.attack_effects:
-
-        if random.random() <= attack_effect.chance:
-            effect = create_effect(
-                    attack_effect.effect_id,
-                    source=opponent
-
-                )
-
-            target.effects.append(effect) 
-            
 
 def character_turn(character, player_team, enemies, inventory):
     separator()
@@ -126,17 +216,13 @@ def one_turn(opponent, player_team, enemies, inventory):
     
     return "continuer"
 
+#----------------------------------------- Combat ----------------------------------------------
 
-def combat(player_team, enemy_pool, inventory):
+def combat(player_team, enemy_team, inventory, zone):
 
-    while enemy_pool:
+    scale_enemy_team(player_team, enemy_team)
 
-        enemy_base = random.choice(get_available_opponents(enemy_pool)
-)
-        enemy = scale_opponent(player_team, enemy_base)
-
-        enemy_team = [enemy]
-
+    for enemy in enemy_team:
         display_opponent(enemy)
 
         while enemy.life > 0:
@@ -144,20 +230,67 @@ def combat(player_team, enemy_pool, inventory):
             result = one_turn(enemy, player_team, enemy_team, inventory)
 
             if result == "ennemi mort":
-                if result == "ennemi mort":
-                    print(f"{enemy.name} est vaincu !")
-                    loot = generate_loot(enemy)
-                
-                    display_loot(loot)
-                    add_loot(inventory, loot)
-                    gain_xp(player_team, enemy)
-                    enemy_base.defeated = True
-                    save_game(player_team, inventory, enemy_pool)
-                
-                    break
-            
-            if result == "defaite":
+
+                print(f"{enemy.name} disparaît !")
+                loot = generate_loot(enemy, zone)
+                display_loot(loot)
+                add_loot(inventory, loot)
+                gain_xp(player_team, enemy)
+                enemy.defeated = True
+
+                break
+
+
+            elif result == "defaite":
+
                 print("GAME OVER")
                 return
-    
+
+    save_game(player_team, inventory, enemy_team)
+
     print("Victoire totale !")
+#----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------
+
+def generate_enemy_team(zone):
+
+    enemy_team = []
+
+    # chance ennemi rare
+    chance = zone.rare_chance
+
+    if zone.progress >= 10:
+        chance += 0.05
+
+    if zone.sub_boss_defeated:
+        chance += 0.10
+
+    if random.random() <= chance:
+        enemy = random.choice(zone.rare_enemies)
+
+        return [create_opponent(enemy)]
+
+    # combat normal selon progression
+    if zone.difficulty == 1:
+        enemy_count = 1
+        possible_rarity = ["common"]
+
+
+    elif zone.difficulty == 2:
+        enemy_count = random.choice([1, 2])
+        possible_rarity = ["common", "uncommon"]
+
+
+    else:
+        enemy_count = random.choice([2, 3])
+        possible_rarity = ["common", "uncommon"]
+
+
+    available = [enemy for enemy in OPPONENTS if (enemy.id in zone.enemies and enemy.rarity in possible_rarity)]
+
+    for _ in range(enemy_count):
+
+        enemy = random.choice(available)
+
+        enemy_team.append(create_opponent(enemy.id))
+
+    return enemy_team

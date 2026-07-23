@@ -1,97 +1,38 @@
-from sac_a_dos import equip_from_inventory, use_item
 from ui import section
-from class_skill import SKILL_FUNCTIONS, get_target_name
-from display import display_equipment, display_inventory
+from display import display_player_team
+from combat import combat, generate_enemy_team, menu_inventory
+from class_zone import explore
+from save import save_game
 
-def menu_inventory(character, player_team, inventory):
-    display_equipment(character)
-    while True:
-        
-        display_inventory(inventory)
-        print("")
-        print("[1] Équiper")
-        print("[2] Utiliser objet")
-        print("[3] Retour")
-
-        choix = input("> ")
-
-        if choix == "1":
-            equip_from_inventory(character, inventory)
-
-        elif choix == "2":
-            use_item(player_team, inventory)
-
-        elif choix == "3":
-            return
-
-        else:
-            print("Choix invalide")
-
-def menu_tour(character, player_team, enemies, inventory):
+def menu_zone(character, player_team, inventory, enemy_pool, current_zone):
 
     while True:
 
         section("Actions")
-        print("[s] Skill")
-        print("[i] Inventaire")
-        print("[q] Fin du tour")
+        print("[1] Explorer")
+        print("[2] Equipe")
+        print("[3] Inventaire")
+        print("[4] Sauvegarder")
+        print("[5] Quitter")
 
         choix = input("> ").lower()
 
+        if choix == "1":
+            result = explore(current_zone)
 
-        # =====================
-        # SKILL
-        # =====================
-        if choix == "s":
-            menu_skill(character, player_team, enemies)
-            return "fin_tour"
+            if result and result["type"] == "combat":
 
-        # =====================
-        # INVENTAIRE
-        # =====================
-        elif choix == "i":
+                enemies = generate_enemy_team(current_zone)
+                combat(player_team, enemies, inventory, current_zone)
+
+        elif choix == "2":
+            display_player_team(player_team)
+
+        elif choix == "3":
             menu_inventory(character, player_team, inventory)
-            # on reste dans le tour
 
-        # =====================
-        # FIN VOLONTAIRE
-        # =====================
-        elif choix == "q":
-            return "fin_tour"
+        elif choix == "4":
+            save_game(player_team, inventory, enemy_pool)
 
         else:
             print("Choix invalide")
-
-
-def menu_skill(character, allies, enemies):
-
-    print(f"\nActions de {character.name}")
-
-    for i, skill in enumerate(character.skills, start=1):
-        print(f"{i}. {skill.name:<25} Coût : {skill.cost} - Cible {get_target_name(skill)}")
-   
-    print("0. Retour")
-
-    while True:
-
-        choix = input("> ")
-
-        if choix.isdigit():
-
-            choix = int(choix)
-
-            if choix == 0:
-                return None
-
-            skill = character.skills[choix - 1]
-
-            action = SKILL_FUNCTIONS.get(skill.id)
-
-            if action is None:
-                print(f"Compétence inconnue : {skill.id}")
-                return
-
-            action(character, allies, enemies, skill)
-            return
-
-        print("Choix invalide.")

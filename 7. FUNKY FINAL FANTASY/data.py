@@ -19,6 +19,16 @@ RARITY = {
 }
 
 
+SLOTS = {
+    "head": "tête",
+    "chest": "torse",
+    "hands": "mains",
+    "legs": "jambes",
+    "feet": "pieds",
+    "weapon": "arme",
+}
+
+
 RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
@@ -38,6 +48,8 @@ inventory = [
 ]
 
 ITEMS = {
+
+#---------------------------- Consommables ------------------------------------------------
     "phoenix_feather": {
         "id": "phoenix_feather",
         "name": "Plume de phénix",
@@ -47,7 +59,7 @@ ITEMS = {
         "effect": "resurrection",
         "healing": 50,
         "cost": 0
-        },
+    },
 
     "invigorating_potion": {
         "id": "invigorating_potion",
@@ -58,286 +70,528 @@ ITEMS = {
         "effect": "gain_life", 
         "healing": 80,
         "cost": 10
-        },
+    },
+
+#---------------------------- Tête ------------------------------------------------
+
+    "iron_helmet" : {
+        "id": "iron_helmet",
+        "name": "Casque de fer",
+        "description": "Parce qu'avec les casques, on a des têtes de gland.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "head", 
+        "rarity": "common", 
+        "bonus": {"defense": 5},
+        "scaling": 0.5,
+        "cost": 20
+    },
+
+    "black_hood" : {
+        "id": "black_hood",
+        "name": "Capuche noire",
+        "description": "Protège de la chaleur et des insectes.",
+        "type": "equipment", 
+        "class": ["magic", "hand-to-hand"], 
+        "slot": "hands", 
+        "rarity": "common", 
+        "bonus": {"power": 5, "speed": 5},
+        "scaling": 0.5,
+        "cost": 20
+    },
+
+    "shiny_helmet" : {
+        "id": "shiny_helmet",
+        "name": "Casque rutilant",
+        "description": "Quand on tape dessus, on obtient un mi majeur.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "head", 
+        "rarity": "uncommon", 
+        "bonus": {"life_max": 8, "defense": 5},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+    "mysterious_headband" : {
+        "id": "mysterious_headband",
+        "name": "Bandeau mystérieux",
+        "description": "Vous donne un air mystérieux.",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "head", 
+        "rarity": "uncommon", 
+        "bonus": {"mana_max": 8, "power": 5},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+
+    "great_golden_helm" : {
+        "id": "great_golden_helm",
+        "name": "Grand heaume d'or",
+        "description": "Une grande prestance vous est ajoutée.",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "head", 
+        "rarity": "rare", 
+        "bonus": {"life_max": 12, "power": 10, "defense": 8},
+        "scaling": 1,
+        "cost": 30
+    },
+
+    "new_moon_tiara" : {
+        "id": "new_moon_tiara",
+        "name": "Tiare de la nouvelle lune",
+        "description": "Un murmure apaisant s'en échappe...",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "head", 
+        "rarity": "rare", 
+        "bonus": {"mana_max": 15, "power": 10, "speed": 8},
+        "scaling": 1,
+        "cost": 30
+    },
+
+    "beyond_the_veil" : {
+        "id": "beyond_the_veil",
+        "name": "Au-delà du voile",
+        "description": "Une mélopée inquiétante s'en échappe...",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "head", 
+        "rarity": "epic", 
+        "bonus": {"mana_max": 20, "power": 12, "speed": 10},
+        "scaling": 1.5,
+        "cost": 30
+    },
+
+#---------------------------- Mains ------------------------------------------------
 
     "power_gloves" : {
         "id": "power_gloves",
         "name": "Gants de puissance",
-        "description": "+10 puissance",
+        "description": "Vous sentez la puissance entre vos mains !",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "mains", 
+        "slot": "hands", 
         "rarity": "common", 
-        "bonus": {"power" : 10},
+        "bonus": {"power": 10},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "ring_of_domination" : {
         "id": "ring_of_domination",
         "name": "Anneau de domination",
-        "description": "+10 puissance",
+        "description": "La pierre de cet anneau émet une curieuse lumière...",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "mains", 
+        "slot": "hands", 
         "rarity": "common", 
-        "bonus": {"power" : 10},
+        "bonus": {"power": 5, "speed": 5},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "shiny_gloves" : {
         "id": "shiny_gloves",
         "name": "Gants rutilants",
-        "description": "+20 vie maximum",
+        "description": "Protège bien vos doigts.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "hands", 
+        "rarity": "uncommon", 
+        "bonus": {"life_max": 8, "defense": 5},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+    "immaculate_gloves" : {
+        "id": "immaculate_gloves",
+        "name": "Gants immaculés",
+        "description": "Vous imprègne d'une force tranquille.",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "hands", 
+        "rarity": "uncommon", 
+        "bonus": {"mana_max": 8, "power": 5},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+    "cosmic_mittens" : {
+        "id": "cosmic_mittens",
+        "name": "Gants cosmiques",
+        "description": "Vous contrôlez la galaxie !",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "hands", 
+        "rarity": "rare", 
+        "bonus": {"mana_max": 10, "power": 5, "speed": 5},
+        "scaling": 0.75,
+        "cost": 50
+    },
+
+    "obsidian_ring" : {
+        "id": "obsidian_ring",
+        "name": "Anneau d'obsidienne",
+        "description": "La noirceur vous va si bien...",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "hands", 
+        "rarity": "rare", 
+        "bonus": {"life_max": 10, "power": 5, "defense": 5},
+        "scaling": 1,
+        "cost": 50
+    },
+
+    "black_phillips_signed_ring" : {
+        "id": "black_phillips_signed_ring",
+        "name": "Chevalière de Black Phillip",
+        "description": "Vous aimez vivre délicieusement.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "hands", 
+        "rarity": "epic", 
+        "bonus": {"power": 15, "speed": 15, "defense": 5},
+        "scaling": 1.5,
+        "cost": 70
+    },
+
+#---------------------------- Jambes ------------------------------------------------
+
+    "chainmail_trousers" : {
+        "id": "chainmail_trousers",
+        "name": "Pantalon cotte-de-maille",
+        "description": "Très prisé dans certaines soirées.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "legs", 
+        "rarity": "common", 
+        "bonus": {"defense": 8},
+        "scaling": 0.5,
+        "cost": 20
+    },
+
+    "black_trousers" : {
+        "id": "black_trousers",
+        "name": "Pantalon noir",
+        "description": "Un classique indémodable.",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "mains", 
+        "slot": "legs", 
+        "rarity": "common", 
+        "bonus": {"power": 7, "speed": 7},
+        "scaling": 0.5,
+        "cost": 20
+    },
+
+    "iron_thigh_guard" : {
+        "id": "iron_thigh_guard",
+        "name": "Cuissard en fer",
+        "description": "Quand on tape dessus, on obtient un sol bémol majeur.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "legs", 
         "rarity": "uncommon", 
-        "bonus": {"life_max" : 20},
+        "bonus": {"life_max": 10, "defense": 8},
+        "scaling": 0.75,
         "cost": 30
-        },
+    },
+
+    "star_patterned_hose" : {
+        "id": "star_patterned hose",
+        "name": "Chausses étoilées",
+        "description": "Pour des cuisses qui mettent des étoiles plein les yeux !",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "legs", 
+        "rarity": "uncommon", 
+        "bonus": {"mana_max": 15, "power": 8},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+
+    "levis_501" : {
+        "id": "levis_501",
+        "name": "Levis 501",
+        "description": "Est-ce nécessaire de le présenter ?",
+        "type": "equipment", 
+        "class": ["magic", "hand-to-hand"], 
+        "slot": "legs", 
+        "rarity": "rare", 
+        "bonus": {"power": 10, "speed": 8, "defense": 12},
+        "scaling": 1,
+        "cost": 50
+    },
+
+#---------------------------- Pieds ------------------------------------------------
 
     "winged_boots" : {
         "id": "winged_boots",
         "name": "Bottes ailées",
-        "description": "+3 vitesse",
+        "description": "Les bottes-qui-courent-vite !",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "pieds", 
+        "slot": "feet", 
         "rarity": "common", 
-        "bonus": {"speed" : 3},
+        "bonus": {"speed": 3},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "red_shoes" : {
         "id": "red_shoes",
         "name": "Souliers rouges",
-        "description": "+5 vitesse",
+        "description": "Jolies et rapides.",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "pieds", 
+        "slot": "feet", 
         "rarity": "uncommon", 
         "bonus": {"speed" : 5},
+        "scaling": 0.75,
         "cost": 30
-        },
+    },
 
     "seven_league_boots" : {
         "id": "seven_league_boots",
         "name": "Bottes de 7 lieues",
-        "description": "+7 vitesse",
+        "description": "Est-ce nécessaire de les présenter ?",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "pieds", 
+        "slot": "feet", 
         "rarity": "rare", 
-        "bonus": {"speed" : 7},
-        "cost": 40
-        },
+        "bonus": {"speed" : 8},
+        "scaling": 1,
+        "cost": 50
+    },
+
+    "light_infused_shoes" : {
+        "id": "light_infused_shoes",
+        "name": "Chaussures infusées de lumière",
+        "description": "La vitesse de la lumière dans un accessoire de mode.",
+        "type": "equipment", 
+        "class": ["magic", "hand-to-hand"], 
+        "slot": "feet", 
+        "rarity": "epic", 
+        "bonus": {"power": 10, "speed" : 10},
+        "scaling": 1.5,
+        "cost": 70
+    },
+
+#---------------------------- Torse ------------------------------------------------
 
     "embroidered_robe" : {
         "id": "embroidered_robe",
         "name": "Robe brodée",
-        "description": "+10 mana maximum",
+        "description": "Brodée à la main avec du fil de qualité.",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "common", 
-        "bonus": {"mana_max" : 10},
+        "bonus": {"mana_max": 10},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "wizard_robe" : {
         "id": "wizard_robe",
         "name": "Robe de sorcier",
-        "description": "+20 mana maximum",
+        "description": "Une robe de sorcier de seconde main. Très bon état. Merci Vinted !",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "uncommon", 
-        "bonus": {"mana_max" : 20},
+        "bonus": {"mana_max": 15, "power": 5},
+        "scaling": 0.75,
         "cost": 30
-        },
+    },
 
     "force_field" : {
         "id": "force_field",
         "name": "Champ de force",
-        "description": "+40 vie maximum",
+        "description": "BzZZzBzZZz...",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "rare", 
-        "bonus": {"life_max" : 40},
-        "cost": 40
-        },
+        "bonus": {"mana_max": 20, "power": 10, "defense": 5},
+        "scaling": 1,
+        "cost": 50
+    },
 
     "radiance" : {
         "id": "radiance",
         "name": "Radiance",
-        "description": "+60 vie maximum",
+        "description": "Lunettes de soleil obligatoires !",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "epic", 
-        "bonus": {"life_max" : 60},
+        "bonus": {"mana_max": 25, "power": 10, "defense": 10},
+        "scaling": 1.5,
         "cost": 70
-        },
-
-    "iron_sword" : {
-        "id": "iron_sword",
-        "name": "Epée de fer",
-        "description": "+10 puissance brute",
-        "type": "equipment", 
-        "class": ["hand-to-hand"], 
-        "slot": "arme", 
-        "rarity": "common", 
-        "bonus": {"power" : 10},
-        "cost": 20
-        },
-
-    "claymore" : {
-        "id": "claymore",
-        "name": "Claymore",
-        "description": "+20 puissance brute",
-        "type": "equipment", 
-        "class": ["hand-to-hand"], 
-        "slot": "arme", 
-        "rarity": "uncommon", 
-        "bonus": {"power" : 20},
-        "cost": 30
-        },
-
-    "scimitar" : {
-        "id": "scimitar",
-        "name": "Cimeterre",
-        "description": "+40 puissance brute",
-        "type": "equipment", 
-        "class": ["hand-to-hand"], 
-        "slot": "arme", 
-        "rarity": "rare", 
-        "bonus": {"power" : 40},
-        "cost": 40
-        },
+    },
 
     "iron_breastplate" : {
         "id": "iron_breastplate",
         "name": "Plastron de fer",
-        "description": "+20 vie maximum",
+        "description": "Un honnête plastron de fer.",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "common", 
         "bonus": {"life_max" : 20},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "shiny_breastplate" : {
         "id": "shiny_breastplate",
         "name": "Plastron rutilant",
-        "description": "+30 vie maximum",
+        "description": "Ouh ça brille !",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "uncommon", 
-        "bonus": {"life_max" : 30},
+        "bonus": {"life_max": 10, "defense" : 5},
+        "scaling": 0.75,
         "cost": 30
-        },
+    },
 
     "the_kings_breastplate" : {
         "id" : "the_kings_breastplate",
         "name": "Plastron du Roi",
-        "description": "+40 vie maximum",
+        "description": "Orné de symboles à la feuille d'or.",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
-        "slot": "armure", 
+        "slot": "chest", 
         "rarity": "rare", 
-        "bonus": {"life_max" : 40},
-        "cost": 40
-        },
+        "bonus": {"life_max": 15, "power": 10, "defense" : 10},
+        "scaling": 1,
+        "cost": 50
+    },
 
+    "dark_armor" : {
+        "id" : "dark_armor",
+        "name": "Armure sombre",
+        "description": "Une énergie maléfique s'en dégage...",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "chest", 
+        "rarity": "epic", 
+        "bonus": {"life_max": 20, "power": 15, "defense" : 15},
+        "scaling": 1.5,
+        "cost": 70
+    },
+
+#---------------------------- Armes ------------------------------------------------
+
+    "iron_sword" : {
+        "id": "iron_sword",
+        "name": "Epée de fer",
+        "description": "Une épée ordinaire.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "weapon", 
+        "rarity": "common", 
+        "bonus": {"power" : 10},
+        "scaling": 0.5,
+        "cost": 20
+    },
+
+    "claymore" : {
+        "id": "claymore",
+        "name": "Claymore",
+        "description": "Une épée imposante.",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "weapon", 
+        "rarity": "uncommon", 
+        "bonus": {"power" : 20},
+        "scaling": 0.75,
+        "cost": 30
+    },
+
+    "scimitar" : {
+        "id": "scimitar",
+        "name": "Cimeterre",
+        "description": "Tu l'as vu ma grosse lame ?",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "weapon", 
+        "rarity": "rare", 
+        "bonus": {"power" : 30, "speed": 10},
+        "scaling": 1,
+        "cost": 50
+    },
+
+    "memento_mori" : {
+        "id": "memento_mori",
+        "name": "Memento Mori",
+        "description": "Rappelle-toi que tu vas mourir...",
+        "type": "equipment", 
+        "class": ["hand-to-hand"], 
+        "slot": "weapon", 
+        "rarity": "epic", 
+        "bonus": {"life_max": 10, "power" : 35, "speed": 12},
+        "scaling": 1.5,
+        "cost": 70
+    },
+    
     "shiny_staff" : {
         "id": "shiny_staff",
         "name": "Bâton brillant",
-        "description": "+10 puissance magique",
+        "description": "Un bâton qui brille.",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "arme", 
+        "slot": "weapon", 
         "rarity": "common", 
         "bonus": {"power" : 10},
+        "scaling": 0.5,
         "cost": 20
-        },
+    },
 
     "lunar_scepter" : {
         "id": "lunar_scepter",
         "name": "Sceptre lunaire",
-        "description": "+20 puissance magique",
+        "description": "Il y a une lune argentée au bout.",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "arme", 
+        "slot": "weapon", 
         "rarity": "uncommon", 
-        "bonus": {"power" : 20},
+        "bonus": {"power" : 15, "speed": 5},
+        "scaling": 0.75,
         "cost": 30
-        },
+    },
 
     "solar_orb" : {
         "id": "solar_orb",
         "name": "Orbe solaire",
-        "description": "+30 puissance magique",
+        "description": "Il émet des rayonnements flamboyants.",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "arme", 
+        "slot": "weapon", 
         "rarity": "rare", 
-        "bonus": {"power" : 30},
-        "cost": 40
-        },
+        "bonus": {"power" : 20, "speed": 10},
+        "scaling": 1,
+        "cost": 50
+    },
 
-    "cosmic_vortex" : {
-        "id": "cosmic_vortex",
-        "name": "Vortex cosmique",
-        "description": "+50 puissance magique",
+    "nothingness" : {
+        "id": "nothingness",
+        "name": "Néant",
+        "description": "Un puissant vide de désespoir...",
         "type": "equipment", 
         "class": ["magic"], 
-        "slot": "arme", 
+        "slot": "weapon", 
         "rarity": "epic", 
-        "bonus": {"power" : 50},
+        "bonus": {"mana_max": 15, "power" : 25, "speed": 15},
+        "scaling": 1.5,
         "cost": 70
-        }
     }
-
-loot_tables = {
-    "basic" : [
-        {"id" : "winged_boots", "chance" : 0.8},
-        {"id" : "power_gloves", "chance" : 0.8},
-        {"id" : "embroidered_robe", "chance" : 0.6}, 
-        {"id" : "iron_sword", "chance" : 0.5},
-        {"id" : "shiny_staff", "chance" : 0.5},
-        {"id" : "iron_breastplate", "chance" : 0.6},
-        {"id" : "shiny_breastplate", "chance" : 0.2},
-        {"id" : "claymore", "chance" : 0.2},
-        {"id" : "wizard_robe", "chance" : 0.2},
-        {"id" : "lunar_scepter", "chance" : 0.2}
-        ],
-
-    "improved" : [
-        {"id" : "ring_of_domination", "chance" : 0.8},
-        {"id" : "invigorating_potion", "chance" : 0.5},
-        {"id" : "red_shoes", "chance" : 0.6}, 
-        {"id" : "wizard_robe", "chance" : 0.5},
-        {"id" : "lunar_scepter", "chance" : 0.5},
-        {"id" : "shiny_breastplate", "chance" : 0.6},
-        {"id" : "claymore", "chance" : 0.5},
-        {"id" : "solar_orb", "chance" : 0.2},
-        {"id" : "the_kings_breastplate", "chance" : 0.2}
-        ],
-
-    "rare" : [
-        {"id" : "seven_league_boots", "chance" : 0.6},
-        {"id" : "phoenix_feather", "chance" : 0.4},
-        {"id" : "force_field", "chance" : 0.6}, 
-        {"id" : "scimitar", "chance" : 0.5},
-        {"id" : "lunar_scepter", "chance" : 0.5},
-        {"id" : "solar_orb", "chance" : 0.6},
-        {"id" : "the_kings_breastplate", "chance" : 0.6},
-        {"id" : "cosmic_vortex", "chance" : 0.2},
-        {"id" : "radiance", "chance" : 0.2}
-        ]
 }
 
 player_team = []

@@ -2,10 +2,9 @@ import traceback
 from ui import header
 from data import inventory
 from display import display_inventory, display_character
-from combat import combat
 from save import load_game, new_game
 from class_zone import ZONES
-from exploration import explore_zone
+from menu import menu_zone
 
 
 try:
@@ -31,9 +30,7 @@ try:
         header(current_zone.name)
         print(current_zone.description)  
 
-        enemy = explore_zone(current_zone)
-
-    combat(player_team, [enemy], inventory)
+    menu_zone(character, player_team, inventory, enemy_pool, current_zone)
 
 except Exception as e:
     traceback.print_exc()

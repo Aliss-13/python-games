@@ -88,3 +88,22 @@ def display_character(character):
     print(f"Puissance : {stats['power']}") 
     print(f"Vitesse : {stats['speed']}")
     print(f"Défense : {stats['defense']}")
+
+
+def display_player_team(player_team):
+
+    for character in player_team:
+        separator()
+        header(f"{character.name}")
+        stats = character.base_stats
+        print(f"PV : {character.life}/{stats['life_max']}")
+        
+        if character.mana is not None:
+            print(f"Mana : {character.mana}/{stats['mana_max']}")
+        print(f"Puissance : {stats['power']}") 
+        print(f"Vitesse : {stats['speed']}")
+        print(f"Défense : {stats['defense']}")
+
+        separator()
+        display_equipment(character)
+
