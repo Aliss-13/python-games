@@ -81,6 +81,9 @@ class Character:
             bonus=data.get("bonus", {})
         )
 
+    def __repr__(self):
+        return f"{self.name} (lvl {self.level})"
+
     
 CLASS = ["magic", "hand-to-hand", "distance"]
     

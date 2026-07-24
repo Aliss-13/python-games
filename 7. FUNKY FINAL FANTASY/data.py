@@ -43,7 +43,11 @@ RESET = "\033[0m"
 inventory = [
     {
         "id": "phoenix_feather",
-        "quantity": 1
+        "quantity": 1,
+        "type": "consumable",
+        "rarity": "rare",
+        "quantity": 1,
+        "item_level": 1,
     }
 ]
 
@@ -51,10 +55,9 @@ ITEMS = {
 
 #---------------------------- Consommables ------------------------------------------------
     "phoenix_feather": {
-        "id": "phoenix_feather",
         "name": "Plume de phénix",
         "description": "Résurrection personnage avec 50 PV",
-        "type": "consommable", 
+        "type": "consumable", 
         "rarity": "rare", 
         "effect": "resurrection",
         "healing": 50,
@@ -62,10 +65,9 @@ ITEMS = {
     },
 
     "invigorating_potion": {
-        "id": "invigorating_potion",
         "name": "Potion revigorante",
         "description": "+80 PV",
-        "type": "consommable", 
+        "type": "consumable", 
         "rarity": "uncommon", 
         "effect": "gain_life", 
         "healing": 80,
@@ -75,7 +77,6 @@ ITEMS = {
 #---------------------------- Tête ------------------------------------------------
 
     "iron_helmet" : {
-        "id": "iron_helmet",
         "name": "Casque de fer",
         "description": "Parce qu'avec les casques, on a des têtes de gland.",
         "type": "equipment", 
@@ -88,12 +89,11 @@ ITEMS = {
     },
 
     "black_hood" : {
-        "id": "black_hood",
         "name": "Capuche noire",
         "description": "Protège de la chaleur et des insectes.",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
-        "slot": "hands", 
+        "slot": "head", 
         "rarity": "common", 
         "bonus": {"power": 5, "speed": 5},
         "scaling": 0.5,
@@ -101,7 +101,6 @@ ITEMS = {
     },
 
     "shiny_helmet" : {
-        "id": "shiny_helmet",
         "name": "Casque rutilant",
         "description": "Quand on tape dessus, on obtient un mi majeur.",
         "type": "equipment", 
@@ -114,7 +113,6 @@ ITEMS = {
     },
 
     "mysterious_headband" : {
-        "id": "mysterious_headband",
         "name": "Bandeau mystérieux",
         "description": "Vous donne un air mystérieux.",
         "type": "equipment", 
@@ -128,9 +126,8 @@ ITEMS = {
 
 
     "great_golden_helm" : {
-        "id": "great_golden_helm",
         "name": "Grand heaume d'or",
-        "description": "Une grande prestance vous est ajoutée.",
+        "description": "Vous gagnez 20 cm ! Non, pas là, non...",
         "type": "equipment", 
         "class": ["magic"], 
         "slot": "head", 
@@ -141,9 +138,8 @@ ITEMS = {
     },
 
     "new_moon_tiara" : {
-        "id": "new_moon_tiara",
         "name": "Tiare de la nouvelle lune",
-        "description": "Un murmure apaisant s'en échappe...",
+        "description": "Vous vous sentez une âme de princesse.",
         "type": "equipment", 
         "class": ["magic"], 
         "slot": "head", 
@@ -154,7 +150,6 @@ ITEMS = {
     },
 
     "beyond_the_veil" : {
-        "id": "beyond_the_veil",
         "name": "Au-delà du voile",
         "description": "Une mélopée inquiétante s'en échappe...",
         "type": "equipment", 
@@ -169,7 +164,6 @@ ITEMS = {
 #---------------------------- Mains ------------------------------------------------
 
     "power_gloves" : {
-        "id": "power_gloves",
         "name": "Gants de puissance",
         "description": "Vous sentez la puissance entre vos mains !",
         "type": "equipment", 
@@ -182,7 +176,6 @@ ITEMS = {
     },
 
     "ring_of_domination" : {
-        "id": "ring_of_domination",
         "name": "Anneau de domination",
         "description": "La pierre de cet anneau émet une curieuse lumière...",
         "type": "equipment", 
@@ -195,7 +188,6 @@ ITEMS = {
     },
 
     "shiny_gloves" : {
-        "id": "shiny_gloves",
         "name": "Gants rutilants",
         "description": "Protège bien vos doigts.",
         "type": "equipment", 
@@ -208,7 +200,6 @@ ITEMS = {
     },
 
     "immaculate_gloves" : {
-        "id": "immaculate_gloves",
         "name": "Gants immaculés",
         "description": "Vous imprègne d'une force tranquille.",
         "type": "equipment", 
@@ -221,7 +212,6 @@ ITEMS = {
     },
 
     "cosmic_mittens" : {
-        "id": "cosmic_mittens",
         "name": "Gants cosmiques",
         "description": "Vous contrôlez la galaxie !",
         "type": "equipment", 
@@ -234,7 +224,6 @@ ITEMS = {
     },
 
     "obsidian_ring" : {
-        "id": "obsidian_ring",
         "name": "Anneau d'obsidienne",
         "description": "La noirceur vous va si bien...",
         "type": "equipment", 
@@ -247,7 +236,6 @@ ITEMS = {
     },
 
     "black_phillips_signed_ring" : {
-        "id": "black_phillips_signed_ring",
         "name": "Chevalière de Black Phillip",
         "description": "Vous aimez vivre délicieusement.",
         "type": "equipment", 
@@ -262,7 +250,6 @@ ITEMS = {
 #---------------------------- Jambes ------------------------------------------------
 
     "chainmail_trousers" : {
-        "id": "chainmail_trousers",
         "name": "Pantalon cotte-de-maille",
         "description": "Très prisé dans certaines soirées.",
         "type": "equipment", 
@@ -275,7 +262,6 @@ ITEMS = {
     },
 
     "black_trousers" : {
-        "id": "black_trousers",
         "name": "Pantalon noir",
         "description": "Un classique indémodable.",
         "type": "equipment", 
@@ -288,7 +274,6 @@ ITEMS = {
     },
 
     "iron_thigh_guard" : {
-        "id": "iron_thigh_guard",
         "name": "Cuissard en fer",
         "description": "Quand on tape dessus, on obtient un sol bémol majeur.",
         "type": "equipment", 
@@ -301,7 +286,6 @@ ITEMS = {
     },
 
     "star_patterned_hose" : {
-        "id": "star_patterned hose",
         "name": "Chausses étoilées",
         "description": "Pour des cuisses qui mettent des étoiles plein les yeux !",
         "type": "equipment", 
@@ -315,7 +299,6 @@ ITEMS = {
 
 
     "levis_501" : {
-        "id": "levis_501",
         "name": "Levis 501",
         "description": "Est-ce nécessaire de le présenter ?",
         "type": "equipment", 
@@ -330,7 +313,6 @@ ITEMS = {
 #---------------------------- Pieds ------------------------------------------------
 
     "winged_boots" : {
-        "id": "winged_boots",
         "name": "Bottes ailées",
         "description": "Les bottes-qui-courent-vite !",
         "type": "equipment", 
@@ -343,9 +325,8 @@ ITEMS = {
     },
 
     "red_shoes" : {
-        "id": "red_shoes",
         "name": "Souliers rouges",
-        "description": "Jolies et rapides.",
+        "description": "Elles sont vernies avec un joli noeud. Pas très quête fantastique tout ça...",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
         "slot": "feet", 
@@ -356,7 +337,6 @@ ITEMS = {
     },
 
     "seven_league_boots" : {
-        "id": "seven_league_boots",
         "name": "Bottes de 7 lieues",
         "description": "Est-ce nécessaire de les présenter ?",
         "type": "equipment", 
@@ -369,7 +349,6 @@ ITEMS = {
     },
 
     "light_infused_shoes" : {
-        "id": "light_infused_shoes",
         "name": "Chaussures infusées de lumière",
         "description": "La vitesse de la lumière dans un accessoire de mode.",
         "type": "equipment", 
@@ -384,7 +363,6 @@ ITEMS = {
 #---------------------------- Torse ------------------------------------------------
 
     "embroidered_robe" : {
-        "id": "embroidered_robe",
         "name": "Robe brodée",
         "description": "Brodée à la main avec du fil de qualité.",
         "type": "equipment", 
@@ -397,7 +375,6 @@ ITEMS = {
     },
 
     "wizard_robe" : {
-        "id": "wizard_robe",
         "name": "Robe de sorcier",
         "description": "Une robe de sorcier de seconde main. Très bon état. Merci Vinted !",
         "type": "equipment", 
@@ -410,7 +387,6 @@ ITEMS = {
     },
 
     "force_field" : {
-        "id": "force_field",
         "name": "Champ de force",
         "description": "BzZZzBzZZz...",
         "type": "equipment", 
@@ -423,7 +399,6 @@ ITEMS = {
     },
 
     "radiance" : {
-        "id": "radiance",
         "name": "Radiance",
         "description": "Lunettes de soleil obligatoires !",
         "type": "equipment", 
@@ -436,7 +411,6 @@ ITEMS = {
     },
 
     "iron_breastplate" : {
-        "id": "iron_breastplate",
         "name": "Plastron de fer",
         "description": "Un honnête plastron de fer.",
         "type": "equipment", 
@@ -449,9 +423,8 @@ ITEMS = {
     },
 
     "shiny_breastplate" : {
-        "id": "shiny_breastplate",
         "name": "Plastron rutilant",
-        "description": "Ouh ça brille !",
+        "description": "On peut s'admirer dedans.",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
         "slot": "chest", 
@@ -462,7 +435,6 @@ ITEMS = {
     },
 
     "the_kings_breastplate" : {
-        "id" : "the_kings_breastplate",
         "name": "Plastron du Roi",
         "description": "Orné de symboles à la feuille d'or.",
         "type": "equipment", 
@@ -475,7 +447,6 @@ ITEMS = {
     },
 
     "dark_armor" : {
-        "id" : "dark_armor",
         "name": "Armure sombre",
         "description": "Une énergie maléfique s'en dégage...",
         "type": "equipment", 
@@ -490,7 +461,6 @@ ITEMS = {
 #---------------------------- Armes ------------------------------------------------
 
     "iron_sword" : {
-        "id": "iron_sword",
         "name": "Epée de fer",
         "description": "Une épée ordinaire.",
         "type": "equipment", 
@@ -503,7 +473,6 @@ ITEMS = {
     },
 
     "claymore" : {
-        "id": "claymore",
         "name": "Claymore",
         "description": "Une épée imposante.",
         "type": "equipment", 
@@ -516,7 +485,6 @@ ITEMS = {
     },
 
     "scimitar" : {
-        "id": "scimitar",
         "name": "Cimeterre",
         "description": "Tu l'as vu ma grosse lame ?",
         "type": "equipment", 
@@ -529,7 +497,6 @@ ITEMS = {
     },
 
     "memento_mori" : {
-        "id": "memento_mori",
         "name": "Memento Mori",
         "description": "Rappelle-toi que tu vas mourir...",
         "type": "equipment", 
@@ -542,9 +509,8 @@ ITEMS = {
     },
     
     "shiny_staff" : {
-        "id": "shiny_staff",
         "name": "Bâton brillant",
-        "description": "Un bâton qui brille.",
+        "description": "Très tendance aux concerts de Coldplay.",
         "type": "equipment", 
         "class": ["magic"], 
         "slot": "weapon", 
@@ -555,7 +521,6 @@ ITEMS = {
     },
 
     "lunar_scepter" : {
-        "id": "lunar_scepter",
         "name": "Sceptre lunaire",
         "description": "Il y a une lune argentée au bout.",
         "type": "equipment", 
@@ -568,9 +533,8 @@ ITEMS = {
     },
 
     "solar_orb" : {
-        "id": "solar_orb",
         "name": "Orbe solaire",
-        "description": "Il émet des rayonnements flamboyants.",
+        "description": "Il émet des rayons flamboyants.",
         "type": "equipment", 
         "class": ["magic"], 
         "slot": "weapon", 
@@ -581,7 +545,6 @@ ITEMS = {
     },
 
     "nothingness" : {
-        "id": "nothingness",
         "name": "Néant",
         "description": "Un puissant vide de désespoir...",
         "type": "equipment", 

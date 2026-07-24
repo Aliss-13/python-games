@@ -83,186 +83,209 @@ SKILL_FUNCTIONS = {
 
 SKILLS = [
 
-    # GUERRIER
+#------------------------------------------ THE VVITCH ------------------------------------------------
 
-        Skill(
-            id="attack",
-            name="Attaque",
-            cost=0,
-            target="opponent",
-            actions=["damage"],
-            power=10,
-            damage_type="physical",
-            effects=[],
-            
-        ),
+    Skill(
+        id="corruption",
+        name="Corruption",
+        cost=0,
+        target="opponents",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="corruption", chance=1, target="skill_target")]
+    ),
 
-        Skill(
-            id="powerful_blow",
-            name="Coup puissant",
-            cost=10,
-            target="opponent",
-            actions=["damage", "apply_effect"],
-            power=30,
-            damage_type="physical",
-            effects=[
-                SkillEffect(
-                    effect_id="shield",
-                    chance=0.4,
-                    target="self"
-                    )
-            ]
-        ),
+    Skill(
+        id="dark_ritual",
+        name="Rituel sombre",
+        cost=0,
+        target="opponents",
+        actions=["damage", "apply_effect"],
+        power=20,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="dread", chance=0.4, target="skill_target")]
+    ),
 
-        Skill(
-            id="spinning_attack",
-            name="Attaque tournoyante",
-            cost=15,
-            target="opponents",
-            actions=["damage"],
-            power=20,
-            damage_type="physical",
-            effects=[]
-        ),
+    Skill(
+        id="sacrifice",
+        name="Sacrifice",
+        cost=15,
+        target="opponents",
+        actions=["damage", "apply_effect"],
+        power=30,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="hemmorhage", chance=1, target="skill_target")]
+    ),
 
-        Skill(
-            id="war_cry",
-            name="Cri de guerre",
-            cost=0,
-            target="self",
-            actions=["apply_effect"],
-            power=20,
-            effects=[
-                SkillEffect(
-                    effect_id="taunt",
-                    chance=1,
-                    target="skill_target"
-                    )
-            ]
-        ),
+#------------------------------------------ BLACK PHILLIP ------------------------------------------------
 
+    Skill(
+        id="charge",
+        name="Charge",
+        cost=0,
+        target="opponent",
+        actions=["damage"],
+        power=10,
+        damage_type="physical",
+        effects=[],
+    ),
 
-    # MAGE
+    Skill(
+        id="dark_stare",
+        name="Regard noir",
+        cost=0,
+        target="opponents",
+        actions=["apply_effect"],
+        effects=[SkillEffect(effect_id="dread", chance=1, target="skill_target")]
+    ),
 
-        Skill(
-            id="spark",
-            name="Etincelle",
-            cost=0,
-            target="opponent",
-            actions=["damage"],
-            power=10,
-            damage_type="magical",
-            effects=[]
-        ),
-
-        Skill(
-            id="fireball",
-            name="Boule de feu",
-            cost=10,
-            target="opponent",
-            actions=["damage", "apply_effect"],
-            power=30,
-            damage_type="magical",
-            effects=[
-                SkillEffect(
-                    effect_id="burn",
-                    chance=0.3,
-                    target="skill_target"
-                    )
-            ]
-        ),
-
-        Skill(
-            id="pyrotechnic_explosion",
-            name="Explosion pyrotechnique",
-            cost=15,
-            target="opponents",
-            actions=["damage"],
-            power=20,
-            damage_type="magical",
-            effects=[]
-        ),
-
-        Skill(
-            id="greek_fire",
-            name="Feu grégeois",
-            cost=10,
-            target="opponent",
-            actions=["damage"],
-            power=80,
-            damage_type="magical",
-            effects=[
-                SkillEffect(
-                effect_id="greek_fire",
-                chance=1,
-                target="skill_target"
-                )
-            ]
-        ),
+    Skill(
+        id="black_flame",
+        name="Flamme noire",
+        cost=15,
+        target="opponents",
+        actions=["damage", "apply_effect"],
+        power=20,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")]
+    ),
 
 
-    # PRETRE
+#------------------------------------------ GUERRIER ------------------------------------------------
 
-        Skill(
-            id="simple_healing",
-            name="Soin simple",
-            cost=0,
-            target="ally",
-            actions=["heal"],
-            power=20,
-            effects=[]
-        ),
+    Skill(
+        id="attack",
+        name="Attaque",
+        cost=0,
+        target="opponent",
+        actions=["damage"],
+        power=10,
+        damage_type="physical",
+        effects=[],
+    ),
 
-        Skill(
-            id="blessing",
-            name="Bénédiction",
-            cost=10,
-            target="allies",
-            actions=["heal", "apply_effect"],
-            power=10,
-            effects=[
-                SkillEffect(
-                    effect_id="regeneration",
-                    chance=0.4, 
-                    target="ally"
-                    )
-            ]
-        ),
+    Skill(
+        id="powerful_blow",
+        name="Coup puissant",
+        cost=10,
+        target="opponent",
+        actions=["damage", "apply_effect"],
+        power=30,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="shield", chance=0.4, target="self")]
+    ),
 
-        Skill(
-            id="radiant_protection",
-            name="Protection radieuse",
-            cost=0,
-            target="allies",
-            actions=["apply_effect"],
-            power=10,
-            effects=[
-                SkillEffect(
-                    effect_id="light_prism",
-                    chance=1,
-                    target="allies"
-                    )
-            ]
-        ),
+    Skill(
+        id="spinning_attack",
+        name="Attaque tournoyante",
+        cost=15,
+        target="opponents",
+        actions=["damage"],
+        power=20,
+        damage_type="physical",
+        effects=[]
+    ),
 
-        Skill(
-            id="penance",
-            name="Pénitence",
-            cost=10,
-            target="opponent",
-            actions=["damage"],
-            power=20,
-            damage_type="magical",
-            effects=[
-                SkillEffect(
-                    effect_id="melancholy",
-                    chance=0.3, 
-                    target="opponent"
-                    )
-            ]
-        ),
+    Skill(
+        id="war_cry",
+        name="Cri de guerre",
+        cost=0,
+        target="self",
+        actions=["apply_effect"],
+        power=20,
+        effects=[SkillEffect(effect_id="taunt", chance=1, target="skill_target")]
+    ),
+
+#------------------------------------------ MAGE ------------------------------------------------
+
+    Skill(
+        id="spark",
+        name="Etincelle",
+        cost=0,
+        target="opponent",
+        actions=["damage"],
+        power=10,
+        damage_type="magical",
+        effects=[]
+    ),
+
+    Skill(
+        id="fireball",
+        name="Boule de feu",
+        cost=10,
+        target="opponent",
+        actions=["damage", "apply_effect"],
+        power=30,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")]
+    ),
+
+    Skill(
+        id="pyrotechnic_explosion",
+        name="Explosion pyrotechnique",
+        cost=15,
+        target="opponents",
+        actions=["damage"],
+        power=20,
+        damage_type="magical",
+        effects=[]
+    ),
+
+    Skill(
+        id="greek_fire",
+        name="Feu grégeois",
+        cost=10,
+        target="opponent",
+        actions=["damage"],
+        power=80,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="greek_fire", chance=1, target="skill_target")]
+    ),
+
+#------------------------------------------ PRETRE ------------------------------------------------
+
+    Skill(
+        id="simple_healing",
+        name="Soin simple",
+        cost=0,
+        target="ally",
+        actions=["heal"],
+        power=20,
+        effects=[]
+    ),
+
+    Skill(
+        id="blessing",
+        name="Bénédiction",
+        cost=10,
+        target="allies",
+        actions=["heal", "apply_effect"],
+        power=10,
+        effects=[SkillEffect(effect_id="regeneration", chance=0.4, target="ally")]
+    ),
+
+    Skill(
+        id="radiant_protection",
+        name="Protection radieuse",
+        cost=0,
+        target="allies",
+        actions=["apply_effect"],
+        power=10,
+        effects=[SkillEffect(effect_id="light_prism", chance=1, target="allies")]
+    ),
+
+    Skill(
+        id="penance",
+        name="Pénitence",
+        cost=10,
+        target="opponent",
+        actions=["damage"],
+        power=20,
+        damage_type="magical",
+        effects=[SkillEffect(effect_id="melancholy", chance=0.3, target="opponent")]
+    ),
 ]
-
 
 
 

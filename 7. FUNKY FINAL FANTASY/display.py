@@ -4,7 +4,7 @@ from ui import header, separator
 def display_item(item):
 
     item_id = item["id"]
-
+    
     if item_id not in ITEMS:
         print("Objet inconnu")
         return
@@ -17,11 +17,14 @@ def display_item(item):
     reset = "\033[0m"
 
     print(
-        f"{couleur}{data_item['name']} "
-        f"({RARITY[rarity]}){reset} "
-        f"x{item['quantity']} - "
-        f"{DIM}{data_item['description']}{RESET}"
-    )
+        f"{couleur}{data_item['name']} ({RARITY[rarity]}){reset} x{item['quantity']} - {DIM}{data_item['description']}{RESET}")
+    
+    
+    if item["type"] == "equipment":
+        print(f" Niveau : {item['item_level']}")
+
+        for stat, value in item["bonus"].items():
+            print(f" {stat} : +{value}")
 
 
 def display_inventory(inventory):

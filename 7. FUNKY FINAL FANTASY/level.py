@@ -29,6 +29,7 @@ def scale_opponent(player_team, opponent):
 
 
 def scale_enemy_team(player_team, enemy_team):
+
     return [scale_opponent(player_team, enemy) for enemy in enemy_team]
 
 

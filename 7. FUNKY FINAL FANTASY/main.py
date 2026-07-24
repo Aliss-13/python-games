@@ -2,7 +2,7 @@ import traceback
 from ui import header
 from data import inventory
 from display import display_inventory, display_character
-from save import load_game, new_game
+from class_savemanager import SaveManager
 from class_zone import ZONES
 from menu import menu_zone
 
@@ -10,14 +10,14 @@ from menu import menu_zone
 try:
     print("\n• “. ,, .¤° ´¯` • Funky Final Fantasy • ´¯` °¤. ,, . ” •")
 
-    result = load_game()
+    result = SaveManager.load()
 
     if result:
-        player_team, inventory, enemy_pool = result
+        player_team, enemy_team, inventory = result
         
 
     else: 
-        player_team, inventory, enemy_pool = new_game()
+        player_team, enemy_team, inventory = SaveManager.new_game()
 
         print("🧭 Nouvelle aventure !")
         
@@ -30,7 +30,7 @@ try:
         header(current_zone.name)
         print(current_zone.description)  
 
-    menu_zone(character, player_team, inventory, enemy_pool, current_zone)
+    menu_zone(character, player_team, enemy_team, inventory, current_zone)
 
 except Exception as e:
     traceback.print_exc()

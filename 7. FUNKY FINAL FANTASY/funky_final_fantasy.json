@@ -1,0 +1,171 @@
+{
+    "version": 1,
+    "team": [
+        {
+            "id": "warrior",
+            "name": "Guerrier",
+            "character_class": "hand-to-hand",
+            "skills": [
+                "attack",
+                "powerful_blow",
+                "spinning_attack",
+                "war_cry"
+            ],
+            "life": 260,
+            "mana": 0,
+            "base_stats": {
+                "life_max": 260,
+                "mana_max": 0,
+                "power": 60,
+                "speed": 48,
+                "defense": 24
+            },
+            "level": 9,
+            "xp": 100,
+            "equipment": {
+                "arme": null,
+                "armure": null,
+                "mains": null,
+                "pieds": null
+            },
+            "effects": [
+                "regeneration",
+                "shield"
+            ],
+            "bonus": {
+                "life_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 62
+            }
+        },
+        {
+            "id": "warlock",
+            "name": "Mage",
+            "character_class": "magic",
+            "skills": [
+                "spark",
+                "fireball",
+                "pyrotechnic_explosion",
+                "greek_fire"
+            ],
+            "life": 230,
+            "mana": 130,
+            "base_stats": {
+                "life_max": 230,
+                "mana_max": 130,
+                "power": 55,
+                "speed": 52,
+                "defense": 21
+            },
+            "level": 9,
+            "xp": 100,
+            "equipment": {
+                "arme": null,
+                "armure": null,
+                "mains": null,
+                "pieds": null
+            },
+            "effects": [],
+            "bonus": {
+                "life_max": 0,
+                "mana_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 0
+            }
+        },
+        {
+            "id": "priest",
+            "name": "Prêtre",
+            "character_class": "magic",
+            "skills": [
+                "simple_healing",
+                "blessing",
+                "radiant_protection",
+                "penance"
+            ],
+            "life": 220,
+            "mana": 130,
+            "base_stats": {
+                "life_max": 220,
+                "mana_max": 130,
+                "power": 60,
+                "speed": 50,
+                "defense": 26
+            },
+            "level": 9,
+            "xp": 100,
+            "equipment": {
+                "arme": null,
+                "armure": null,
+                "mains": null,
+                "pieds": null
+            },
+            "effects": [
+                "poison"
+            ],
+            "bonus": {
+                "life_max": 0,
+                "mana_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 0
+            }
+        }
+    ],
+    "enemy_team": [
+        {
+            "id": "recluse",
+            "defeated": false
+        },
+        {
+            "id": "werewolf",
+            "defeated": true
+        }
+    ],
+    "inventory": [
+        {
+            "id": "phoenix_feather",
+            "quantity": 1,
+            "type": "consumable",
+            "rarity": "rare",
+            "item_level": 1
+        },
+        {
+            "id": "immaculate_gloves",
+            "name": "Gants immaculés",
+            "type": "equipment",
+            "rarity": "uncommon",
+            "quantity": 1,
+            "item_level": 5,
+            "bonus": {
+                "mana_max": 38,
+                "power": 23
+            }
+        },
+        {
+            "id": "seven_league_boots",
+            "name": "Bottes de 7 lieues",
+            "type": "equipment",
+            "rarity": "rare",
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": {
+                "speed": 16
+            }
+        },
+        {
+            "id": "shiny_helmet",
+            "name": "Casque rutilant",
+            "type": "equipment",
+            "rarity": "uncommon",
+            "quantity": 1,
+            "item_level": 6,
+            "bonus": {
+                "life_max": 44,
+                "defense": 27
+            }
+        }
+    ]
+}

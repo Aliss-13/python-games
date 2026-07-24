@@ -238,3 +238,17 @@ milieu
     )
 
 ]
+
+
+
+
+item_id = "phoenix_feather"
+
+➡️ une clé dans un dictionnaire.
+
+item = ITEMS["phoenix_feather"]
+
+➡️ le vrai objet avec ses propriétés.
+
+TODO :
+- séparer gestion équipement / consommable / matériau si le système d'objets grossit

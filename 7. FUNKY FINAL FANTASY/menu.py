@@ -2,9 +2,9 @@ from ui import section
 from display import display_player_team
 from combat import combat, generate_enemy_team, menu_inventory
 from class_zone import explore
-from save import save_game
+from class_savemanager import SaveManager
 
-def menu_zone(character, player_team, inventory, enemy_pool, current_zone):
+def menu_zone(character, player_team, enemy_team, inventory, current_zone):
 
     while True:
 
@@ -21,8 +21,7 @@ def menu_zone(character, player_team, inventory, enemy_pool, current_zone):
             result = explore(current_zone)
 
             if result and result["type"] == "combat":
-
-                enemies = generate_enemy_team(current_zone)
+                enemies = generate_enemy_team(current_zone, result["event"])
                 combat(player_team, enemies, inventory, current_zone)
 
         elif choix == "2":
@@ -32,7 +31,7 @@ def menu_zone(character, player_team, inventory, enemy_pool, current_zone):
             menu_inventory(character, player_team, inventory)
 
         elif choix == "4":
-            save_game(player_team, inventory, enemy_pool)
+            SaveManager.save(player_team, enemy_team, inventory)
 
         else:
             print("Choix invalide")

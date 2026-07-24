@@ -1,7 +1,6 @@
 import random
 from class_event import FOREST_EVENTS
 from loot_tables import FOREST_LOOTS
-from combat import combat, generate_enemy_team
 
 
 class Zone:
@@ -90,7 +89,7 @@ ZONES = [
         name="Forêt obscure",
         description="Une forêt sombre, très sombre...",
 
-        events=FOREST_EVENTS,
+        events = FOREST_EVENTS,
 
         loot_profile=FOREST_LOOTS,
 
@@ -137,30 +136,57 @@ def get_zone_by_id(zone_id, zones):
 current_zone = get_zone_by_id("dark_forest", ZONES)
 
 
+def choose_event(zone):
+
+    # une chance de combat rare
+    if random.random() <= zone.rare_chance:
+        return choose_combat_event(zone)
+
+    events = [
+        event 
+        for event in zone.events.values()
+        if event.event_type == "discovery"
+    ]
+
+    return random.choice(events)
+
+
+def choose_combat_event(zone):
+
+    if zone.progress >= 10:
+        pass
+
+    if zone.sub_boss_defeated:
+        pass
+
+    return random.choice([
+        FOREST_EVENTS["raven_attack"],
+        FOREST_EVENTS["spider_nest"]
+    ])
+
 
 def explore(zone):
 
     if not zone.discovered:
-
         print(f"\n🌲 Vous entrez dans : {zone.name}")
         zone.discovered = True
 
-    zone_event = random.choice(zone.events)
+    zone_event = random.choice(list(zone.events.values()))
 
     return resolve_event(zone, zone_event)
-
 
 
 def resolve_event(zone, event):
 
     print(f"\n🌲 {event.name}")
 
+
     if event.event_type == "discovery":
+
 
         zone.progress += event.progress
 
         print(f"+{event.progress} progression de zone")
-
 
         if (zone.progress >= zone.sub_boss_progress and not zone.sub_boss_unlocked):
             zone.sub_boss_unlocked = True
@@ -181,6 +207,13 @@ def resolve_event(zone, event):
         if event.flag and event.flag not in zone.flags:
             zone.flags.append(event.flag)
 
+        return {"type": "discovery"}
+
 
     elif event.event_type == "combat":
-        return {"type": "combat"}
+
+        return {
+            "type": "combat",
+            "event": event
+        }
+        

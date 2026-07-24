@@ -10,6 +10,7 @@ class Opponent:
         self,
         id,
         name,
+        rarity,
         tier,
         life,
         base_stats,
@@ -21,12 +22,13 @@ class Opponent:
         loot_table=None,
         drop_rate=1,
         drop_count=(1, 1),
-        rarity="common",
+        
         xp=0
     ):
 
         self.id = id
         self.name = name
+        self.rarity = rarity
         self.tier = tier
         self.life = life
         self.base_stats = base_stats
@@ -38,7 +40,6 @@ class Opponent:
         self.loot_table = loot_table
         self.drop_rate = drop_rate
         self.drop_count = drop_count
-        self.rarity = rarity
         self.xp = xp
         self.defeated = False
 
@@ -50,6 +51,8 @@ class Opponent:
             "defeated": self.defeated
         }
 
+    def __repr__(self):
+        return f"{self.name} - {self.rarity}"
 
 OPPONENTS = [
 
@@ -58,6 +61,7 @@ OPPONENTS = [
     Opponent(
         id="novice_goblin",
         name="Gobelin novice",
+        rarity="common",
         tier=1,
         life=160,
         base_stats={"life_max": 160, "mana_max": 0, "power": 30, "speed": 9, "defense": 5}, 
@@ -75,13 +79,13 @@ OPPONENTS = [
         loot_table="common",
         drop_rate = 0.35,
         drop_count = (1, 1),
-        rarity="common",
         xp=200
     ),
 
     Opponent(
         id="trained_goblin",
         name="Gobelin entraîné",
+        rarity="uncommon",
         tier=2,
         life=220,
         base_stats={"life_max": 220, "mana_max": 0, "power": 40, "speed": 12, "defense": 8}, 
@@ -99,13 +103,13 @@ OPPONENTS = [
         loot_table="uncommon",
         drop_rate = 0.70,
         drop_count = (1, 2),
-        rarity="uncommon",
         xp=300
     ),
 
     Opponent(
         id="veteran_goblin",
         name="Gobelin vétéran",
+        rarity="rare",
         tier=3,
         life=260,
         base_stats={"life_max": 260, "mana_max": 0, "power": 60, "speed": 15, "defense": 12}, 
@@ -123,7 +127,6 @@ OPPONENTS = [
         loot_table="rare",
         drop_rate = 1.00,
         drop_count = (2, 3),
-        rarity="rare",
         xp=300
     ),
 
@@ -134,6 +137,7 @@ OPPONENTS = [
     Opponent(
         id="black_spider",
         name="Araignée noire",
+        rarity="common",
         tier=1,
         life=160,
         base_stats={"life_max": 160, "mana_max": 0, "power": 30, "speed": 10, "defense": 7}, 
@@ -151,13 +155,13 @@ OPPONENTS = [
         loot_table="common",
         drop_rate = 0.35,
         drop_count = (1, 1),
-        rarity="common",
         xp=150
     ),
 
     Opponent(
         id="black_widow",
         name="Veuve noire",
+        rarity="uncommon",
         tier=2,
         life=200,
         base_stats={"life_max": 200, "mana_max": 0, "power": 40, "speed": 20, "defense": 10}, 
@@ -175,14 +179,14 @@ OPPONENTS = [
         loot_table="uncommon",
         drop_rate = 0.70,
         drop_count = (1, 2),
-        rarity="uncommon",
         xp=150
     ),
 
     Opponent(
         id="recluse",
         name="Recluse",
-        tier=2,
+        rarity="rare",
+        tier=3,
         life=240,
         base_stats={"life_max": 240, "mana_max": 0, "power": 50, "speed": 25, "defense": 15}, 
 
@@ -199,7 +203,6 @@ OPPONENTS = [
         loot_table="rare",
         drop_rate = 1.00,
         drop_count = (2, 3),
-        rarity="rare",
         xp=150
     ),
 
@@ -208,6 +211,7 @@ OPPONENTS = [
     Opponent(
         id="sick_raven",
         name="Corbeau Malade",
+        rarity="common",
         tier=1,
         life=160,
         base_stats={"life_max": 160, "mana_max": 0, "power": 30, "speed": 10, "defense": 7}, 
@@ -225,13 +229,13 @@ OPPONENTS = [
         loot_table="common",
         drop_rate = 0.35,
         drop_count = (1, 1),
-        rarity="common",
         xp=150
     ),
 
     Opponent(
         id="sick_great_raven",
         name="Grand Corbeau Malade",
+        rarity="uncommon",
         tier=2,
         life=250,
         base_stats={"life_max": 250, "mana_max": 0, "power": 40, "speed": 10, "defense": 10}, 
@@ -249,13 +253,13 @@ OPPONENTS = [
         loot_table="uncommon",
         drop_rate = 0.70,
         drop_count = (1, 2),
-        rarity="uncommon",
         xp=200
     ),
 
     Opponent(
         id="putrid_great_raven",
         name="Grand Corbeau Putride",
+        rarity="rare",
         tier=3,
         life=260,
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 7}, 
@@ -273,13 +277,13 @@ OPPONENTS = [
         loot_table="rare",
         drop_rate = 1.00,
         drop_count = (2, 3),
-        rarity="rare",
         xp=300
     ),
 
     Opponent(
         id="werewolf",
         name="Loup-garou",
+        rarity="rare",
         tier=3,
         life=260,
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 10}, 
@@ -297,67 +301,66 @@ OPPONENTS = [
         loot_table="rare",
         drop_rate = 1.00,
         drop_count = (2, 3),
-        rarity="rare",
         xp=300
     ),
 
     Opponent(
-            id="doomed_baby_samuel",
-            name="Bébé Samuel",
-            tier=3,
-            life=230,
-            base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 20, "defense": 5}, 
+        id="doomed_baby_samuel",
+        name="Bébé Samuel",
+        rarity="rare",
+        tier=3,
+        life=230,
+        base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 20, "defense": 5}, 
     
-            attack_effects=[
-                SkillEffect(
-                    effect_id="hemorrhage",
-                    chance=0.4,
-                    target="opponent"
-                ),
+        attack_effects=[
+            SkillEffect(
+                effect_id="hemorrhage",
+                chance=0.4,
+                target="opponent"
+            ),
                 
-                SkillEffect(
-                    effect_id="melancholy",
-                    chance=0.3,
-                    target="opponent"
-                ),
-            ],
+            SkillEffect(
+                effect_id="melancholy",
+                chance=0.3,
+                target="opponent"
+            ),
+        ],
     
-            bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
+        bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
     
-            loot_table = ["rare"],
-            drop_rate = 1.00,
-            drop_count = (2, 3),
-            rarity="rare",
-            xp=300
-        ),
+        loot_table = "rare",
+        drop_rate = 1.00,
+        drop_count = (2, 3),
+        xp=300
+    ),
 
 # =============================================== BOSS
 
     Opponent(
         id="black_phillip",
         name="Black Phillip 🐐",
-        tier="sub_boss",
+        rarity="epic",
+        tier=4,
         life=350,
         base_stats={"life_max": 350, "mana_max": 0, "power": 50, "speed": 9, "defense": 12},
-        skills=["charge", "corruption"],
-        loot_table=["epic"],
+        skills=["charge", "dark_stare", "black_flame"],
+        loot_table="epic",
         drop_rate = 1.00,
         drop_count = (3, 4),
-        rarity="epic",
         xp=250
     ),
 
     Opponent(
         id="the_vvitch",
         name="The VVitch",
-        tier="sub_boss",
+        rarity="legendary",
+        tier=5,
         life=450,
         base_stats={"life_max": 450, "mana_max": 0, "power": 50, "speed": 9, "defense": 15},
-        skills=["charge","corruption"],
+        skills=["corruption", "dark_ritual", "sacrifice"],
         loot_table="boss",
         drop_rate = 1.00,
         drop_count = (3, 4),
-        rarity="legendary",
         xp=250
         ),
 
@@ -366,6 +369,7 @@ OPPONENTS = [
     Opponent(
         id="grumpy_orc",
         name="Orc grognon",
+        rarity="common",
         tier=1,
         life=160,
         base_stats={"life_max": 160, "mana_max": 0, "power": 25, "speed": 5, "defense": 4}, 
@@ -383,13 +387,13 @@ OPPONENTS = [
         loot_table="basic",
         drop_rate = 0.35,
         drop_count = (1, 1),
-        rarity="common",
         xp=150
     ),
 
     Opponent(
         id="hot_tempered_orc",
         name="Orc colérique",
+        rarity="uncommon",
         tier=2,
         life=220,
         base_stats={"life_max": 220, "mana_max": 0, "power": 35, "speed": 10, "defense": 10}, 
@@ -407,13 +411,13 @@ OPPONENTS = [
         loot_table="uncommon",
         drop_rate = 0.70,
         drop_count = (1, 2),
-        rarity="uncommon",
         xp=200
     ),
 
     Opponent(
         id="enraged_orc",
         name="Orc enragé",
+        rarity="rare",
         tier=3,
         life=260,
         base_stats={"life_max": 260, "mana_max": 0, "power": 40, "speed": 12, "defense": 15}, 
@@ -431,11 +435,8 @@ OPPONENTS = [
         loot_table="rare",
         drop_rate = 1.00,
         drop_count = (2, 3),
-        rarity="rare",
         xp=300
     ),
-
-    
 ]
 
 def create_opponent(opponent_id):

@@ -41,7 +41,6 @@ EFFECTS = {
 
     # damage_over_time
     "burn": {
-        "id": "burn",
         "name": "Brûlure 🔥",
         "type": "damage_over_time",
         "duration": 3,
@@ -51,7 +50,6 @@ EFFECTS = {
     },
 
     "poison": {
-        "id": "poison",
         "name": "Poison 🦠",
         "type": "damage_over_time",
         "duration": 3,
@@ -61,7 +59,6 @@ EFFECTS = {
     },
 
     "hemorrhage": {
-        "id": "hemorrhage",
         "name": "Hémorragie 🩸",
         "type": "damage_over_time",
         "duration": 3,
@@ -70,8 +67,16 @@ EFFECTS = {
         "stackable": True
     },
 
+    "corruption": {
+        "name": "Corruption 🫟",
+        "type": "damage_over_time",
+        "duration": 3,
+        "value": 10,
+        "scaling": "defense",
+        "stackable": True
+    },
+
     "melancholy": {
-        "id": "melancholy",
         "name": "Mélancolie 🎭",
         "type": "damage_over_time",
         "duration": 3,
@@ -82,7 +87,6 @@ EFFECTS = {
 
     # damage
     "greek_fire": {
-        "id": "greek_fire",
         "name": "Feu grégeois 🛢️",
         "type": "delayed_damage",
         "duration": 3,
@@ -94,7 +98,6 @@ EFFECTS = {
 
     # heal_over_time
     "regeneration": {
-        "id": "regeneration",
         "name": "Régénération 🌟",
         "type": "heal_over_time",
         "duration": 3,
@@ -106,7 +109,6 @@ EFFECTS = {
 
     # forced_target
     "taunt": {
-        "id": "taunt",
         "name": "Provocation 🗣️",
         "type": "forced_target",
         "duration": 3,
@@ -114,7 +116,6 @@ EFFECTS = {
     },
 
     "stun": {
-        "id": "stun",
         "name": "Etourdissement 😵",
         "type": "incapacitating",
         "duration": 2,
@@ -124,7 +125,6 @@ EFFECTS = {
 
     # defense_buff
     "light_prism": {
-        "id": "light_prism",
         "name": "Prisme lumineux 🔶",
         "type": "defense_buff",
         "duration": 3,
@@ -134,11 +134,20 @@ EFFECTS = {
     },
 
     "shield": {
-        "id": "shield",
         "name": "Bouclier 🛡️",
         "type": "defense_buff",
         "duration": 2,
         "value": 7,
+        "scaling": "power",
+        "stackable": True
+    },
+
+    # defense_alteration
+    "dread": {
+        "name": "Terreur 👁️‍🗨️",
+        "type": "defense_alteration",
+        "duration": 3,
+        "value": 4,
         "scaling": "power",
         "stackable": True
     }
@@ -254,6 +263,20 @@ def apply_protection_effect(character, target, effect):
         f"{target.name} bénéficie de {effect.name} "
         f"(+{bonus} défense) !"
     )
+
+
+def apply_protection_alteration(character, target, effect):
+
+    malus = calculate_effect_value(character, effect)
+
+    effect.applied_value = malus
+
+    target.bonus["defense"] -= malus
+
+    print(
+        f"{target.name} subit {effect.name} "
+        f"(-{malus} défense) !"
+    )
    
 EFFECT_IMMEDIATE = ["defense_buff"]
 
@@ -268,7 +291,8 @@ EFFECT_HANDLERS = {
     "heal_over_time": apply_healing_effect, 
     "incapacitating": apply_incapacitating_effect,
     "forced_target": apply_choose_target,
-    "defense_buff": apply_protection_effect
+    "defense_buff": apply_protection_effect,
+    "defense_alteration": apply_protection_alteration
 }
 
 EFFECT_TYPE_LABEL = {
@@ -277,7 +301,9 @@ EFFECT_TYPE_LABEL = {
     "heal_over_time": "soins périodiques", 
     "incapacitating": "incapacitation",
     "forced_target": "ciblage forcé",
-    "defense_buff": "bonus défensif"
+    "defense_buff": "bonus de défense",
+    "defense_alteration": "malus de défense"
+
 }
 
 

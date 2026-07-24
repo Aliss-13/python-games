@@ -96,7 +96,7 @@ def use_item(player_team, inventory):
     
     if item_id is None:
         return
-    if item["type"] != "consommable":
+    if item["type"] != "consumable":
         print("Cet objet n'est pas un consommable.")
         return
     
@@ -140,7 +140,7 @@ def equip_from_inventory(character, inventory):
     if item_id is None:
         return
     
-    if item["type"] == "consommable":
+    if item["type"] == "consumable":
         print("Cet objet est un consommable.")
         return
 

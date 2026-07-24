@@ -1,16 +1,17 @@
 import random
 from display import display_opponent_light, display_opponent, display_loot, display_equipment, display_inventory
 from ui import separator, header, section
-from class_opponent import create_opponent, get_opponent_by_id, OPPONENTS
+from class_opponent import create_opponent, OPPONENTS
 from class_character import get_live_characters
 from class_skill import SKILL_FUNCTIONS, get_target_name
 from skills import calculate_damage
 from class_effect import create_effect, apply_choose_target
 from effects import start_of_turn
+from class_event import FOREST_EVENTS
 from level import scale_enemy_team, gain_xp
 from loot_tables import generate_loot, add_loot
 from sac_a_dos import get_stats, calcul_stats, equip_from_inventory, use_item
-from save import save_game
+from class_savemanager import SaveManager
 
 def speed_order(player_team, opponent):
     
@@ -220,7 +221,7 @@ def one_turn(opponent, player_team, enemies, inventory):
 
 def combat(player_team, enemy_team, inventory, zone):
 
-    scale_enemy_team(player_team, enemy_team)
+    enemy_team = scale_enemy_team(player_team, enemy_team)
 
     for enemy in enemy_team:
         display_opponent(enemy)
@@ -245,52 +246,60 @@ def combat(player_team, enemy_team, inventory, zone):
 
                 print("GAME OVER")
                 return
+            
+    print("DEBUG ENEMY TEAM")
+    for enemy in enemy_team:
+        print(enemy, type(enemy))
 
-    save_game(player_team, inventory, enemy_team)
+    SaveManager.save(player_team, enemy_team, inventory)
 
     print("Victoire totale !")
+
 #----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------
 
-def generate_enemy_team(zone):
+def generate_enemy_team(zone, event):
 
-    enemy_team = []
-
-    # chance ennemi rare
-    chance = zone.rare_chance
-
-    if zone.progress >= 10:
-        chance += 0.05
-
-    if zone.sub_boss_defeated:
-        chance += 0.10
-
-    if random.random() <= chance:
-        enemy = random.choice(zone.rare_enemies)
-
-        return [create_opponent(enemy)]
-
-    # combat normal selon progression
     if zone.difficulty == 1:
         enemy_count = 1
         possible_rarity = ["common"]
-
 
     elif zone.difficulty == 2:
         enemy_count = random.choice([1, 2])
         possible_rarity = ["common", "uncommon"]
 
-
     else:
         enemy_count = random.choice([2, 3])
         possible_rarity = ["common", "uncommon"]
 
+    if event.ignore_rarity:
+        available = [
+            enemy for enemy in OPPONENTS
+            if enemy.id in event.enemies
+        ]
 
-    available = [enemy for enemy in OPPONENTS if (enemy.id in zone.enemies and enemy.rarity in possible_rarity)]
+    else:
+        available = [
+            enemy for enemy in OPPONENTS
+            if enemy.id in event.enemies
+            and enemy.rarity in possible_rarity
+        ]
 
-    for _ in range(enemy_count):
+    # On cherche d'abord les rares éventuels
+    rare_enemies = [
+        enemy for enemy in OPPONENTS
+        if enemy.id in event.enemies
+        and enemy.rarity == "rare"
+    ]
 
-        enemy = random.choice(available)
+    # Chance d'apparition d'un rare
+    if rare_enemies and random.random() < event.rare_chance:
 
-        enemy_team.append(create_opponent(enemy.id))
+        return [
+            create_opponent(random.choice(rare_enemies).id)
+        ]
 
-    return enemy_team
+    # Sinon équipe normale
+    return [
+        create_opponent(random.choice(available).id)
+        for _ in range(enemy_count)
+    ]

@@ -83,33 +83,42 @@ FOREST_LOOTS = {
 
 def scale_item_bonus(item, item_level):
 
+    if item["type"] != "equipment":
+        return {}
+
     scaled_bonus = {}
 
     for stat, value in item["bonus"].items():
-
-        scaled_bonus[stat] = int(
-            value * (1 + (item_level - 1) * 0.15)
-        )
+        scaled_bonus[stat] = int(value * (1 + item_level * item["scaling"]))
 
     return scaled_bonus
 
 
-
 def create_loot_item(item, zone):
 
-    item_level = random.randint(
-        zone.min_item_level,
-        zone.max_item_level
-    )
+    item_id = item["id"]
 
-    base_item = ITEMS[item["id"]]
+    base_item = ITEMS[item_id]
 
-    return {
-        "id": item["id"],
+    item_level = random.randint(*zone.loot_profile["item_level"])
+
+    loot = {
+        "id": item_id,
+        "name": base_item["name"],
+        "type": base_item["type"],
+        "rarity": base_item["rarity"],
         "quantity": 1,
-        "item_level": item_level,
-        "bonus": scale_item_bonus(base_item, item_level)
+        "item_level": item_level
     }
+
+    if base_item["type"] == "equipment":
+        loot["bonus"] = scale_item_bonus(base_item, item_level)
+
+    elif base_item["type"] == "consommable":
+        loot["effect"] = base_item["effect"]
+        loot["healing"] = base_item.get("healing", 0)
+
+    return loot
 
 
 def generate_loot(enemy, zone):
@@ -118,6 +127,10 @@ def generate_loot(enemy, zone):
 
     if random.random() > enemy.drop_rate:
         return loot
+    
+    print(enemy.name)
+    print(enemy.loot_table)
+    print(type(enemy.loot_table))
 
     table = zone.loot_profile["items"][enemy.loot_table]
 
@@ -140,19 +153,25 @@ def add_loot(inventory, loot):
         for item in inventory:
 
             if (
-                item["id"] == loot_item["id"]
-                and item["item_level"] == loot_item["item_level"]
-            ):
-
-                item["quantity"] += loot_item["quantity"]
-                break
+                item["id"] == loot_item["id"] 
+                and (loot_item["type"] == "consommable" 
+                or item["item_level"] == loot_item["item_level"])):
+                    
+                    item["quantity"] += loot_item["quantity"]
+                    break
 
         else:
             inventory.append({
                 "id": loot_item["id"],
+                "name": loot_item["name"],
+                "type": loot_item["type"],
+                "rarity": loot_item["rarity"],
                 "quantity": loot_item["quantity"],
-                "item_level": loot_item["item_level"]
+                "item_level": loot_item["item_level"],
             })
+
+            if loot_item["type"] == "equipment":
+                inventory[-1]["bonus"] = loot_item["bonus"]
 
 
 
