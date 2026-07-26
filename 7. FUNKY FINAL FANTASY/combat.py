@@ -1,259 +1,302 @@
 import random
-from display import display_opponent_light, display_opponent, display_loot, display_equipment, display_inventory
-from ui import separator, header, section
-from class_opponent import create_opponent, OPPONENTS
-from class_character import get_live_characters
-from class_skill import SKILL_FUNCTIONS, get_target_name
-from skills import calculate_damage
-from class_effect import create_effect, apply_choose_target
+from display import display_enemy, display_enemy_light, display_loot
+from ui import separator, header
+from class_enemy import create_enemy, ENEMIES
+from skill_engine import execute_skill
+from class_skillcontext import SkillContext
+from class_combatcontext import CombatContext
 from effects import start_of_turn
-from class_event import FOREST_EVENTS
-from level import scale_enemy_team, gain_xp
+from level import scale_enemy_team, unlock_skills, level_up, xp_required
 from loot_tables import generate_loot, add_loot
-from sac_a_dos import get_stats, calcul_stats, equip_from_inventory, use_item
+from sac_a_dos import get_stats, calcul_stats
 from class_savemanager import SaveManager
+from menu_combat import menu_tour
+from class_zone import explore
 
-def speed_order(player_team, opponent):
-    
-    tous = player_team + [opponent]
+RARE_CHANCE = 0.05
+
+#----------------------------------------- Ordre en fonction de la rapidité ----------------------------------------------
+
+def speed_order(context: CombatContext):
+
     return sorted(
-    tous,
-    key=lambda entite: (
-        get_stats(entite)["speed"],
-        random.random()
-    ),
-    reverse=True
-)
-
-#----------------------------------------- SOUS MENUS ----------------------------------------------
-
-def menu_inventory(character, player_team, inventory):
-    display_equipment(character)
-    while True:
-        
-        display_inventory(inventory)
-        print("")
-        print("[1] Équiper")
-        print("[2] Utiliser objet")
-        print("[3] Retour")
-
-        choix = input("> ")
-
-        if choix == "1":
-            equip_from_inventory(character, inventory)
-
-        elif choix == "2":
-            use_item(player_team, inventory)
-
-        elif choix == "3":
-            return
-
-        else:
-            print("Choix invalide")
-
-def menu_tour(character, player_team, enemies, inventory):
-
-    while True:
-
-        section("Actions")
-        print("[s] Skill")
-        print("[i] Inventaire")
-        print("[q] Fin du tour")
-
-        choix = input("> ").lower()
-       
-        # SKILL
-        if choix == "s":
-            menu_skill(character, player_team, enemies)
-            return "fin_tour"
-
-     
-        # INVENTAIRE
-        elif choix == "i":
-            menu_inventory(character, player_team, inventory)
-            # on reste dans le tour
-
-        # FIN VOLONTAIRE
-        elif choix == "q":
-            return "fin_tour"
-
-        else:
-            print("Choix invalide")
-
-
-def menu_skill(character, allies, enemies):
-
-    print(f"\nActions de {character.name}")
-
-    for i, skill in enumerate(character.skills, start=1):
-        print(f"{i}. {skill.name:<25} Coût : {skill.cost} - Cible {get_target_name(skill)}")
-   
-    print("0. Retour")
-
-    while True:
-
-        choix = input("> ")
-
-        if choix.isdigit():
-
-            choix = int(choix)
-
-            if choix == 0:
-                return None
-
-            skill = character.skills[choix - 1]
-
-            action = SKILL_FUNCTIONS.get(skill.id)
-
-            if action is None:
-                print(f"Compétence inconnue : {skill.id}")
-                return
-
-            action(character, allies, enemies, skill)
-            return
-
-        print("Choix invalide.")
-
+        context.get_live_entities(),
+        key=lambda entity: (
+            get_stats(entity)["speed"],
+            random.random()
+        ),
+        reverse=True
+    )
 
 #----------------------------------------- Gestion des effets de début de tour ----------------------------------------------
 
-def manage_start_of_turn(entite):
+def has_stun(entity):
 
-    if any(effect.id == "stun" for effect in entite.effects):
-        print(f"{entite.name} est immobilisé ⛔ et ne joue pas !")
-        start_of_turn(entite)
+    return any(
+        effect.id == "stun"
+        for effect in entity.effects
+    )
+
+
+def manage_start_of_turn(entity):
+
+    start_of_turn(entity)
+
+    if has_stun(entity):
+        print(f"{entity.name} est immobilisé ⛔")
         return False
 
-    start_of_turn(entite)
     return True
-   
-def apply_opponent_effects(opponent, target):
-
-    for attack_effect in opponent.attack_effects:
-
-        if random.random() <= attack_effect.chance:
-            effect = create_effect(
-                    attack_effect.effect_id,
-                    source=opponent
-
-                )
-
-            target.effects.append(effect) 
 
 #----------------------------------------- Tours ----------------------------------------------
 
-def opponent_turn(player_team, opponent):
+def choose_skill(enemy):
+
+    skill = enemy.rotation[enemy.sr_index]
+
+    enemy.sr_index += 1
+
+    if enemy.sr_index >= len(enemy.rotation):
+        enemy.sr_index = 0
+
+    return skill
+
+
+def enemy_turn(context, enemy):
+
     separator()
-    header(f"Tour de {opponent.name}")
-    if opponent.life <= 0:
-        return
-    
-    if not manage_start_of_turn(opponent):
-        return
-    
-    vivants = get_live_characters(player_team).copy()
-    if not vivants:
-        return
-    
-    display_opponent_light(opponent)
+    header(f"Tour de {enemy.name}")
 
-    target = apply_choose_target(player_team)
+    display_enemy_light(enemy)
 
-    if target is None:
-        return
+    skill = choose_skill(enemy)
 
-    damage = calculate_damage(opponent, target)
+    skill_context = SkillContext(
+        caster=enemy,
+        allies=context.enemy_team,
+        enemies=context.player_team,
+        skill=skill,
+    )
 
-    target.life -= damage
-
-    print(f"⚔ {opponent.name} → {target.name} : -{damage} PV")
-        
-    if target.life <= 0:
-        target.life = 0
-        print(f"{target.name} est mort.")
-    
-    else:
-        print(f"{target.name} n'a plus que {target.life} PV !")
-    
-    # effets des attaques selon l'ennemi
-    apply_opponent_effects(opponent, target)
+    execute_skill(skill_context)
 
 
-def character_turn(character, player_team, enemies, inventory):
+def character_turn(context, character):
+
     separator()
+    
+    if character.life <= 0:
+        return
+
     header(f"Tour de {character.name}")
     calcul_stats(character)
     stats = get_stats(character)
-    
+
     print(f"PV : {character.life}/{stats['life_max']}")
 
     if character.mana is not None:
         print(f"Mana : {character.mana}/{stats['mana_max']}")
-    print(f"Puissance : {stats['power']}") 
+
+    print(f"Puissance : {stats['power']}")
     print(f"Vitesse : {stats['speed']}")
     print(f"Défense : {stats['defense']}")
+    
+    menu_tour(context, character)
 
-    if not manage_start_of_turn(character):
+
+def play_entity_turn(context, entity):
+
+    if entity.life <= 0:
         return
-    
-    menu_tour(character, player_team, enemies, inventory)
+
+    if not manage_start_of_turn(entity):
+        return
+
+    if entity in context.player_team:
+        character_turn(context, entity)
+
+    else:
+        enemy_turn(context, entity)
 
 
-def one_turn(opponent, player_team, enemies, inventory):
-    ordre = speed_order(get_live_characters(player_team), opponent)
+def one_turn(context : CombatContext):
 
-    for entite in ordre:
+    order = speed_order(context)
+
+    for entity in order:
+
         # mort → skip
-        if entite.life <= 0:
+        if entity.life <= 0:
             continue
-        if entite in player_team:
-            character_turn(entite, player_team, enemies, inventory)
-            if opponent.life <= 0:
-                return "ennemi mort"
-        else:
-            opponent_turn(player_team, opponent)
-            if all(character.life <= 0 for character in player_team):
-                return "defaite"
-    
+
+        play_entity_turn(context, entity)
+
+        if not context.get_live_enemies():
+            return "victoire"
+
+        if not context.get_live_players():
+            return "defaite"
+
     return "continuer"
 
 #----------------------------------------- Combat ----------------------------------------------
 
-def combat(player_team, enemy_team, inventory, zone):
+def rest_after_combat(player_team):
 
-    enemy_team = scale_enemy_team(player_team, enemy_team)
+    for character in player_team:
 
-    for enemy in enemy_team:
-        display_opponent(enemy)
+        if character.life > 0:
+            character.life = min(
+                character.life + character.base_stats["life_max"] * 0.2,
+                character.base_stats["life_max"]
+            )
 
-        while enemy.life > 0:
-
-            result = one_turn(enemy, player_team, enemy_team, inventory)
-
-            if result == "ennemi mort":
-
-                print(f"{enemy.name} disparaît !")
-                loot = generate_loot(enemy, zone)
-                display_loot(loot)
-                add_loot(inventory, loot)
-                gain_xp(player_team, enemy)
-                enemy.defeated = True
-
-                break
+            if character.mana is not None:
+                character.mana = min(
+                    character.mana + character.base_stats["mana_max"] * 0.3,
+                    character.base_stats["mana_max"]
+                )
 
 
-            elif result == "defaite":
+def restore_team_after_combat(player_team):
 
-                print("GAME OVER")
-                return
-            
-    print("DEBUG ENEMY TEAM")
-    for enemy in enemy_team:
-        print(enemy, type(enemy))
+    for character in player_team:
 
-    SaveManager.save(player_team, enemy_team, inventory)
+        character.life = character.base_stats["life_max"]
+        
+        if character.mana is not None:
+            character.mana = character.base_stats["mana_max"]
 
+        character.effects.clear()
+
+    print("✨ Votre équipe récupère tous ses PV et son mana.")
+
+
+def handle_defeated_enemies(context):
+
+    loot = []
+
+    for enemy in context.enemy_team:
+
+        if is_dead(enemy):
+
+            print(f"{enemy.name} disparaît !")
+
+            loot.extend(
+                generate_loot(enemy, context.zone)
+            )
+
+            enemy.defeated = True
+
+    return loot
+
+
+def is_dead(entity):
+    return entity.life <= 0
+
+
+def remove_dead_entities(context):
+    for enemy in context.enemy_team:
+        if is_dead(enemy):
+            enemy.defeated = True
+
+
+def prepare_combat(game):
+
+    explore_result = explore(game.current_zone)
+
+    if not explore_result or explore_result["type"] != "combat":
+        return None
+
+    enemy_team = generate_enemy_team(
+        game.current_zone,
+        explore_result["event"]
+    )
+
+    enemy_team = scale_enemy_team(
+        game.player_team,
+        enemy_team
+    )
+
+    return CombatContext(
+        player_team=game.player_team,
+        enemy_team=enemy_team,
+        inventory=game.inventory,
+        zone=game.current_zone,
+        game=game
+    )
+
+
+def end_combat(game, context):
+
+    if context.is_sub_boss_fight:
+        game.current_zone.sub_boss_defeated = True
+
+    if context.is_boss_fight:
+        game.current_zone.boss_defeated = True
+
+    loot = handle_defeated_enemies(context)
+    
+    add_loot(game.inventory, loot)
+    
+    display_loot(loot)
+
+    gain_xp(context)
+
+    restore_team_after_combat(game.player_team)
+
+    SaveManager.save(game)
+    
     print("Victoire totale !")
+    
+
+def combat(game):
+
+    context = prepare_combat(game)
+
+    if not context:
+        return
+
+    separator()
+    
+    for enemy in context.enemy_team:
+        display_enemy(enemy)
+
+    while context.get_live_enemies():
+
+        turn_result = one_turn(context)
+
+        if turn_result == "defaite":
+            print("GAME OVER")
+            return
+
+        if turn_result == "victoire":
+            end_combat(game, context)
+            return
+
+
+def gain_xp(context):
+
+    for enemy in context.enemy_team:
+
+        if is_dead(enemy):
+
+            xp_reward = enemy.xp
+
+            for character in context.player_team:
+                character.xp += xp_reward
+
+                print(
+                    f"{character.name} gagne {xp_reward} XP !"
+                )
+
+                while character.xp >= xp_required(character.level):
+
+                    character.xp -= xp_required(character.level)
+                    character.level += 1
+
+                    level_up(character)
+                    unlock_skills(character)
 
 #----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------
 
@@ -273,33 +316,33 @@ def generate_enemy_team(zone, event):
 
     if event.ignore_rarity:
         available = [
-            enemy for enemy in OPPONENTS
+            enemy for enemy in ENEMIES
             if enemy.id in event.enemies
         ]
 
     else:
         available = [
-            enemy for enemy in OPPONENTS
+            enemy for enemy in ENEMIES
             if enemy.id in event.enemies
             and enemy.rarity in possible_rarity
         ]
 
     # On cherche d'abord les rares éventuels
     rare_enemies = [
-        enemy for enemy in OPPONENTS
+        enemy for enemy in ENEMIES
         if enemy.id in event.enemies
         and enemy.rarity == "rare"
     ]
 
     # Chance d'apparition d'un rare
-    if rare_enemies and random.random() < event.rare_chance:
+    if rare_enemies and random.random() < RARE_CHANCE:
 
         return [
-            create_opponent(random.choice(rare_enemies).id)
+            create_enemy(random.choice(rare_enemies).id)
         ]
 
     # Sinon équipe normale
     return [
-        create_opponent(random.choice(available).id)
+        create_enemy(random.choice(available).id)
         for _ in range(enemy_count)
     ]

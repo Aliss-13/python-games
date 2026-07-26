@@ -239,7 +239,10 @@ milieu
 
 ]
 
+En Python :
 
+= sert à attribuer une valeur
+== sert à comparer
 
 
 item_id = "phoenix_feather"
@@ -252,3 +255,128 @@ item = ITEMS["phoenix_feather"]
 
 TODO :
 - séparer gestion équipement / consommable / matériau si le système d'objets grossit
+
+
+
+
+Ou carrément dans main.py
+
+Juste avant le combat :
+
+enemy_team = [
+    create_opponent("black_phillip")
+]
+
+Puis :
+
+combat(player_team, enemy_team, inventory, current_zone)
+
+Là tu lances directement le combat sans dépendre des événements.
+
+
+menu_zone(character, player_team, enemy_team, inventory, current_zone):
+
+
+
+
+
+Type	Attaque normale	Effets	Compétences
+Commun	        ✅	    ❌	    ❌
+Inhabituel	    ✅	    ✅	    ❌
+Rare	        ✅	    ✅ (pls)	❌
+Sous-boss	    ❌	   via compétences	✅
+Boss	        ❌	    via compétences	✅
+
+
+
+
+Là tu as deux contextes différents :
+
+CombatContext
+
+Le plateau :
+
+joueurs
+ennemis
+
+
+SkillContext
+
+L'action en cours :
+
+qui lance ?
+quelle compétence ?
+qui est ciblé ?
+
+
+
+GENERATION D'UN LOOT
+
+Combat gagné
+      |
+      v
+generate_loot(enemy, zone)
+      |
+      |
+      +--> profil ennemi
+      |       |
+      |       +--> drop_rate
+      |       +--> nombre d'objets
+      |       +--> rareté possible
+      |
+      v
+choose_rarity()
+      |
+      v
+FOREST_LOOTS[rarity]
+      |
+      v
+choix de l'item
+      |
+      v
+create_loot_item()
+      |
+      +--> récupère ITEMS[item_id]
+      |
+      +--> tire item_level
+      |
+      +--> si équipement
+      |       |
+      |       v
+      |   scale_item_bonus()
+      |
+      v
+loot final ajouté à l'inventaire
+
+
+
+
+Ce qui appartient à GameState
+
+Tout ce qui survit après le combat :
+
+personnages
+XP
+niveaux
+inventaire
+zone actuelle
+progression
+quêtes
+boss vaincus
+
+Donc :
+
+SaveManager.save(game)
+
+est parfait.
+
+Ce qui appartient à CombatContext
+
+Tout ce qui existe uniquement pendant un combat :
+
+ordre des tours
+ennemi actuel
+cible sélectionnée
+effets temporaires
+buffs/debuffs
+historique du combat

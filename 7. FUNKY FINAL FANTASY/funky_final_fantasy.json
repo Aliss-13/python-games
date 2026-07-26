@@ -8,35 +8,33 @@
             "skills": [
                 "attack",
                 "powerful_blow",
-                "spinning_attack",
-                "war_cry"
+                "spinning_attack"
             ],
-            "life": 260,
+            "life": 120,
             "mana": 0,
             "base_stats": {
-                "life_max": 260,
+                "life_max": 120,
                 "mana_max": 0,
-                "power": 60,
-                "speed": 48,
-                "defense": 24
+                "power": 25,
+                "speed": 13,
+                "defense": 10
             },
-            "level": 9,
-            "xp": 100,
+            "level": 2,
+            "xp": 15.0,
             "equipment": {
-                "arme": null,
-                "armure": null,
-                "mains": null,
-                "pieds": null
+                "weapon": null,
+                "head": null,
+                "chest": null,
+                "hands": null,
+                "legs": null,
+                "feet": null
             },
-            "effects": [
-                "regeneration",
-                "shield"
-            ],
+            "effects": [],
             "bonus": {
                 "life_max": 0,
                 "power": 0,
                 "speed": 0,
-                "defense": 62
+                "defense": 22
             }
         },
         {
@@ -46,33 +44,34 @@
             "skills": [
                 "spark",
                 "fireball",
-                "pyrotechnic_explosion",
-                "greek_fire"
+                "pyrotechnic_explosion"
             ],
-            "life": 230,
-            "mana": 130,
+            "life": 90,
+            "mana": 60,
             "base_stats": {
-                "life_max": 230,
-                "mana_max": 130,
-                "power": 55,
-                "speed": 52,
-                "defense": 21
+                "life_max": 90,
+                "mana_max": 60,
+                "power": 20,
+                "speed": 17,
+                "defense": 7
             },
-            "level": 9,
-            "xp": 100,
+            "level": 2,
+            "xp": 15.0,
             "equipment": {
-                "arme": null,
-                "armure": null,
-                "mains": null,
-                "pieds": null
+                "weapon": null,
+                "head": null,
+                "chest": "embroidered_robe",
+                "hands": "power_gloves",
+                "legs": null,
+                "feet": null
             },
             "effects": [],
             "bonus": {
                 "life_max": 0,
-                "mana_max": 0,
-                "power": 0,
+                "mana_max": 10,
+                "power": 10,
                 "speed": 0,
-                "defense": 0
+                "defense": 6
             }
         },
         {
@@ -82,48 +81,38 @@
             "skills": [
                 "simple_healing",
                 "blessing",
-                "radiant_protection",
-                "penance"
+                "radiant_protection"
             ],
-            "life": 220,
-            "mana": 130,
+            "life": 80,
+            "mana": 60,
             "base_stats": {
-                "life_max": 220,
-                "mana_max": 130,
-                "power": 60,
-                "speed": 50,
-                "defense": 26
+                "life_max": 80,
+                "mana_max": 60,
+                "power": 25,
+                "speed": 15,
+                "defense": 12
             },
-            "level": 9,
-            "xp": 100,
+            "level": 2,
+            "xp": 15.0,
             "equipment": {
-                "arme": null,
-                "armure": null,
-                "mains": null,
-                "pieds": null
+                "weapon": null,
+                "head": null,
+                "chest": null,
+                "hands": null,
+                "legs": null,
+                "feet": null
             },
-            "effects": [
-                "poison"
-            ],
+            "effects": [],
             "bonus": {
                 "life_max": 0,
                 "mana_max": 0,
                 "power": 0,
                 "speed": 0,
-                "defense": 0
+                "defense": 6
             }
         }
     ],
-    "enemy_team": [
-        {
-            "id": "recluse",
-            "defeated": false
-        },
-        {
-            "id": "werewolf",
-            "defeated": true
-        }
-    ],
+    "enemy_team": [],
     "inventory": [
         {
             "id": "phoenix_feather",
@@ -131,41 +120,7 @@
             "type": "consumable",
             "rarity": "rare",
             "item_level": 1
-        },
-        {
-            "id": "immaculate_gloves",
-            "name": "Gants immaculés",
-            "type": "equipment",
-            "rarity": "uncommon",
-            "quantity": 1,
-            "item_level": 5,
-            "bonus": {
-                "mana_max": 38,
-                "power": 23
-            }
-        },
-        {
-            "id": "seven_league_boots",
-            "name": "Bottes de 7 lieues",
-            "type": "equipment",
-            "rarity": "rare",
-            "quantity": 1,
-            "item_level": 1,
-            "bonus": {
-                "speed": 16
-            }
-        },
-        {
-            "id": "shiny_helmet",
-            "name": "Casque rutilant",
-            "type": "equipment",
-            "rarity": "uncommon",
-            "quantity": 1,
-            "item_level": 6,
-            "bonus": {
-                "life_max": 44,
-                "defense": 27
-            }
         }
-    ]
+    ],
+    "zone": "dark_forest"
 }

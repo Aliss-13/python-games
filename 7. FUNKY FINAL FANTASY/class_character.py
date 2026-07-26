@@ -83,10 +83,13 @@ class Character:
 
     def __repr__(self):
         return f"{self.name} (lvl {self.level})"
-
+    
+    @property
+    def has_mana(self):
+        return self.base_stats["mana_max"] > 0
     
 CLASS = ["magic", "hand-to-hand", "distance"]
-    
+
 CHARACTERS = [
 
     Character(
@@ -100,7 +103,7 @@ CHARACTERS = [
         effects = [],
         level = 1,
         xp = 0,
-        equipment = {"arme" : None, "armure" : None, "mains" : None, "pieds" : None},
+        equipment = {"weapon" : None, "head" : None, "chest" : None, "hands" : None, "legs" : None, "feet" : None},
         bonus = {"life_max": 0, "mana_max" : 0, "power": 0,"speed": 0, "defense": 0} 
     ),    
 
@@ -117,7 +120,7 @@ CHARACTERS = [
         effects = [],
         level = 1,
         xp = 0,
-        equipment = {"arme" : None, "armure" : None, "mains" : None, "pieds" : None},
+        equipment = {"weapon" : None, "head" : None, "chest" : None, "hands" : None, "legs" : None, "feet" : None},
         bonus = {"life_max": 0, "mana_max" : 0, "power": 0,"speed": 0, "defense": 0}
     ),
 
@@ -133,7 +136,7 @@ CHARACTERS = [
         effects = [],
         level = 1,
         xp = 0,
-        equipment = {"arme" : None, "armure" : None, "mains" : None, "pieds" : None},
+        equipment = {"weapon" : None, "head" : None, "chest" : None, "hands" : None, "legs" : None, "feet" : None},
         bonus = {"life_max": 0, "power": 0,"speed": 0, "defense": 0}
     )
 ]

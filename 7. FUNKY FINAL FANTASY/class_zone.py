@@ -1,6 +1,6 @@
 import random
-from class_event import FOREST_EVENTS
-from loot_tables import FOREST_LOOTS
+from class_event import FOREST_EVENTS, Event
+from loot_tables import LOOT_ZONES_PROFILES
 
 
 class Zone:
@@ -69,17 +69,68 @@ class Zone:
         self.completed = False
 
 
+    def to_dict(self):
+
+        return {
+            "id": self.id,
+            "progress": self.progress,
+            "flags": self.flags,
+            "discovered": self.discovered,
+            "sub_boss_unlocked": self.sub_boss_unlocked,
+            "sub_boss_defeated": self.sub_boss_defeated,
+            "boss_unlocked": self.boss_unlocked,
+            "boss_defeated": self.boss_defeated   
+        }
+
+    def load_state(self, data):
+
+        self.progress = data["progress"]
+        self.flags = data["flags"]
+        self.discovered = data["discovered"]
+        self.sub_boss_defeated = data["sub_boss_defeated"]
+        self.boss_defeated = data["boss_defeated"]
+
+
     @property
     def difficulty(self):
 
-        if self.progress < 5:
+        if self.progress < self.sub_boss_progress:
             return 1
 
-        elif self.progress < 15:
+        elif self.progress < self.boss_progress:
             return 2
 
         else:
             return 3
+
+
+    def add_progress(self, amount):
+
+        self.progress += amount
+
+        print(f"+{amount} progression de zone")
+
+        self.check_unlocks()
+
+
+
+    def check_unlocks(self):
+
+        if (
+            self.progress >= self.sub_boss_progress
+            and not self.sub_boss_unlocked
+        ):
+            self.sub_boss_unlocked = True
+            print(f"⚔️ {self.sub_boss} est accessible !")
+
+
+        if (
+            self.progress >= self.boss_progress
+            and self.sub_boss_defeated
+            and not self.boss_unlocked
+        ):
+            self.boss_unlocked = True
+            print(f"👑 {self.boss} est accessible !")
 
 
 ZONES = [
@@ -91,7 +142,7 @@ ZONES = [
 
         events = FOREST_EVENTS,
 
-        loot_profile=FOREST_LOOTS,
+        loot_profile=LOOT_ZONES_PROFILES["dark_forest"],
 
         enemies=[
             "sick_raven",
@@ -121,7 +172,6 @@ ZONES = [
 ]
 
 
-
 def get_zone_by_id(zone_id, zones):
 
     for zone in zones:
@@ -132,37 +182,30 @@ def get_zone_by_id(zone_id, zones):
     return None
 
 
-
 current_zone = get_zone_by_id("dark_forest", ZONES)
 
 
-def choose_event(zone):
+def create_boss_event(boss_id):
 
-    # une chance de combat rare
-    if random.random() <= zone.rare_chance:
-        return choose_combat_event(zone)
-
-    events = [
-        event 
-        for event in zone.events.values()
-        if event.event_type == "discovery"
-    ]
-
-    return random.choice(events)
+    return Event(
+        id=f"{boss_id}_battle",
+        name=f"⚔️ Combat contre {boss_id}",
+        event_type="combat",
+        enemies=[boss_id],
+        ignore_rarity=True,
+        is_boss=True
+    )
 
 
 def choose_combat_event(zone):
 
-    if zone.progress >= 10:
-        pass
+    if (zone.boss_unlocked and not zone.boss_defeated):
+        return create_boss_event(zone.boss)
 
-    if zone.sub_boss_defeated:
-        pass
+    if (zone.sub_boss_unlocked and not zone.sub_boss_defeated):
+        return create_boss_event(zone.sub_boss)
 
-    return random.choice([
-        FOREST_EVENTS["raven_attack"],
-        FOREST_EVENTS["spider_nest"]
-    ])
+    return random.choice(list(zone.events.values()))
 
 
 def explore(zone):
@@ -171,7 +214,15 @@ def explore(zone):
         print(f"\n🌲 Vous entrez dans : {zone.name}")
         zone.discovered = True
 
-    zone_event = random.choice(list(zone.events.values()))
+
+    if zone.sub_boss_unlocked or zone.boss_unlocked:
+        zone_event = choose_combat_event(zone)
+
+    else:
+        zone_event = random.choice(
+            list(zone.events.values())
+        )
+
 
     return resolve_event(zone, zone_event)
 
@@ -183,8 +234,7 @@ def resolve_event(zone, event):
 
     if event.event_type == "discovery":
 
-
-        zone.progress += event.progress
+        zone.add_progress(event.progress)
 
         print(f"+{event.progress} progression de zone")
 

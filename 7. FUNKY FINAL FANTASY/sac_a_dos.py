@@ -1,7 +1,18 @@
 from data import ITEMS
 
+# ----------------------------------------- Ajout, retrait, sélection dans l'inventaire --------------------------------------------------------
+
 def add_item(inventory, item_id):
-    inventory.append({"item": item_id})
+    
+    item = ITEMS[item_id]
+
+    inventory.append({
+        "id": item_id,
+        "name": item["name"],
+        "type": item["type"],
+        "rarity": item["rarity"],
+        "quantity": 1
+    })
 
 def remove_item(inventory, index):
     if not isinstance(index, int):
@@ -9,6 +20,7 @@ def remove_item(inventory, index):
         return None
 
     return inventory.pop(index)
+
 
 def get_item(inventory, choix):
     if not isinstance(choix, int):
@@ -22,20 +34,19 @@ def get_item(inventory, choix):
     if not isinstance(item, dict):
         return None, None
 
-    item_id = item.get("item")
+    item_id = item.get("id")
 
     if item_id not in ITEMS:
         return None, None
 
     return item_id, ITEMS[item_id]
 
+# ----------------------------------------- Consommables --------------------------------------------------------
+
 def apply_item_effect(player_team, item):
     
     effect = item.get("effect")
-    for character in player_team :
-        stats = get_stats(character)
-    
-
+    stats = get_stats(character)
     if effect == "gain_pv":
         allies = [character for character in player_team if character.life > 0 and character.life < stats["life_max"]]
         if not allies:
@@ -105,6 +116,7 @@ def use_item(player_team, inventory):
     remove_item(inventory, choix)
     print(f"{ITEMS[item_id]["name"]} disparaît de l'inventaire !")
 
+# ----------------------------------------- Statistiques de base + bonus --------------------------------------------------------
 
 def get_stats(entite):
 
@@ -114,7 +126,24 @@ def get_stats(entite):
         stats[key] = stats.get(key, 0) + value
 
     return stats
-    
+
+
+def get_item_stats(item):
+
+    data = ITEMS[item["id"]]
+
+    level = item.get("item_level", 1)
+
+    stats = {}
+
+    for stat, value in data["bonus"].items():
+
+        scaling = data.get("scaling", {}).get(stat, 0)
+
+        stats[stat] = value + int(level * scaling)
+
+    return stats
+
 
 def calcul_stats(character):
     stats = character.base_stats.copy()
@@ -122,6 +151,7 @@ def calcul_stats(character):
         stats[stat] += val
     return stats
     
+# ----------------------------------------- Equipement --------------------------------------------------------
 
 def equip_from_inventory(character, inventory):
 
@@ -159,7 +189,15 @@ def equip_from_inventory(character, inventory):
             character.bonus[stat] = character.bonus.get(stat,0) - val
             calcul_stats(character)
 
-        inventory.append({"item": ancien_id})
+        inventory.append({
+            "id": ancien_id,
+            "name": ITEMS[ancien_id]["name"],
+            "type": ITEMS[ancien_id]["type"],
+            "rarity": ITEMS[ancien_id]["rarity"],
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": ITEMS[ancien_id]["bonus"]
+        })
 
     character.equipment[slot] = item_id
 

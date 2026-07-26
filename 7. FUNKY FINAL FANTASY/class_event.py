@@ -59,7 +59,7 @@ FOREST_EVENTS = {
         event_type="combat",
         enemies=["putrid_great_raven", "recluse", "werewolf", "doomed_baby_samuel"],
         ignore_rarity=True
-        )
+        )     
 }
 
 

@@ -1,0 +1,22 @@
+from combat import create_opponent, combat
+
+
+
+
+
+def test_black_phillip():
+    enemy_team = [create_opponent("black_phillip")]
+    combat(player_team, enemy_team, inventory, current_zone)
+
+
+def test_the_vvitch():
+    enemy_team = [create_opponent("the_vvitch")]
+    combat(player_team, enemy_team, inventory, current_zone)
+
+
+def test_goblins():
+    enemy_team = [
+        create_opponent("novice_goblin"),
+        create_opponent("trained_goblin"),
+    ]
+    combat(player_team, enemy_team, inventory, current_zone)

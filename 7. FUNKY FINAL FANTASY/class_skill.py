@@ -1,7 +1,4 @@
 from class_skilleffect import SkillEffect
-from skills import attack, powerful_blow, spinning_attack, war_cry
-from skills import spark, fireball, pyrotechnic_explosion, greek_fire
-from skills import simple_healing, blessing, radiant_protection, penance
 
 class Skill:
 
@@ -14,18 +11,21 @@ class Skill:
         actions,
         power=0,
         damage_type=None,
-        effects=None
+        effects=None,
+        message="{caster} lance {skill} !",
+        cost_type=None
     ):
 
         self.id = id
         self.name = name
         self.cost = cost
+        self.cost_type= cost_type
         self.target = target
         self.actions = actions
         self.power = power
         self.damage_type = damage_type
         self.effects = effects or []
-
+        self.message = message
 
 
 def unlock_skills(character):
@@ -56,40 +56,118 @@ def get_skill(skill_id):
     return None
 
 
+
 TARGET_NAMES = {
-    "opponent": "Ennemi",
-    "opponents": "Tous les ennemis",
+    "enemy": "Ennemi",
+    "enemies": "Tous les ennemis",
     "self": "Soi",
     "ally": "Allié",
     "allies": "Tous les alliés"
 }
 
 
-SKILL_FUNCTIONS = {
-    "attack": attack,
-    "powerful_blow": powerful_blow,
-    "spinning_attack": spinning_attack,
-    "war_cry": war_cry,
-    "spark": spark,
-    "fireball": fireball,
-    "pyrotechnic_explosion": pyrotechnic_explosion,
-    "greek_fire": greek_fire,
-    "simple_healing": simple_healing,
-    "blessing": blessing,
-    "radiant_protection": radiant_protection,
-    "penance": penance
-}
+def display_skill_message(context):
+
+    values = {
+        "caster": context.caster.name,
+        "skill": context.skill.name,
+        "cost": context.skill.cost,
+        "remaining_life": context.caster.life,
+        "remaining_mana": context.caster.mana
+    }
+
+    print(
+        context.skill.message.format(**values)
+    )
 
 
 SKILLS = [
+#------------------------------------------ Orcs ------------------------------------------------
+
+    Skill(
+        id="dull_thud",
+        name="Coup sourd 🫨",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="stun", chance=0.3, target="skill_target")],
+    ),
+
+#------------------------------------------ Gobelins ------------------------------------------------
+
+    Skill(
+        id="spear_thrust",
+        name="Coup de lance ⚔️",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="poison", chance=0.3, target="skill_target")]
+    ),
+
+#------------------------------------------ Araignées ------------------------------------------------
+
+    Skill(
+        id="bite",
+        name="Morsure 😬",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="poison", chance=0.3, target="skill_target")]
+    ),
+
+#------------------------------------------ Loups-garous ------------------------------------------------
+
+    Skill(
+        id="rage",
+        name="Rage 💢",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="hemorrhage", chance=0.3, target="skill_target")]
+    ),
+
+#------------------------------------------ Baby Samuel ------------------------------------------------
+
+    Skill(
+        id="babys_wail",
+        name="Hurlement de bébé 🚼",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="hemorrhage", chance=0.3, target="skill_target"), 
+                 SkillEffect(effect_id="melancholy", chance=0.3, target="skill_target"),]
+    ),
+
+#------------------------------------------ Corbeaux ------------------------------------------------
+
+    Skill(
+        id="peck",
+        name="Coup de bec 🐦‍⬛",
+        cost=0,
+        target="enemy",
+        actions=["damage", "apply_effect"],
+        power=10,
+        damage_type="physical",
+        effects=[SkillEffect(effect_id="melancholy", chance=0.3, target="skill_target")]
+    ),
 
 #------------------------------------------ THE VVITCH ------------------------------------------------
 
     Skill(
         id="corruption",
-        name="Corruption",
+        name="Corruption 🫟",
         cost=0,
-        target="opponents",
+        target="enemies",
         actions=["damage", "apply_effect"],
         power=10,
         damage_type="magical",
@@ -98,9 +176,9 @@ SKILLS = [
 
     Skill(
         id="dark_ritual",
-        name="Rituel sombre",
+        name="Rituel sombre 🕯️",
         cost=0,
-        target="opponents",
+        target="enemies",
         actions=["damage", "apply_effect"],
         power=20,
         damage_type="magical",
@@ -109,22 +187,24 @@ SKILLS = [
 
     Skill(
         id="sacrifice",
-        name="Sacrifice",
+        name="Sacrifice 🗡️",
         cost=15,
-        target="opponents",
+        cost_type="mana",
+        target="enemies",
         actions=["damage", "apply_effect"],
         power=30,
         damage_type="physical",
-        effects=[SkillEffect(effect_id="hemmorhage", chance=1, target="skill_target")]
+        effects=[SkillEffect(effect_id="hemorrhage", chance=1, target="skill_target")],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
 #------------------------------------------ BLACK PHILLIP ------------------------------------------------
 
     Skill(
         id="charge",
-        name="Charge",
+        name="Charge ♈",
         cost=0,
-        target="opponent",
+        target="enemy",
         actions=["damage"],
         power=10,
         damage_type="physical",
@@ -133,22 +213,24 @@ SKILLS = [
 
     Skill(
         id="dark_stare",
-        name="Regard noir",
+        name="Regard sombre 👁️‍🗨️",
         cost=0,
-        target="opponents",
+        target="enemies",
         actions=["apply_effect"],
         effects=[SkillEffect(effect_id="dread", chance=1, target="skill_target")]
     ),
 
     Skill(
         id="black_flame",
-        name="Flamme noire",
+        name="Flamme noire ⚫",
         cost=15,
-        target="opponents",
+        cost_type="mana",
+        target="enemies",
         actions=["damage", "apply_effect"],
         power=20,
         damage_type="magical",
-        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")]
+        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
 
@@ -156,9 +238,9 @@ SKILLS = [
 
     Skill(
         id="attack",
-        name="Attaque",
+        name="Attaque 🤜",
         cost=0,
-        target="opponent",
+        target="enemy",
         actions=["damage"],
         power=10,
         damage_type="physical",
@@ -167,29 +249,33 @@ SKILLS = [
 
     Skill(
         id="powerful_blow",
-        name="Coup puissant",
+        name="Coup puissant ⚔️",
         cost=10,
-        target="opponent",
+        cost_type="life",
+        target="enemy",
         actions=["damage", "apply_effect"],
         power=30,
         damage_type="physical",
-        effects=[SkillEffect(effect_id="shield", chance=0.4, target="self")]
+        effects=[SkillEffect(effect_id="shield", chance=0.4, target="self")],
+        message="{caster} lance {skill} (-{cost} PV, {remaining_life} PV restants) !"
     ),
 
     Skill(
         id="spinning_attack",
-        name="Attaque tournoyante",
+        name="Attaque tournoyante 🌀",
         cost=15,
-        target="opponents",
+        cost_type="life",
+        target="enemies",
         actions=["damage"],
         power=20,
         damage_type="physical",
-        effects=[]
+        effects=[],
+        message="{caster} lance {skill} (-{cost} PV, {remaining_life} PV restants) !"
     ),
 
     Skill(
         id="war_cry",
-        name="Cri de guerre",
+        name="Cri de guerre 🗣️",
         cost=0,
         target="self",
         actions=["apply_effect"],
@@ -201,9 +287,9 @@ SKILLS = [
 
     Skill(
         id="spark",
-        name="Etincelle",
+        name="Etincelle 💫",
         cost=0,
-        target="opponent",
+        target="enemy",
         actions=["damage"],
         power=10,
         damage_type="magical",
@@ -212,42 +298,48 @@ SKILLS = [
 
     Skill(
         id="fireball",
-        name="Boule de feu",
+        name="Boule de feu ☄️",
         cost=10,
-        target="opponent",
+        cost_type="mana",
+        target="enemy",
         actions=["damage", "apply_effect"],
         power=30,
         damage_type="magical",
-        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")]
+        effects=[SkillEffect(effect_id="burn", chance=0.3, target="skill_target")],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
     Skill(
         id="pyrotechnic_explosion",
-        name="Explosion pyrotechnique",
+        name="Explosion pyrotechnique 💥",
         cost=15,
-        target="opponents",
+        cost_type="mana",
+        target="enemies",
         actions=["damage"],
         power=20,
         damage_type="magical",
-        effects=[]
+        effects=[],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
     Skill(
         id="greek_fire",
-        name="Feu grégeois",
+        name="Feu grégeois 🛢️",
         cost=10,
-        target="opponent",
+        cost_type="mana",
+        target="enemy",
         actions=["damage"],
         power=80,
         damage_type="magical",
-        effects=[SkillEffect(effect_id="greek_fire", chance=1, target="skill_target")]
+        effects=[SkillEffect(effect_id="greek_fire", chance=1, target="skill_target")],
+        message="{caster} prépare un baril ̗🛢️ (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
 #------------------------------------------ PRETRE ------------------------------------------------
 
     Skill(
         id="simple_healing",
-        name="Soin simple",
+        name="Soin simple ✨",
         cost=0,
         target="ally",
         actions=["heal"],
@@ -257,17 +349,19 @@ SKILLS = [
 
     Skill(
         id="blessing",
-        name="Bénédiction",
+        name="Bénédiction 🙏",
         cost=10,
+        cost_type="mana",
         target="allies",
         actions=["heal", "apply_effect"],
         power=10,
-        effects=[SkillEffect(effect_id="regeneration", chance=0.4, target="ally")]
+        effects=[SkillEffect(effect_id="regeneration", chance=0.4, target="ally")],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
     Skill(
         id="radiant_protection",
-        name="Protection radieuse",
+        name="Protection radieuse 🔶",
         cost=0,
         target="allies",
         actions=["apply_effect"],
@@ -277,17 +371,20 @@ SKILLS = [
 
     Skill(
         id="penance",
-        name="Pénitence",
-        cost=10,
-        target="opponent",
+        name="Pénitence 💫",
+        cost=0,
+        target="enemy",
         actions=["damage"],
         power=20,
         damage_type="magical",
-        effects=[SkillEffect(effect_id="melancholy", chance=0.3, target="opponent")]
+        effects=[SkillEffect(effect_id="melancholy", chance=0.3, target="enemy")]
     ),
 ]
 
-
+COST_TYPES = [
+    "mana",
+    "life"
+]
 
 SKILL_UNLOCKS = {
 

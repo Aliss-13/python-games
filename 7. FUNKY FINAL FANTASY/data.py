@@ -1,44 +1,6 @@
 # dans Data, stocker uniquement des structures
 # pas de fonction !
 
-couleurs = {
-    "common": "\033[90m",       # gris
-    "uncommon": "\033[92m",   # vert
-    "rare" : "\033[94m",        # bleu
-    "epic": "\033[95m",       # violet
-    "legendary" : "\033[93m",   # orange
-    "reset" : "\033[0m"
-}
-
-RARITY = {
-    "common": "commun",
-    "uncommon": "inhabituel",
-    "rare": "rare",
-    "epic": "épique",
-    "legendary": "légendaire"
-}
-
-
-SLOTS = {
-    "head": "tête",
-    "chest": "torse",
-    "hands": "mains",
-    "legs": "jambes",
-    "feet": "pieds",
-    "weapon": "arme",
-}
-
-
-RED = "\033[91m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-CYAN = "\033[96m"
-BLUE = "\033[94m"
-DIM = "\033[2m"
-LIGHT_PINK = "\033[38;5;218m"
-PURPLE = "\033[95m"
-RESET = "\033[0m"
-
 
 inventory = [
     {
@@ -139,7 +101,7 @@ ITEMS = {
 
     "new_moon_tiara" : {
         "name": "Tiare de la nouvelle lune",
-        "description": "Vous vous sentez une âme de princesse.",
+        "description": "Vous vous sentez comme une princesse.",
         "type": "equipment", 
         "class": ["magic"], 
         "slot": "head", 
@@ -326,7 +288,7 @@ ITEMS = {
 
     "red_shoes" : {
         "name": "Souliers rouges",
-        "description": "Elles sont vernies avec un joli noeud. Pas très quête fantastique tout ça...",
+        "description": "Elles sont vernies avec un joli noeud. Pas très epic fantasy tout ça...",
         "type": "equipment", 
         "class": ["magic", "hand-to-hand"], 
         "slot": "feet", 
@@ -424,7 +386,7 @@ ITEMS = {
 
     "shiny_breastplate" : {
         "name": "Plastron rutilant",
-        "description": "On peut s'admirer dedans.",
+        "description": "Rutilant, ça veut dire « Qui brille beaucoup. ». J'ai appris ce mot avec un chaudron...",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
         "slot": "chest", 

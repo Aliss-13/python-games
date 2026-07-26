@@ -24,18 +24,18 @@ class Effect:
         self.source = source
 
 
-def to_dict(self):
+    def to_dict(self):
 
-    return {
-        "id": self.id,
-        "name": self.name,
-        "type": self.type,
-        "duration": self.duration,
-        "value": self.value,
-        "scaling": self.scaling,
-        "stackable": self.stackable,
-        "source": self.source
-    }
+        return {
+            "id": self.id,
+            "name": self.name,
+            "type": self.type,
+            "duration": self.duration,
+            "value": self.value,
+            "scaling": self.scaling,
+            "stackable": self.stackable,
+            "source": self.source
+        }
 
 EFFECTS = {
 
@@ -45,7 +45,7 @@ EFFECTS = {
         "type": "damage_over_time",
         "duration": 3,
         "value": 4,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True, 
     },
 
@@ -54,7 +54,7 @@ EFFECTS = {
         "type": "damage_over_time",
         "duration": 3,
         "value": 5,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -63,7 +63,7 @@ EFFECTS = {
         "type": "damage_over_time",
         "duration": 3,
         "value": 6,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -72,7 +72,7 @@ EFFECTS = {
         "type": "damage_over_time",
         "duration": 3,
         "value": 10,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -81,7 +81,7 @@ EFFECTS = {
         "type": "damage_over_time",
         "duration": 3,
         "value": 5,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -91,7 +91,7 @@ EFFECTS = {
         "type": "delayed_damage",
         "duration": 3,
         "value": 80,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -102,7 +102,7 @@ EFFECTS = {
         "type": "heal_over_time",
         "duration": 3,
         "value": 6,
-        "scaling": "defense",
+        "scaling": "level",
         "stackable": True
     },
 
@@ -129,8 +129,8 @@ EFFECTS = {
         "type": "defense_buff",
         "duration": 3,
         "value": 4,
-        "scaling": "power",
-        "stackable": True
+        "scaling": "level",
+        "stackable": False
     },
 
     "shield": {
@@ -138,8 +138,8 @@ EFFECTS = {
         "type": "defense_buff",
         "duration": 2,
         "value": 7,
-        "scaling": "power",
-        "stackable": True
+        "scaling": "level",
+        "stackable": False
     },
 
     # defense_alteration
@@ -148,8 +148,8 @@ EFFECTS = {
         "type": "defense_alteration",
         "duration": 3,
         "value": 4,
-        "scaling": "power",
-        "stackable": True
+        "scaling": "level",
+        "stackable": False
     }
 }
 

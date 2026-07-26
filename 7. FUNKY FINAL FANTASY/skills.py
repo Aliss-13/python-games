@@ -2,49 +2,40 @@ import random
 from sac_a_dos import get_stats
 from class_effect import create_effect, EFFECT_HANDLERS, EFFECT_IMMEDIATE
 
-
-def basic_attack(character, allies, enemies, skill, message):
-
-    print(message)
-    apply_skill_damage_to_targets(character, allies, enemies, skill)
-    display_remaining_life(enemies)
-
 #------------------------------------ EFFETS ---------------------------------------------------
 
-def get_effect_targets(character, allies, skill_targets, skill_effect):
+def get_effect_targets(context, skill_targets, skill_effect): 
 
-    if skill_effect.target == "self":
-        return [character]
-
-    elif skill_effect.target == "skill_target":
-        return skill_targets
-
-    elif skill_effect.target == "allies":
-        return allies
+    if skill_effect.target == "self": 
+        return [context.caster] 
     
-    elif skill_effect.target == "ally":
-        vivants = [ally for ally in allies if ally.life > 0]
+    elif skill_effect.target == "skill_target": 
+        return skill_targets 
+    
+    elif skill_effect.target == "allies":
+        return [ally for ally in context.allies if ally.life > 0]
+      
+    elif skill_effect.target == "ally": 
+        vivants = [ally for ally in context.allies if ally.life > 0] 
 
-        if not vivants:
-            return []
-
-        return [min(vivants, key=lambda ally: ally.life / get_stats(ally)["life_max"])]
+        if not vivants: 
+            return [] 
+        
+        return [min(vivants, key=lambda ally: ally.life / get_stats(ally)["life_max"])] 
 
     return []
 
 
+def apply_skill_effects(context):
+    
+    targets = get_skill_targets(context)
 
-def apply_skill_effects(character, allies, enemies, skill):
-
-    targets = get_targets(character, allies, enemies, skill)
-
-    for skill_effect in skill.effects:
+    for skill_effect in context.skill.effects:
 
         if random.random() <= skill_effect.chance:
 
             effect_targets = get_effect_targets(
-                character,
-                allies,
+                context,
                 targets,
                 skill_effect,
             )
@@ -54,7 +45,7 @@ def apply_skill_effects(character, allies, enemies, skill):
 
                 effect = create_effect(
                     skill_effect.effect_id,
-                    source=character
+                    source=context.caster
                 )
 
                 target.effects.append(effect)
@@ -64,38 +55,30 @@ def apply_skill_effects(character, allies, enemies, skill):
                     handler = EFFECT_HANDLERS.get(effect.type)
 
                     if handler:
-                        handler(character, target, effect)
+                        handler(context.caster, target, effect)
 
-
-def apply_skill_effects_to_targets(character, allies, enemies, skill):
-
-    targets = get_targets(character, allies, enemies, skill)
-
-    apply_skill_effects(character, targets, enemies, skill)
-            
 
 #------------------------------------ COUT ---------------------------------------------------
 
-def pay_skill_cost_life(character, skill):
-    cout = skill.cost
-    
-    if character.life <= cout:
-        print(f"{character.name} n'a pas assez d'énergie !")
-        return False
-    
-    character.life -= cout
-    return True
+def pay_skill_cost(context):
 
+    skill = context.skill
+    caster = context.caster
 
-def pay_skill_cost_mana(character, skill):
-    
-    cout = skill.cost
-    
-    if character.mana < cout:
-        print(f"{character.name} n'a pas assez de mana !")
-        return False
-    
-    character.mana -= cout
+    if skill.cost_type == "mana":
+        if caster.mana < skill.cost:
+            print("Pas assez de mana !")
+            return False
+
+        caster.mana -= skill.cost
+
+    elif skill.cost_type == "life":
+        if caster.life <= skill.cost:
+            print("Pas assez de PV !")
+            return False
+
+        caster.life -= skill.cost
+
     return True
 
 #------------------------------------ VIE RESTANTE ---------------------------------------------------
@@ -121,66 +104,76 @@ def display_remaining_life(targets):
 
 #------------------------------------ DEGATS : CIBLES, CALCUL et APPLICATION ---------------------------------------------------
 
-def get_targets(character, allies, enemies, skill, target=None):
+def get_skill_targets(context):
 
-    if skill.target == "opponent":
-        return [enemy for enemy in enemies if enemy.life > 0]
+    enemies = [
+        entity for entity in context.enemies
+        if entity.life > 0
+    ]
 
-    elif skill.target == "opponents":
+    allies = [
+        entity for entity in context.allies
+        if entity.life > 0
+    ]
+
+    if context.skill.target == "enemy":
+        return [random.choice(enemies)] if enemies else []
+
+    elif context.skill.target == "enemies":
         return enemies
-    
-    elif skill.target == "self":
-        return [character]
-    
 
-    elif skill.target == "ally":
+    elif context.skill.target == "self":
+        return [context.caster]
 
-        vivants = [ally for ally in allies if ally.life > 0]
+    elif context.skill.target == "ally":
+        return [min(allies, key=lambda ally: ally.life / get_stats(ally)["life_max"])] if allies else []
 
-        if not vivants:
-            return []
-
-        return [min(vivants, key=lambda ally: ally.life / get_stats(ally)["life_max"])]
-
-    elif skill.target == "allies":
+    elif context.skill.target == "allies":
         return allies
-    
-    else:
-        return []
-    
+
+    return []
 
 def deal_damage(attacker, defender, skill):
-    damage = calculate_damage(attacker, defender, skill.power) # ATTENTION CET ORDRE EST IMPORTANT, TARGET = DEFENDER
+    damage = calculate_damage(attacker, defender, skill) # ATTENTION CET ORDRE EST IMPORTANT, TARGET = DEFENDER
     defender.life = max(defender.life - damage, 0)
     print(f"⚔ {attacker.name} → {defender.name} : -{damage} PV")
 
 
-def apply_skill_damage_to_targets(character, allies, enemies, skill):
+def apply_skill_damage_to_targets(context):
 
-    targets = get_targets(character, allies, enemies, skill)
-
+    targets = get_skill_targets(context)
+    
     for target in targets:
-        deal_damage(character, target, skill)
+        deal_damage(context.caster, target, context.skill)
+
+    return targets
 
 
-def calculate_damage(attacker, defender, skill_power=0):
+def calculate_damage(attacker, defender, skill):
 
     attacker_stats = get_stats(attacker)
     defender_stats = get_stats(defender)
 
-    raw_damage = attacker_stats["power"] + skill_power
+    raw_damage = skill.power + attacker_stats["power"]
 
-    damage = max(raw_damage - defender_stats["defense"], 1)
+    damage = raw_damage - defender_stats["defense"]
 
-    return damage
+    return max(1, damage)
 
 #------------------------------------ SOIN ---------------------------------------------------
 
-def heal_target(character, target, skill):
+def apply_skill_healing(context):
+
+    targets = get_skill_targets(context)
+
+    for target in targets:
+        heal_target(context, target)
+
+def heal_target(context, target):
     
-    stats_healer = get_stats(character)
+    stats_healer = get_stats(context.caster)
     stats_target = get_stats(target)
-    healing = stats_healer["power"] + skill.power
+    healing = stats_healer["power"] + context.skill.power
 
     if target.life == stats_target["life_max"] :
         print(f"{target.name} est déjà au maximum de ses PV !")
@@ -192,164 +185,3 @@ def heal_target(character, target, skill):
 
     if real_healing > 0:
         print(f"{target.name} gagne {real_healing} PV → PV : {target.life}/{stats_target['life_max']} !")
-        
-#------------------------------------ GUERRIER ---------------------------------------------------
-
-def attack(character, allies, enemies, skill):
-
-    basic_attack(character, allies, enemies, skill, f"{character.name} lance Attaque 🤜 !")
-
-def powerful_blow(character, allies, enemies, skill):
-
-    if not pay_skill_cost_life(character, skill):
-        return
-    
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance un Coup puissant ⚔️ (-{skill.cost} PV, {character.life} PV restants) !"
-    )
-
-    # effet bouclier
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-    
-
-
-def spinning_attack(character, allies, enemies, skill):
-
-    if not pay_skill_cost_life(character, skill):
-        return
-    
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance Attaque tournoyante 🌀 (-{skill.cost} PV, {character.life} PV restants) !"
-    )
-
-
-def war_cry(character, allies, enemies, skill):
-    
-    print(f"{character.name} pousse un hurlement guttural ̗🗣️ !")
-    
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-    
-#------------------------------------ MAGE ---------------------------------------------------
-
-def spark(character, allies, enemies, skill):
-
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance Etincelle 💫 !"
-    )
-
-
-def fireball(character, allies, enemies, skill):
-    
-    if not pay_skill_cost_mana(character, skill):
-        return
-
-    # dégâts normaux
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance Boule de feu ̗☄️ (-{skill.cost} mana, {character.mana} mana restant) !"
-    )
-
-    # effet brûlure
-    
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-
-
-def pyrotechnic_explosion(character, allies, enemies, skill):
-
-    if not pay_skill_cost_mana(character, skill):
-        return
-    
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance Explosion pyrotechnique 💥 (-{skill.cost} mana, {character.mana} mana restant) !"
-    )
-
-def greek_fire(character, allies, enemies, skill):
-    
-    if not pay_skill_cost_mana(character, skill):
-        return
-    
-    print(f"{character.name} prépare un baril ̗🛢️ (-{skill.cost} mana, {character.mana} mana restant) !")
-
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-
-#------------------------------------ PRETRE ---------------------------------------------------
-
-def simple_healing(character, allies, enemies, skill): # MERCI DE NE PAS ENLEVER ENNEMIES
-
-    injured_allies = []
-
-    for ally in allies:
-        stats = get_stats(ally)
-
-        if 0 < ally.life < stats["life_max"]:
-            injured_allies.append(ally)
-
-    if not injured_allies:
-        print("Personne à soigner !")
-        return
-
-    target = min(
-        injured_allies,
-        key=lambda ally: ally.life / get_stats(ally)["life_max"]
-    )
-
-    print(f"{character.name} lance Soin simple 🌿 !")
-    heal_target(character, target, skill)
-
-
-def blessing(character, allies, enemies, skill):
-
-    if not pay_skill_cost_mana(character, skill):
-        return
-    
-    print(f"{character.name} lance Bénédiction 🙏 (-{skill.cost} mana, {character.mana} mana restant) !")
-    
-    targets = get_targets(character, allies, enemies, skill)
-    
-    for target in targets:
-        if target.life > 0:
-            heal_target(character, target, skill)
-    
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-
-
-def radiant_protection(character, allies, enemies, skill):
-    
-    apply_skill_effects_to_targets(character, allies, enemies, skill)
-
-
-def penance(character, allies, enemies, skill):
-
-    if not pay_skill_cost_mana(character, skill):
-        return
-    
-    basic_attack(
-        character,
-        allies,
-        enemies,
-        skill,
-        f"{character.name} lance Pénitence 💫 !"
-    )
-
-    # effet mélancolie
-    
-    apply_skill_effects_to_targets(character, allies, enemies, skill)

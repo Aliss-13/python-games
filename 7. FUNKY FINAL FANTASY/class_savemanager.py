@@ -4,7 +4,8 @@ import os
 import sys
 
 from class_character import Character, CHARACTERS, get_character_by_id
-from class_opponent import OPPONENTS
+from class_enemy import ENEMIES
+from class_zone import ZONES
 from data import inventory
 
 SAVE_FILE = "funky_final_fantasy.json"
@@ -24,13 +25,15 @@ class SaveManager:
 
 
     @classmethod
-    def save(cls, player_team, enemy_team, inventory):
+    def save(cls, game):
 
         data = {
             "version": cls.SAVE_VERSION,
-            "team": [character.to_dict() for character in player_team],
-            "enemy_team": [enemy.to_dict() for enemy in enemy_team],
-            "inventory": inventory
+            "team": [character.to_dict() for character in game.player_team],
+            "enemy_team": [enemy.to_dict() for enemy in game.enemy_team],
+            "inventory": game.inventory,
+            "zone": game.current_zone.id,
+            
         }
 
         with open(cls.SAVE_PATH, "w", encoding="utf-8") as file:
@@ -50,15 +53,20 @@ class SaveManager:
             data = json.load(file)
 
         data = cls.update_save(data)
-
-        player_team = cls.load_characters(data["team"])
-        enemy_team = cls.load_enemy_progress(data["enemy_team"])
-        inventory = data["inventory"]
         
+        # données indispensables
+        player_team = cls.load_characters(data["team"])
 
+        # données qui peuvent évoluer
+        enemy_team = cls.load_enemy_progress(data.get("enemy_team", []))
+        inventory = data.get("inventory", [])
+
+        zone_id = data.get("zone", "dark_forest")
+        zone = next((zone for zone in ZONES if zone.id == zone_id), ZONES[0])
+        
         print("⌛ Partie chargée.")
 
-        return player_team, enemy_team, inventory
+        return player_team, enemy_team, copy.deepcopy(inventory), zone
 
 
     @classmethod
@@ -72,14 +80,19 @@ class SaveManager:
     @classmethod
     def load_enemy_progress(cls, saved_enemies):
 
-        enemy_team = copy.deepcopy(OPPONENTS)
+        enemy_team = copy.deepcopy(ENEMIES)
+
+        saved_dict = {
+            enemy["id"]: enemy
+            for enemy in saved_enemies
+        }
 
         for enemy in enemy_team:
 
-            for saved in saved_enemies:
+            saved_enemy = saved_dict.get(enemy.id)
 
-                if enemy.id == saved["id"]:
-                    enemy.defeated = saved["defeated"]
+            if saved_enemy:
+                enemy.defeated = saved_enemy.get("defeated", False)
 
         return enemy_team
 
@@ -92,22 +105,18 @@ class SaveManager:
             get_character_by_id("priest", CHARACTERS),
         ]
 
-        enemy_team = copy.deepcopy(OPPONENTS)
+        enemy_team = []
+        
+        zone = ZONES[0]
 
-        return player_team, enemy_team, inventory
+        return player_team, enemy_team, inventory, zone
 
 
     @classmethod
+  
     def update_save(cls, data):
 
-        version = data.get("version", 1)
-
-        if version < cls.SAVE_VERSION:
-
-            if version == 1:
-                pass
-
-        data["version"] = cls.SAVE_VERSION
+        data.setdefault("version", 1)
 
         return data
     

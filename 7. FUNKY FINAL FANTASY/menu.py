@@ -1,10 +1,19 @@
 from ui import section
 from display import display_player_team
-from combat import combat, generate_enemy_team, menu_inventory
-from class_zone import explore
+from menu_combat import menu_inventory
+from combat import combat
 from class_savemanager import SaveManager
+from class_combatcontext import CombatContext
 
-def menu_zone(character, player_team, enemy_team, inventory, current_zone):
+def menu_zone(game, context):
+
+    context = CombatContext(
+        player_team=game.player_team,
+        enemy_team=game.enemy_team,
+        inventory=game.inventory,
+        zone=game.current_zone,
+        game=game
+    )
 
     while True:
 
@@ -18,20 +27,20 @@ def menu_zone(character, player_team, enemy_team, inventory, current_zone):
         choix = input("> ").lower()
 
         if choix == "1":
-            result = explore(current_zone)
-
-            if result and result["type"] == "combat":
-                enemies = generate_enemy_team(current_zone, result["event"])
-                combat(player_team, enemies, inventory, current_zone)
+            combat(game)
 
         elif choix == "2":
-            display_player_team(player_team)
+            display_player_team(game.player_team)
 
         elif choix == "3":
-            menu_inventory(character, player_team, inventory)
+            menu_inventory(context)
 
         elif choix == "4":
-            SaveManager.save(player_team, enemy_team, inventory)
+            SaveManager.save(game)
+
+        elif choix == "5":
+            print("À bientôt.")
+            return
 
         else:
             print("Choix invalide")
