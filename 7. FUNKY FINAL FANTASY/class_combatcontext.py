@@ -6,7 +6,8 @@ class CombatContext:
         enemy_team,
         inventory=None,
         zone=None,
-        game=None
+        game=None, 
+        event=None
     ):
         self.player_team = player_team
         self.enemy_team = enemy_team
@@ -14,6 +15,9 @@ class CombatContext:
         self.zone = zone
         self.game = game
 
+        self.event = event
+        self.is_sub_boss_fight = (event and event.event_category == "sub_boss")
+        self.is_boss_fight = (event and event.event_category == "boss")
 
     def get_live_entities(self):
 

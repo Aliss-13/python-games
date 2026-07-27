@@ -11,7 +11,7 @@ from loot_tables import generate_loot, add_loot
 from sac_a_dos import get_stats, calcul_stats
 from class_savemanager import SaveManager
 from menu_combat import menu_tour
-from class_zone import explore
+from class_zone import explore, gain_zone_progress
 
 RARE_CHANCE = 0.05
 
@@ -86,6 +86,7 @@ def character_turn(context, character):
     separator()
     
     if character.life <= 0:
+        print(f"{character.name} est mort !")
         return
 
     header(f"Tour de {character.name}")
@@ -172,7 +173,21 @@ def restore_team_after_combat(player_team):
     print("✨ Votre équipe récupère tous ses PV et son mana.")
 
 
-def handle_defeated_enemies(context):
+def register_defeated_enemies(context):
+
+    for enemy in context.enemy_team:
+
+        if enemy.life <= 0:
+
+            context.zone.enemy_kills[enemy.id] = (
+                context.zone.enemy_kills.get(enemy.id, 0) + 1
+            )
+
+            gain_zone_progress(context.zone, enemy)
+
+
+
+def handle_defeated_enemies(game, context):
 
     loot = []
 
@@ -182,13 +197,17 @@ def handle_defeated_enemies(context):
 
             print(f"{enemy.name} disparaît !")
 
-            loot.extend(
-                generate_loot(enemy, context.zone)
-            )
+            # progression de nettoyage de zone
+            register_defeated_enemies(context)
+
+            gain_xp(context)
 
             enemy.defeated = True
 
-    return loot
+            loot.extend(generate_loot(enemy, context.zone))
+            add_loot(game.inventory, loot)
+            display_loot(loot)
+            return loot
 
 
 def is_dead(entity):
@@ -223,7 +242,8 @@ def prepare_combat(game):
         enemy_team=enemy_team,
         inventory=game.inventory,
         zone=game.current_zone,
-        game=game
+        game=game,
+        event=explore_result["event"]
     )
 
 
@@ -235,14 +255,8 @@ def end_combat(game, context):
     if context.is_boss_fight:
         game.current_zone.boss_defeated = True
 
-    loot = handle_defeated_enemies(context)
+    handle_defeated_enemies(game, context)
     
-    add_loot(game.inventory, loot)
-    
-    display_loot(loot)
-
-    gain_xp(context)
-
     restore_team_after_combat(game.player_team)
 
     SaveManager.save(game)

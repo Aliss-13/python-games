@@ -86,7 +86,7 @@ SKILLS = [
 
     Skill(
         id="dull_thud",
-        name="Coup sourd 🫨",
+        name="Coup sourd 🧌",
         cost=0,
         target="enemy",
         actions=["damage", "apply_effect"],

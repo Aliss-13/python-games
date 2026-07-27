@@ -380,3 +380,43 @@ cible sélectionnée
 effets temporaires
 buffs/debuffs
 historique du combat
+
+
+
+Ce serait bien de retenir : 
+
+_____.get(bidule) c'est pour un dictionnaire
+
+for flag in zone.flags:
+
+    event = FOREST_EVENTS.get(flag)
+
+    if event:
+        print(f"- {event.name}")
+
+______fonction get_bidule_by_id(bidule_id) c'est pour une liste
+
+for enemy_id, count in zone.enemy_kills.items():
+
+    enemy = get_enemy_by_id(enemy_id) # récupère l'objet "ennemi" grâce à son id.
+
+        print(f"- {enemy.name} : {count}")
+
+def get_enemy_by_id(enemy_id, enemy_list):
+
+    for enemy in enemy_list:
+        if enemy.id == enemy_id:
+            return enemy
+
+    raise ValueError(f"Ennemi inconnu : {enemy_id}")
+
+Dictionnaire = placard avec étiquettes → j'ouvre directement le tiroir.
+Liste = tas d'objets → je fouille.
+
+
+J'ai...	                    Je fais...
+dict avec une clé	        >  .get(clé)
+list d'objets avec un id	>  get_xxx_by_id()
+list simple	                >  boucle for ou index [0]
+objet avec attribut	        >  .attribut
+

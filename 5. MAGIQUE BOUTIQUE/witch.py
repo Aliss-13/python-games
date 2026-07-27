@@ -144,13 +144,13 @@ class Witch:
             if choice_index is None or choice_index >= len(client.choices):
                 continue
 
-        selected_choice = client.choices[choice_index]
+            selected_choice = client.choices[choice_index]
 
-        self.waiting_clients.append(
-            WaitingClient(
-                client,
-                selected_choice
-            )
+            self.waiting_clients.append(
+                WaitingClient(
+                    client,
+                    selected_choice
+                )
         )
 
         

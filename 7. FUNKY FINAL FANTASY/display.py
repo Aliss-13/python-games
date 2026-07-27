@@ -1,5 +1,7 @@
 
 from data import ITEMS
+from class_event import FOREST_EVENTS
+from class_enemy import get_enemy_by_id, ENEMIES
 from ui import header, separator
 from sac_a_dos import get_stats
 
@@ -23,12 +25,12 @@ RARITY = {
 
 
 SLOTS = {
-    "head": "tête",
-    "chest": "torse",
-    "hands": "mains",
-    "legs": "jambes",
-    "feet": "pieds",
-    "weapon": "arme",
+    "head": "Tête",
+    "chest": "Torse",
+    "hands": "Mains",
+    "legs": "Jambes",
+    "feet": "Pieds",
+    "weapon": "Arme",
 }
 
 
@@ -50,6 +52,7 @@ STAT_NAMES = {
     "life_max": "Points de vie",
     "mana_max": "Mana"
 }
+
 
 #--------------------------------------------------- OBJETS ---------------------------------------------------
 
@@ -118,6 +121,7 @@ def display_equipment(character):
         name = ITEMS[item_id]["name"]
         description = ITEMS[item_id]["description"]
         item = ITEMS[item_id]
+        slot=SLOTS.get(slot, slot)
         couleur = couleurs.get(item["rarity"], "")
         reset = couleurs["reset"]
         print(f" {slot} → {couleur}{name}{reset} - {DIM}{description}{RESET}")
@@ -194,3 +198,83 @@ def display_combat_state(context):
 
     separator()
 
+
+
+def display_zone_progress(zone):
+
+    separator()
+
+    print(f"🌲 {zone.name}")
+    print(zone.description)
+
+    print()
+
+    print(f"Progression : {zone.progress}/{zone.boss_progress}")
+
+    # barre visuelle
+    bar_size = 20
+
+    filled = int(bar_size * zone.progress / zone.boss_progress)
+
+    bar = "█" * filled + "-" * (bar_size - filled)
+
+    print(f"[{bar}]")
+
+    print()
+
+
+    # discovery
+    if zone.flags:
+        print("\n📜 Découvertes :")
+
+    for flag in zone.flags:
+
+        event = FOREST_EVENTS.get(flag)
+
+        if event:
+            print(f"- {event.name}")
+
+        else:
+            print(f"- Découverte inconnue ({flag})")
+
+
+    # ennemis vaincus
+    print("\n⚔️ Ennemis vaincus :")
+
+    if zone.enemy_kills:
+
+        for enemy_id, count in zone.enemy_kills.items():
+
+            enemy = get_enemy_by_id(enemy_id, ENEMIES) # récupère l'objet "ennemi" grâce à son id.
+
+        print(f"- {enemy.name} : {count}")
+
+    else:
+        print("- Aucun ennemi vaincu")
+
+    print("")
+
+    # sous-boss, boss
+
+    if zone.sub_boss_unlocked:
+        if zone.sub_boss_defeated:
+            print(f"🥈 Sous-boss : {zone.sub_boss} vaincu")
+        else:
+            print(f"🥈 Sous-boss disponible : {zone.sub_boss}")
+
+    else:
+        print("🥈 Sous-boss : inconnu")
+
+    print("")
+
+
+    if zone.boss_unlocked:
+        if zone.boss_defeated:
+            print(f"🥇 Boss : {zone.boss} vaincu")
+        else:
+            print(f"🥇 Boss disponible : {zone.boss}")
+
+    else:
+        print("🥇 Boss : inconnu")
+
+    print("")

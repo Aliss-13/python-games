@@ -1,6 +1,7 @@
 import random
 from class_event import FOREST_EVENTS, Event
 from loot_tables import LOOT_ZONES_PROFILES
+from class_enemy import get_enemy_by_id
 
 
 class Zone:
@@ -79,16 +80,20 @@ class Zone:
             "sub_boss_unlocked": self.sub_boss_unlocked,
             "sub_boss_defeated": self.sub_boss_defeated,
             "boss_unlocked": self.boss_unlocked,
-            "boss_defeated": self.boss_defeated   
+            "boss_defeated": self.boss_defeated,
+            "enemy_kills": self.enemy_kills,   
         }
 
     def load_state(self, data):
 
-        self.progress = data["progress"]
-        self.flags = data["flags"]
-        self.discovered = data["discovered"]
-        self.sub_boss_defeated = data["sub_boss_defeated"]
-        self.boss_defeated = data["boss_defeated"]
+        self.progress = data.get("progress", 0)
+        self.flags = data.get("flags", [])
+        self.discovered = data.get("discovered", False)
+        self.sub_boss_unlocked = data.get("sub_boss_unlocked", False)
+        self.sub_boss_defeated = data.get("sub_boss_defeated", False)
+        self.boss_unlocked = data.get("boss_unlocked", False)
+        self.boss_defeated = data.get("boss_defeated", False)
+        self.enemy_kills = data.get("enemy_kills", {})
 
 
     @property
@@ -184,29 +189,7 @@ def get_zone_by_id(zone_id, zones):
 
 current_zone = get_zone_by_id("dark_forest", ZONES)
 
-
-def create_boss_event(boss_id):
-
-    return Event(
-        id=f"{boss_id}_battle",
-        name=f"⚔️ Combat contre {boss_id}",
-        event_type="combat",
-        enemies=[boss_id],
-        ignore_rarity=True,
-        is_boss=True
-    )
-
-
-def choose_combat_event(zone):
-
-    if (zone.boss_unlocked and not zone.boss_defeated):
-        return create_boss_event(zone.boss)
-
-    if (zone.sub_boss_unlocked and not zone.sub_boss_defeated):
-        return create_boss_event(zone.sub_boss)
-
-    return random.choice(list(zone.events.values()))
-
+#---------------------------------------------------- Exploration -----------------------------------------
 
 def explore(zone):
 
@@ -215,17 +198,42 @@ def explore(zone):
         zone.discovered = True
 
 
-    if zone.sub_boss_unlocked or zone.boss_unlocked:
+    # Priorité aux boss
+    if (zone.sub_boss_unlocked and not zone.sub_boss_defeated):
         zone_event = choose_combat_event(zone)
+        return resolve_event(zone, zone_event)
 
-    else:
-        zone_event = random.choice(
-            list(zone.events.values())
-        )
 
+    if (zone.boss_unlocked and not zone.boss_defeated):
+        zone_event = choose_combat_event(zone)
+        return resolve_event(zone, zone_event)
+
+
+    available_events = []
+
+    for event in zone.events.values():
+
+        # événements répétables (combats)
+        if event.repeatable:
+            available_events.append(event)
+
+
+        # découvertes uniques
+        elif event.event_type == "discovery":
+
+            if event.flag not in zone.flags:
+                available_events.append(event)
+
+
+    if not available_events:
+        return {"type": "nothing"}
+
+
+    zone_event = random.choice(available_events)
 
     return resolve_event(zone, zone_event)
 
+#--------------------------------- Résolution des évènements (combats + découvertes) ------------------------
 
 def resolve_event(zone, event):
 
@@ -235,24 +243,6 @@ def resolve_event(zone, event):
     if event.event_type == "discovery":
 
         zone.add_progress(event.progress)
-
-        print(f"+{event.progress} progression de zone")
-
-        if (zone.progress >= zone.sub_boss_progress and not zone.sub_boss_unlocked):
-            zone.sub_boss_unlocked = True
-            print(f"\n⚔️ {zone.sub_boss} est désormais accessible !")
-
-
-        if (
-            zone.progress >= zone.boss_progress
-            and zone.sub_boss_defeated
-            and not zone.boss_unlocked
-        ):
-
-            zone.boss_unlocked = True
-
-            print(f"\n👑 {zone.boss} est désormais accessible !")
-
 
         if event.flag and event.flag not in zone.flags:
             zone.flags.append(event.flag)
@@ -266,4 +256,52 @@ def resolve_event(zone, event):
             "type": "combat",
             "event": event
         }
+
+#---------------------------------------------------- Event combat et boss -----------------------------------------
+
+def gain_zone_progress(zone, enemy):
+
+    zone.add_progress(enemy.zone_progress)
+
+    print(
+        f"🌲 Victoire sur {enemy.name} :"
+        f" +{enemy.zone_progress} progression de zone !"
+    )
+
+
+def create_boss_event(boss_id, boss_type):
+
+    boss = get_enemy_by_id(boss_id)
+
+    return Event(
+        id=f"{boss_id}_battle",
+        name=f"⚔️ Combat contre {boss.name}",
+        event_type="combat",
+        enemies=[boss_id],
+        ignore_rarity=True,
+        is_sub_boss=(boss_type == "sub_boss"),
+        is_boss=(boss_type == "boss")
+    )
+
+
+def choose_combat_event(zone):
+
+    if zone.sub_boss_unlocked and not zone.sub_boss_defeated:
+        return create_boss_event(
+            zone.sub_boss,
+            "sub_boss"
+        )
+
+
+    if zone.boss_unlocked and not zone.boss_defeated:
+        return create_boss_event(
+            zone.boss,
+            "boss"
+        )
+
+
+    return random.choice([
+        FOREST_EVENTS["raven_attack"],
+        FOREST_EVENTS["spider_nest"]
+    ])
         

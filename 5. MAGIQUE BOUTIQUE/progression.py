@@ -87,19 +87,13 @@ def display_scarabac_parts(witch):
     
         
 def display_remaining_recipes(witch):
-    print("\n💫 Crafts restants :")
+    print("\n💫 Crafts :")
     print("")
 
-    any_remaining = False
-
     for recipe, crafted in witch.crafted_once.items():
-        if not crafted:
-            name = recipes.ITEMS[recipe]["name"]
-            print(f"❌ {name}")
-            any_remaining = True
-
-    if not any_remaining:
-        print("Aucune recette craftée pour le moment.")
+        status = "✔" if crafted else "❌"
+        name = recipes.ITEMS[recipe]["name"]
+        print(f"{status} {name}")
 
 
 def crafted_everything(witch):

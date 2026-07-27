@@ -1,5 +1,5 @@
 from ui import section
-from display import display_player_team
+from display import display_player_team, display_zone_progress
 from menu_combat import menu_inventory
 from combat import combat
 from class_savemanager import SaveManager
@@ -21,8 +21,9 @@ def menu_zone(game, context):
         print("[1] Explorer")
         print("[2] Equipe")
         print("[3] Inventaire")
-        print("[4] Sauvegarder")
-        print("[5] Quitter")
+        print("[4] Progression")
+        print("[5] Sauvegarder")
+        print("[6] Quitter")
 
         choix = input("> ").lower()
 
@@ -36,9 +37,12 @@ def menu_zone(game, context):
             menu_inventory(context)
 
         elif choix == "4":
-            SaveManager.save(game)
+            display_zone_progress(game.current_zone)
 
         elif choix == "5":
+            SaveManager.save(game)
+
+        elif choix == "6":
             print("À bientôt.")
             return
 

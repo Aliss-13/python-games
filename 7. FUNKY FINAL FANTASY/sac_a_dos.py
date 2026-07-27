@@ -46,9 +46,13 @@ def get_item(inventory, choix):
 def apply_item_effect(player_team, item):
     
     effect = item.get("effect")
-    stats = get_stats(character)
+
+    for character in player_team:
+        stats = get_stats(character)
+
     if effect == "gain_pv":
         allies = [character for character in player_team if character.life > 0 and character.life < stats["life_max"]]
+
         if not allies:
             return
         

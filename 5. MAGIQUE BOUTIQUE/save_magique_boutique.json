@@ -1,0 +1,349 @@
+{
+    "witch": {
+        "level": 1,
+        "xp": 5,
+        "money": 10,
+        "inventory": {
+            "herbe_lunaire": 0,
+            "champignon_sombre": 0,
+            "poussiere_etoile": 0
+        },
+        "recipes": {},
+        "recipes_upgrades": {
+            "healing_potion": 0,
+            "mana_potion": 0,
+            "love_potion": 0,
+            "empowerment": 0,
+            "polyjuice": 0,
+            "bbl": 0,
+            "banana_boat": 0,
+            "ass_worms": 0,
+            "pebble_in_shoe": 0,
+            "hr_optimization": 0,
+            "knock_pinky": 0,
+            "flatulences": 0,
+            "tax_audit": 0,
+            "no_handy_no_candy": 0,
+            "harissa_revenge": 0,
+            "murphys_laws": 0,
+            "cakes_and_politics": 0,
+            "tax_haven_from_hell_to_hell_yeah": 0,
+            "mimi_the_restroom_queen": 0,
+            "sexy_djinns_and_pentagrams": 0,
+            "agile": 0,
+            "jean_marc_synergie_all_songs_lyrics": 0,
+            "the_devils_best_breakfast_recipes": 0
+        },
+        "shop_stock": {
+            "healing_potion": {
+                "quantity": 0
+            },
+            "mana_potion": {
+                "quantity": 0
+            },
+            "love_potion": {
+                "quantity": 0
+            },
+            "empowerment": {
+                "quantity": 0
+            },
+            "polyjuice": {
+                "quantity": 0
+            },
+            "bbl": {
+                "quantity": 0
+            },
+            "banana_boat": {
+                "quantity": 0
+            },
+            "ass_worms": {
+                "quantity": 0
+            },
+            "pebble_in_shoe": {
+                "quantity": 0
+            },
+            "hr_optimization": {
+                "quantity": 0
+            },
+            "knock_pinky": {
+                "quantity": 0
+            },
+            "flatulences": {
+                "quantity": 0
+            },
+            "tax_audit": {
+                "quantity": 0
+            },
+            "no_handy_no_candy": {
+                "quantity": 0
+            },
+            "harissa_revenge": {
+                "quantity": 0
+            },
+            "murphys_laws": {
+                "quantity": 0
+            },
+            "cakes_and_politics": {
+                "quantity": 0
+            },
+            "tax_haven_from_hell_to_hell_yeah": {
+                "quantity": 0
+            },
+            "mimi_the_restroom_queen": {
+                "quantity": 0
+            },
+            "sexy_djinns_and_pentagrams": {
+                "quantity": 0
+            },
+            "agile": {
+                "quantity": 0
+            },
+            "jean_marc_synergie_all_songs_lyrics": {
+                "quantity": 0
+            },
+            "the_devils_best_breakfast_recipes": {
+                "quantity": 0
+            }
+        },
+        "shop_shelves": {
+            "healing_potion": {
+                "quantity": 0,
+                "last_sell": 1785172992.0927255
+            },
+            "mana_potion": {
+                "quantity": 0,
+                "last_sell": 1785172968.230586
+            },
+            "love_potion": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305868
+            },
+            "empowerment": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305872
+            },
+            "polyjuice": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305877
+            },
+            "bbl": {
+                "quantity": 0,
+                "last_sell": 1785172968.230588
+            },
+            "banana_boat": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305884
+            },
+            "ass_worms": {
+                "quantity": 0,
+                "last_sell": 1785172968.230589
+            },
+            "pebble_in_shoe": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305892
+            },
+            "hr_optimization": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305894
+            },
+            "knock_pinky": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305934
+            },
+            "flatulences": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305942
+            },
+            "tax_audit": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305944
+            },
+            "no_handy_no_candy": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305949
+            },
+            "harissa_revenge": {
+                "quantity": 0,
+                "last_sell": 1785172968.230595
+            },
+            "murphys_laws": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305954
+            },
+            "cakes_and_politics": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305956
+            },
+            "tax_haven_from_hell_to_hell_yeah": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305958
+            },
+            "mimi_the_restroom_queen": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305963
+            },
+            "sexy_djinns_and_pentagrams": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305968
+            },
+            "agile": {
+                "quantity": 0,
+                "last_sell": 1785172968.230597
+            },
+            "jean_marc_synergie_all_songs_lyrics": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305973
+            },
+            "the_devils_best_breakfast_recipes": {
+                "quantity": 0,
+                "last_sell": 1785172968.2305982
+            }
+        },
+        "sales": {
+            "healing_potion": 1
+        },
+        "waiting_clients": [],
+        "crafted_once": {
+            "healing_potion": true,
+            "mana_potion": false,
+            "love_potion": false,
+            "empowerment": false,
+            "polyjuice": false,
+            "bbl": false,
+            "banana_boat": false,
+            "ass_worms": false,
+            "pebble_in_shoe": false,
+            "hr_optimization": false,
+            "knock_pinky": false,
+            "flatulences": false,
+            "tax_audit": false,
+            "no_handy_no_candy": false,
+            "harissa_revenge": false,
+            "murphys_laws": false,
+            "cakes_and_politics": false,
+            "tax_haven_from_hell_to_hell_yeah": false,
+            "mimi_the_restroom_queen": false,
+            "sexy_djinns_and_pentagrams": false,
+            "agile": false,
+            "jean_marc_synergie_all_songs_lyrics": false,
+            "the_devils_best_breakfast_recipes": false
+        },
+        "scarabac": {
+            "gold_shell": false,
+            "left_wing": false,
+            "right_wing": false,
+            "ruby_eye": false,
+            "sharp_mandible": false,
+            "mechanical_heart": false
+        },
+        "victory_objectives": {
+            "craft_all": false,
+            "level_20": false,
+            "scarabac_complete": false
+        },
+        "side_quests": {
+            "gringotts": false,
+            "dat_ass": false,
+            "steve_carrell": false,
+            "jeff_bezos": false,
+            "severus_snape": false,
+            "flitwick": false
+        }
+    },
+    "garden": {
+        "level": 1,
+        "garden_levels": {
+            "1": [
+                "herbe_lunaire",
+                "champignon_sombre",
+                "poussiere_etoile"
+            ],
+            "2": [
+                "ecorce_ancienne",
+                "eau_enchantee"
+            ],
+            "3": [
+                "croc_feroce",
+                "aile_de_fee"
+            ],
+            "4": [],
+            "5": [
+                "pierre_noire",
+                "aconit"
+            ],
+            "6": [],
+            "7": [
+                "bezoard",
+                "ecaille_dragon"
+            ]
+        },
+        "ingredients": {
+            "herbe_lunaire": {
+                "count": 2,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1785172988.2306178
+            },
+            "champignon_sombre": {
+                "count": 1,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1785172984.2306185
+            },
+            "poussiere_etoile": {
+                "count": 0,
+                "unlocked": true,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306187
+            },
+            "ecorce_ancienne": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306108
+            },
+            "eau_enchantee": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.230611
+            },
+            "croc_feroce": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306118
+            },
+            "aile_de_fee": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306123
+            },
+            "pierre_noire": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306125
+            },
+            "aconit": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.230613
+            },
+            "bezoard": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.230614
+            },
+            "ecaille_dragon": {
+                "count": 0,
+                "unlocked": false,
+                "rate_modifier": 1,
+                "last_update": 1785172968.2306142
+            }
+        }
+    }
+}

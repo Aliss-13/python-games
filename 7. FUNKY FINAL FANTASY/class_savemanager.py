@@ -5,7 +5,7 @@ import sys
 
 from class_character import Character, CHARACTERS, get_character_by_id
 from class_enemy import ENEMIES
-from class_zone import ZONES
+from class_zone import ZONES, get_zone_by_id
 from data import inventory
 
 SAVE_FILE = "funky_final_fantasy.json"
@@ -32,7 +32,7 @@ class SaveManager:
             "team": [character.to_dict() for character in game.player_team],
             "enemy_team": [enemy.to_dict() for enemy in game.enemy_team],
             "inventory": game.inventory,
-            "zone": game.current_zone.id,
+            "zone": game.current_zone.to_dict()
             
         }
 
@@ -53,16 +53,14 @@ class SaveManager:
             data = json.load(file)
 
         data = cls.update_save(data)
-        
+
         # données indispensables
         player_team = cls.load_characters(data["team"])
 
         # données qui peuvent évoluer
         enemy_team = cls.load_enemy_progress(data.get("enemy_team", []))
         inventory = data.get("inventory", [])
-
-        zone_id = data.get("zone", "dark_forest")
-        zone = next((zone for zone in ZONES if zone.id == zone_id), ZONES[0])
+        zone = cls.load_zone(data.get("zone"))
         
         print("⌛ Partie chargée.")
 
@@ -96,6 +94,23 @@ class SaveManager:
 
         return enemy_team
 
+    
+    @classmethod
+    def load_zone(cls, saved_zone):
+
+        if not saved_zone:
+            return ZONES[0]
+
+        zone_id = saved_zone["id"]
+
+        zone = copy.deepcopy(get_zone_by_id(zone_id, ZONES))
+
+        if zone:
+            zone.load_state(saved_zone)
+
+        return zone
+
+    
     @classmethod
     def new_game(cls):
 

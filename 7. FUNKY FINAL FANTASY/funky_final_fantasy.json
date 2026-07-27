@@ -7,34 +7,33 @@
             "character_class": "hand-to-hand",
             "skills": [
                 "attack",
-                "powerful_blow",
-                "spinning_attack"
+                "powerful_blow"
             ],
-            "life": 120,
+            "life": 100,
             "mana": 0,
             "base_stats": {
-                "life_max": 120,
+                "life_max": 100,
                 "mana_max": 0,
-                "power": 25,
-                "speed": 13,
-                "defense": 10
+                "power": 20,
+                "speed": 8,
+                "defense": 8
             },
-            "level": 2,
-            "xp": 15.0,
+            "level": 1,
+            "xp": 35,
             "equipment": {
                 "weapon": null,
                 "head": null,
-                "chest": null,
+                "chest": "the_kings_breastplate",
                 "hands": null,
                 "legs": null,
                 "feet": null
             },
             "effects": [],
             "bonus": {
-                "life_max": 0,
-                "power": 0,
+                "life_max": 15,
+                "power": 10,
                 "speed": 0,
-                "defense": 22
+                "defense": 10
             }
         },
         {
@@ -43,35 +42,34 @@
             "character_class": "magic",
             "skills": [
                 "spark",
-                "fireball",
-                "pyrotechnic_explosion"
+                "fireball"
             ],
-            "life": 90,
-            "mana": 60,
+            "life": 70,
+            "mana": 50,
             "base_stats": {
-                "life_max": 90,
-                "mana_max": 60,
-                "power": 20,
-                "speed": 17,
-                "defense": 7
+                "life_max": 70,
+                "mana_max": 50,
+                "power": 15,
+                "speed": 12,
+                "defense": 5
             },
-            "level": 2,
-            "xp": 15.0,
+            "level": 1,
+            "xp": 35,
             "equipment": {
                 "weapon": null,
                 "head": null,
-                "chest": "embroidered_robe",
-                "hands": "power_gloves",
+                "chest": null,
+                "hands": "immaculate_gloves",
                 "legs": null,
                 "feet": null
             },
             "effects": [],
             "bonus": {
                 "life_max": 0,
-                "mana_max": 10,
-                "power": 10,
+                "mana_max": 8,
+                "power": 5,
                 "speed": 0,
-                "defense": 6
+                "defense": 0
             }
         },
         {
@@ -80,24 +78,23 @@
             "character_class": "magic",
             "skills": [
                 "simple_healing",
-                "blessing",
-                "radiant_protection"
+                "blessing"
             ],
-            "life": 80,
-            "mana": 60,
+            "life": 60,
+            "mana": 50,
             "base_stats": {
-                "life_max": 80,
-                "mana_max": 60,
-                "power": 25,
-                "speed": 15,
-                "defense": 12
+                "life_max": 60,
+                "mana_max": 50,
+                "power": 20,
+                "speed": 10,
+                "defense": 10
             },
-            "level": 2,
-            "xp": 15.0,
+            "level": 1,
+            "xp": 35,
             "equipment": {
                 "weapon": null,
                 "head": null,
-                "chest": null,
+                "chest": "embroidered_robe",
                 "hands": null,
                 "legs": null,
                 "feet": null
@@ -105,14 +102,79 @@
             "effects": [],
             "bonus": {
                 "life_max": 0,
-                "mana_max": 0,
+                "mana_max": 10,
                 "power": 0,
                 "speed": 0,
-                "defense": 6
+                "defense": 0
             }
         }
     ],
-    "enemy_team": [],
+    "enemy_team": [
+        {
+            "id": "novice_goblin",
+            "defeated": false
+        },
+        {
+            "id": "trained_goblin",
+            "defeated": false
+        },
+        {
+            "id": "veteran_goblin",
+            "defeated": false
+        },
+        {
+            "id": "black_spider",
+            "defeated": false
+        },
+        {
+            "id": "black_widow",
+            "defeated": false
+        },
+        {
+            "id": "recluse",
+            "defeated": false
+        },
+        {
+            "id": "sick_raven",
+            "defeated": false
+        },
+        {
+            "id": "sick_great_raven",
+            "defeated": false
+        },
+        {
+            "id": "putrid_great_raven",
+            "defeated": false
+        },
+        {
+            "id": "werewolf",
+            "defeated": false
+        },
+        {
+            "id": "doomed_baby_samuel",
+            "defeated": false
+        },
+        {
+            "id": "black_phillip",
+            "defeated": false
+        },
+        {
+            "id": "the_vvitch",
+            "defeated": false
+        },
+        {
+            "id": "grumpy_orc",
+            "defeated": false
+        },
+        {
+            "id": "hot_tempered_orc",
+            "defeated": false
+        },
+        {
+            "id": "enraged_orc",
+            "defeated": false
+        }
+    ],
     "inventory": [
         {
             "id": "phoenix_feather",
@@ -122,5 +184,20 @@
             "item_level": 1
         }
     ],
-    "zone": "dark_forest"
+    "zone": {
+        "id": "dark_forest",
+        "progress": 6,
+        "flags": [
+            "abandoned_hut",
+            "strange_tree"
+        ],
+        "discovered": true,
+        "sub_boss_unlocked": false,
+        "sub_boss_defeated": false,
+        "boss_unlocked": false,
+        "boss_defeated": false,
+        "enemy_kills": {
+            "werewolf": 1
+        }
+    }
 }

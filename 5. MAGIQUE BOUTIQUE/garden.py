@@ -51,9 +51,8 @@ class Garden:
 
     def from_dict(self, data):
         self.level = data.get("level", 1)
-        self.garden_levels = self.garden_levels.update(data.get("garden_levels", {}))
 
-        print(self.garden_levels)
+        self.garden_levels.update(data.get("garden_levels", {}))
 
         saved = data.get("ingredients", {})
 
@@ -111,8 +110,8 @@ def display_garden(garden):
 def improve_garden(garden):
 
     for item, data in garden.ingredients.items():
-            if data["unlocked"]:
-                data["rate_modifier"] *= (1.01 + garden.level * 0.001)
+        if data["unlocked"]:
+            data["rate_modifier"] *= (1.01 + garden.level * 0.001)
 
     garden.level += 1
 
