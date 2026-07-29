@@ -1,17 +1,21 @@
 import random
 from display import display_enemy, display_enemy_light, display_loot
-from ui import separator, header
+from ui import separator, header, separator_bis
 from class_enemy import create_enemy, ENEMIES
 from skill_engine import execute_skill
 from class_skillcontext import SkillContext
 from class_combatcontext import CombatContext
 from effects import start_of_turn
-from level import scale_enemy_team, unlock_skills, level_up, xp_required
+from level import scale_enemy_team, level_up, xp_required
 from loot_tables import generate_loot, add_loot
-from sac_a_dos import get_stats, calcul_stats
+from inventory import get_stats
 from class_savemanager import SaveManager
 from menu_combat import menu_tour
-from class_zone import explore, gain_zone_progress
+from class_zone import explore, add_zone_progress_combat
+from class_effect import remove_effect_malus, remove_effect_bonus
+from display import display_character, display_discovery
+from class_gameevent import GameEvent
+from class_quest import process_game_event
 
 RARE_CHANCE = 0.05
 
@@ -84,24 +88,14 @@ def enemy_turn(context, enemy):
 def character_turn(context, character):
 
     separator()
-    
+    header(f"Tour de {character.name}")
+
+    display_character(character)
+
     if character.life <= 0:
         print(f"{character.name} est mort !")
         return
 
-    header(f"Tour de {character.name}")
-    calcul_stats(character)
-    stats = get_stats(character)
-
-    print(f"PV : {character.life}/{stats['life_max']}")
-
-    if character.mana is not None:
-        print(f"Mana : {character.mana}/{stats['mana_max']}")
-
-    print(f"Puissance : {stats['power']}")
-    print(f"Vitesse : {stats['speed']}")
-    print(f"Défense : {stats['defense']}")
-    
     menu_tour(context, character)
 
 
@@ -110,14 +104,19 @@ def play_entity_turn(context, entity):
     if entity.life <= 0:
         return
 
-    if not manage_start_of_turn(entity):
-        return
+# if not manage
 
     if entity in context.player_team:
         character_turn(context, entity)
 
+        if not manage_start_of_turn(entity):
+            return
+
     else:
         enemy_turn(context, entity)
+
+        if not manage_start_of_turn(entity):
+            return
 
 
 def one_turn(context : CombatContext):
@@ -146,45 +145,63 @@ def rest_after_combat(player_team):
 
     for character in player_team:
 
+        stats = get_stats(character)
+
         if character.life > 0:
+
             character.life = min(
-                character.life + character.base_stats["life_max"] * 0.2,
-                character.base_stats["life_max"]
+                character.life + stats["life_max"] * 0.2,
+                stats["life_max"]
             )
 
             if character.mana is not None:
+
                 character.mana = min(
-                    character.mana + character.base_stats["mana_max"] * 0.3,
-                    character.base_stats["mana_max"]
+                    character.mana + stats["mana_max"] * 0.3,
+                    stats["mana_max"]
                 )
 
+        for effect in character.effects:
+            remove_effect_bonus(character, effect)
+            remove_effect_malus(character, effect)
+                
+        character.effects.clear()
+                        
+        print("✨ Votre équipe récupère !")
+        
 
 def restore_team_after_combat(player_team):
 
     for character in player_team:
 
-        character.life = character.base_stats["life_max"]
-        
+        stats = get_stats(character)
+
+        character.life = stats["life_max"]
+
         if character.mana is not None:
-            character.mana = character.base_stats["mana_max"]
+            character.mana = stats["mana_max"]
+
+        for effect in character.effects:
+            remove_effect_bonus(character, effect)
+            remove_effect_malus(character, effect)
 
         character.effects.clear()
-
+        
     print("✨ Votre équipe récupère tous ses PV et son mana.")
 
 
-def register_defeated_enemies(context):
+def register_defeated_enemies(game, context):
 
     for enemy in context.enemy_team:
 
         if enemy.life <= 0:
 
-            context.zone.enemy_kills[enemy.id] = (
-                context.zone.enemy_kills.get(enemy.id, 0) + 1
-            )
+            context.zone.enemy_kills[enemy.id] = (context.zone.enemy_kills.get(enemy.id, 0) + 1)
 
-            gain_zone_progress(context.zone, enemy)
+            event = GameEvent("kill", enemy.id)
+            process_game_event(game, event)
 
+        add_zone_progress_combat(context.zone, enemy)
 
 
 def handle_defeated_enemies(game, context):
@@ -194,20 +211,21 @@ def handle_defeated_enemies(game, context):
     for enemy in context.enemy_team:
 
         if is_dead(enemy):
-
+            separator_bis()
             print(f"{enemy.name} disparaît !")
-
-            # progression de nettoyage de zone
-            register_defeated_enemies(context)
-
-            gain_xp(context)
-
             enemy.defeated = True
 
+            register_defeated_enemies(game, context)
+            separator_bis()
+            gain_xp_combat(context)
+
             loot.extend(generate_loot(enemy, context.zone))
-            add_loot(game.inventory, loot)
-            display_loot(loot)
-            return loot
+
+    add_loot(game.inventory, loot)
+    separator_bis()
+    display_loot(loot)
+
+    return loot
 
 
 def is_dead(entity):
@@ -220,11 +238,30 @@ def remove_dead_entities(context):
             enemy.defeated = True
 
 
+def result_explore(game):
+
+    result = explore(game.current_zone, game)
+
+    if not result:
+        return None
+
+    if result["type"] == "discovery":
+        display_discovery(result["event"])
+
+    elif result["type"] == "nothing":
+        print("Il ne se passe rien...")
+
+    return result
+
+
 def prepare_combat(game):
 
-    explore_result = explore(game.current_zone)
+    explore_result = result_explore(game)
 
-    if not explore_result or explore_result["type"] != "combat":
+    if explore_result is None:
+        return None
+
+    if explore_result["type"] != "combat":
         return None
 
     enemy_team = generate_enemy_team(
@@ -264,11 +301,12 @@ def end_combat(game, context):
     print("Victoire totale !")
     
 
-def combat(game):
+def combat(game, context=None):
 
-    context = prepare_combat(game)
+    if context is None:
+        context = prepare_combat(game)
 
-    if not context:
+    if context is None:
         return
 
     separator()
@@ -289,7 +327,7 @@ def combat(game):
             return
 
 
-def gain_xp(context):
+def gain_xp_combat(context):
 
     for enemy in context.enemy_team:
 
@@ -307,15 +345,21 @@ def gain_xp(context):
                 while character.xp >= xp_required(character.level):
 
                     character.xp -= xp_required(character.level)
-                    character.level += 1
 
                     level_up(character)
-                    unlock_skills(character)
 
 #----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------
 
 def generate_enemy_team(zone, event):
 
+# Boss et sous-boss : toujours seuls
+
+    if event.event_category in ["boss", "sub_boss"]:
+        return [
+            create_enemy(event.enemies[0])
+        ]
+
+    # ensuite seulement la logique normale
     if zone.difficulty == 1:
         enemy_count = 1
         possible_rarity = ["common"]

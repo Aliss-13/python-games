@@ -1,11 +1,8 @@
-from class_effect import EFFECT_DURATION_ONLY, apply_damage_effect, apply_healing_effect, remove_effect_bonus
+from class_effect import IMMEDIATE_EFFECT, EFFECT_DURATION_ONLY
+from class_effect import apply_damage_effect, apply_healing_effect, remove_effect_bonus, remove_effect_malus
 
 
 def start_of_turn(target):
-
-    if not target.effects:
-        print("Aucun effet actif.")
-        return
 
     new_effects = []
 
@@ -44,7 +41,7 @@ def start_of_turn(target):
                 apply_damage_effect(effect.source, target, effect)
 
 
-        elif effect.type == "defense_buff":
+        elif effect.type in IMMEDIATE_EFFECT:
             effect.duration -= 1
 
 
@@ -62,6 +59,7 @@ def start_of_turn(target):
 
         else:
             remove_effect_bonus(target, effect)
+            remove_effect_malus(target, effect)
             print(f"L'effet {effect.name} disparaît de {target.name}.")
 
     target.effects = new_effects

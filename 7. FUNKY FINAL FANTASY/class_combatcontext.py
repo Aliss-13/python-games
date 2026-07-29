@@ -14,7 +14,6 @@ class CombatContext:
         self.inventory = inventory
         self.zone = zone
         self.game = game
-
         self.event = event
         self.is_sub_boss_fight = (event and event.event_category == "sub_boss")
         self.is_boss_fight = (event and event.event_category == "boss")

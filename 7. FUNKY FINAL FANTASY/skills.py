@@ -1,6 +1,6 @@
 import random
-from sac_a_dos import get_stats
-from class_effect import create_effect, EFFECT_HANDLERS, EFFECT_IMMEDIATE
+from inventory import get_stats
+from class_effect import create_effect, EFFECT_HANDLERS, IMMEDIATE_EFFECT
 
 #------------------------------------ EFFETS ---------------------------------------------------
 
@@ -50,7 +50,7 @@ def apply_skill_effects(context):
 
                 target.effects.append(effect)
 
-                if effect.type in EFFECT_IMMEDIATE:
+                if effect.type in IMMEDIATE_EFFECT:
 
                     handler = EFFECT_HANDLERS.get(effect.type)
 

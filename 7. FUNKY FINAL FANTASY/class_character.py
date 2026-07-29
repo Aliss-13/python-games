@@ -9,8 +9,6 @@ class Character:
             name, 
             character_class, 
             skills, 
-            life, 
-            mana, 
             base_stats, 
             level=1, 
             xp=0, 
@@ -23,8 +21,8 @@ class Character:
         self.name = name
         self.character_class = character_class
         self.skills = skills
-        self.life = life
-        self.mana = mana
+        self.life = base_stats.get("life_max",0)
+        self.mana = base_stats.get("mana_max",0)
         self.base_stats = base_stats
         self.level = level
         self.xp = xp
@@ -40,8 +38,6 @@ class Character:
             "name": self.name,
             "character_class": self.character_class,
             "skills": [skill.id for skill in self.skills],
-            "life": self.life,
-            "mana": self.mana,
             "base_stats": self.base_stats,
             "level": self.level,
             "xp": self.xp,
@@ -64,8 +60,6 @@ class Character:
                 for skill_id in data.get("skills", [])
             ],
 
-            life=data["life"],
-            mana=data["mana"],
             base_stats=data["base_stats"],
 
             level=data["level"],
@@ -80,13 +74,13 @@ class Character:
 
             bonus=data.get("bonus", {})
         )
-
-    def __repr__(self):
-        return f"{self.name} (lvl {self.level})"
-    
     @property
     def has_mana(self):
         return self.base_stats["mana_max"] > 0
+    
+    def __repr__(self):
+        return f"{self.name} (lvl {self.level})"
+
     
 CLASS = ["magic", "hand-to-hand", "distance"]
 
@@ -97,8 +91,6 @@ CHARACTERS = [
         name = "Mage",
         character_class = "magic",
         skills = [get_skill("spark"), get_skill("fireball")],
-        life = 70,
-        mana = 50, 
         base_stats = {"life_max": 70, "mana_max" : 50, "power": 15,"speed": 12, "defense": 5}, 
         effects = [],
         level = 1,
@@ -114,8 +106,6 @@ CHARACTERS = [
         name = "Prêtre",
         character_class = "magic",
         skills = [get_skill("simple_healing"), get_skill("blessing")],
-        life = 60,
-        mana = 50,
         base_stats = {"life_max": 60, "mana_max": 50, "power": 20, "speed": 10, "defense": 10},
         effects = [],
         level = 1,
@@ -130,8 +120,6 @@ CHARACTERS = [
         name = "Guerrier",
         character_class = "hand-to-hand",
         skills = [get_skill("attack"), get_skill("powerful_blow")],
-        life = 100,
-        mana = 0,
         base_stats = {"life_max": 100, "mana_max": 0, "power": 20,"speed": 8, "defense": 8},
         effects = [],
         level = 1,

@@ -2,17 +2,9 @@ from data import ITEMS
 
 # ----------------------------------------- Ajout, retrait, sélection dans l'inventaire --------------------------------------------------------
 
-def add_item(inventory, item_id):
-    
-    item = ITEMS[item_id]
+def add_item(inventory, item):
+    inventory.append(item.copy())
 
-    inventory.append({
-        "id": item_id,
-        "name": item["name"],
-        "type": item["type"],
-        "rarity": item["rarity"],
-        "quantity": 1
-    })
 
 def remove_item(inventory, index):
     if not isinstance(index, int):
@@ -23,23 +15,16 @@ def remove_item(inventory, index):
 
 
 def get_item(inventory, choix):
-    if not isinstance(choix, int):
-        return None, None
 
     if choix < 0 or choix >= len(inventory):
-        return None, None
+        return None
 
     item = inventory[choix]
 
     if not isinstance(item, dict):
-        return None, None
+        return None
 
-    item_id = item.get("id")
-
-    if item_id not in ITEMS:
-        return None, None
-
-    return item_id, ITEMS[item_id]
+    return item
 
 # ----------------------------------------- Consommables --------------------------------------------------------
 
@@ -107,10 +92,13 @@ def use_item(player_team, inventory):
         print("Choix invalide.")
         return
 
-    item_id, item = get_item(inventory, choix)
-    
-    if item_id is None:
+    item = get_item(inventory, choix)
+
+    if item is None:
         return
+
+    item_id = item["id"]
+    
     if item["type"] != "consumable":
         print("Cet objet n'est pas un consommable.")
         return
@@ -147,13 +135,6 @@ def get_item_stats(item):
         stats[stat] = value + int(level * scaling)
 
     return stats
-
-
-def calcul_stats(character):
-    stats = character.base_stats.copy()
-    for stat, val in character.bonus.items():
-        stats[stat] += val
-    return stats
     
 # ----------------------------------------- Equipement --------------------------------------------------------
 
@@ -169,48 +150,34 @@ def equip_from_inventory(character, inventory):
         print("Choix invalide.")
         return
 
-    item_id, item = get_item(inventory, choix)
-    
+    item_inv = inventory[choix] # objet réel (avec item_level et bonus scalés)
+    item_id, item_data = get_item(inventory, choix) # données de base (slot, classe, etc.)
+
     if item_id is None:
         return
-    
-    if item["type"] == "consumable":
+
+    if item_data["type"] == "consumable":
         print("Cet objet est un consommable.")
         return
 
-    if character.character_class not in item["class"]:
+    if character.character_class not in item_data["class"]:
         print("Classe incompatible")
         return
 
-    slot = item["slot"]
-    
+    slot = item_data["slot"]
 
-    ancien_id = character.equipment.get(slot)
-    ancien = ITEMS[ancien_id] if ancien_id else None
+    ancien = character.equipment.get(slot)
 
     if ancien:
         for stat, val in ancien["bonus"].items():
-            character.bonus[stat] = character.bonus.get(stat,0) - val
-            calcul_stats(character)
+            character.bonus[stat] -= val
+        inventory.append(ancien.copy())
 
-        inventory.append({
-            "id": ancien_id,
-            "name": ITEMS[ancien_id]["name"],
-            "type": ITEMS[ancien_id]["type"],
-            "rarity": ITEMS[ancien_id]["rarity"],
-            "quantity": 1,
-            "item_level": 1,
-            "bonus": ITEMS[ancien_id]["bonus"]
-        })
+    character.equipment[slot] = item_inv.copy()
 
-    character.equipment[slot] = item_id
+    for stat, val in item_inv["bonus"].items():
+        character.bonus[stat] += val
 
-    for stat, val in item["bonus"].items():
-        character.bonus[stat] = character.bonus.get(stat,0) + val
-        calcul_stats(character)
-    
     remove_item(inventory, choix)
 
-    item_name = ITEMS[item_id]["name"]
-
-    print(f"{character.name} équipe {item_name}")
+    print(f"{character.name} équipe {item_data['name']}")

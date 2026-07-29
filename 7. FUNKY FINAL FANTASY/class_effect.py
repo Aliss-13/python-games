@@ -1,5 +1,5 @@
 import random
-from sac_a_dos import get_stats
+from inventory import get_stats
 
 class Effect:
 
@@ -71,7 +71,7 @@ EFFECTS = {
         "name": "Corruption 🫟",
         "type": "damage_over_time",
         "duration": 3,
-        "value": 10,
+        "value": 6,
         "scaling": "level",
         "stackable": True
     },
@@ -92,7 +92,7 @@ EFFECTS = {
         "duration": 3,
         "value": 80,
         "scaling": "level",
-        "stackable": True
+        "stackable": False
     },
 
 
@@ -123,10 +123,10 @@ EFFECTS = {
     },
 
 
-    # defense_buff
+    # defense_bonus
     "light_prism": {
         "name": "Prisme lumineux 🔶",
-        "type": "defense_buff",
+        "type": "defense_bonus",
         "duration": 3,
         "value": 4,
         "scaling": "level",
@@ -135,17 +135,17 @@ EFFECTS = {
 
     "shield": {
         "name": "Bouclier 🛡️",
-        "type": "defense_buff",
+        "type": "defense_bonus",
         "duration": 2,
         "value": 7,
         "scaling": "level",
         "stackable": False
     },
 
-    # defense_alteration
+    # defense_malus
     "dread": {
         "name": "Terreur 👁️‍🗨️",
-        "type": "defense_alteration",
+        "type": "defense_malus",
         "duration": 3,
         "value": 4,
         "scaling": "level",
@@ -169,13 +169,28 @@ def create_effect(effect_id, source=None):
         source=source
     )
 
+def get_effect_by_id(effect_id, effect_list):
+
+    for effect in effect_list:
+        if effect.id == effect_id:
+            return effect
+        
 def remove_effect_bonus(target, effect):
 
-    if effect.type != "defense_buff":
+    if effect.type != "defense_bonus":
         return
 
     if hasattr(effect, "applied_value"):
         target.bonus["defense"] -= effect.applied_value
+
+
+def remove_effect_malus(target, effect):
+
+    if effect.type != "defense_malus":
+        return
+
+    if hasattr(effect, "applied_value"):
+        target.bonus["defense"] += effect.applied_value
 
 
 def get_taunt_target(player_team):
@@ -227,11 +242,15 @@ def calculate_effect_value(source, effect):
 
 def apply_damage_effect(source, target, effect):
 
+    stats = get_stats(target)
+
     damage = calculate_effect_value(source, effect)
     target.life = max(target.life - damage, 0)
 
-    print(f"{target.name} subit {effect.name} ")
-    print(f"{target.name} subit {damage} dégâts de {effect.name} !")
+    print(
+        f"{target.name} subit {effect.name} "
+        f"(-{damage} PV → PV : {target.life}/{stats["life_max"]}) !"
+        )
 
 
 def apply_healing_effect(source, target, effect):
@@ -241,8 +260,10 @@ def apply_healing_effect(source, target, effect):
     heal = calculate_effect_value(source, effect)
     target.life = min(target.life + heal, stats["life_max"])
 
-    print(f"{target.name} bénéficie de {effect.name} ")
-    print(f"{target.name} → +{heal} PV → PV : {target.life}/{stats["life_max"]} !")
+    print(
+        f"{target.name} bénéficie de {effect.name} "
+        f"(+{heal} PV → PV : {target.life}/{stats["life_max"]}) !"
+        )
 
 
 def apply_incapacitating_effect(entite, target, effect):
@@ -251,7 +272,7 @@ def apply_incapacitating_effect(entite, target, effect):
     
 
 
-def apply_protection_effect(character, target, effect):
+def apply_defense_bonus(character, target, effect):
 
     bonus = calculate_effect_value(character, effect)
 
@@ -265,7 +286,7 @@ def apply_protection_effect(character, target, effect):
     )
 
 
-def apply_protection_alteration(character, target, effect):
+def apply_defense_malus(character, target, effect):
 
     malus = calculate_effect_value(character, effect)
 
@@ -278,7 +299,7 @@ def apply_protection_alteration(character, target, effect):
         f"(-{malus} défense) !"
     )
    
-EFFECT_IMMEDIATE = ["defense_buff"]
+IMMEDIATE_EFFECT = ["defense_bonus", "defense_malus", "damage_over_time", "heal_over_time"]
 
 EFFECT_DURATION_ONLY = {
     "incapacitating",
@@ -291,8 +312,8 @@ EFFECT_HANDLERS = {
     "heal_over_time": apply_healing_effect, 
     "incapacitating": apply_incapacitating_effect,
     "forced_target": apply_choose_target,
-    "defense_buff": apply_protection_effect,
-    "defense_alteration": apply_protection_alteration
+    "defense_bonus": apply_defense_bonus,
+    "defense_malus": apply_defense_malus
 }
 
 EFFECT_TYPE_LABEL = {
@@ -301,8 +322,8 @@ EFFECT_TYPE_LABEL = {
     "heal_over_time": "soins périodiques", 
     "incapacitating": "incapacitation",
     "forced_target": "ciblage forcé",
-    "defense_buff": "bonus de défense",
-    "defense_alteration": "malus de défense"
+    "defense_bonus": "bonus de défense",
+    "defense_malus": "malus de défense"
 
 }
 

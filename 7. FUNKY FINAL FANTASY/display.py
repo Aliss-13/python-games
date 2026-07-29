@@ -1,9 +1,9 @@
 
 from data import ITEMS
-from class_event import FOREST_EVENTS
+from class_event import FOREST_EVENTS, get_event_by_flag
 from class_enemy import get_enemy_by_id, ENEMIES
-from ui import header, separator
-from sac_a_dos import get_stats
+from ui import header, separator, section
+from inventory import get_stats
 
 
 couleurs = {
@@ -49,54 +49,52 @@ STAT_NAMES = {
     "power": "Puissance",
     "defense": "Défense",
     "speed": "Vitesse",
-    "life_max": "Points de vie",
+    "life_max": "PV",
     "mana_max": "Mana"
 }
 
 
+def display_discovery(event):
+
+    print("\n📜 Découverte !")
+    print(f"🌲 {getattr(event, 'name', '')}")
+
 #--------------------------------------------------- OBJETS ---------------------------------------------------
 
-def display_item(item):
+def display_item_details(item):
 
     item_id = item["id"]
-    
-    if item_id not in ITEMS:
-        print("Objet inconnu")
-        return
 
-    data_item = ITEMS[item_id]
+    # Les infos fixes viennent de ITEMS
+    data = ITEMS[item_id]
 
-    rarity = data_item.get("rarity", "common").lower()
-
+    rarity = item.get("rarity", data.get("rarity", "common")).lower()
     couleur = couleurs.get(rarity, "")
-    reset = "\033[0m"
+    reset = couleurs["reset"]
 
-    print(
-        f"{couleur}{data_item['name']} ({RARITY[rarity]}){reset} - {DIM}{data_item['description']}{RESET}")
+    name = item.get("name", data["name"])
+    description = data.get("description", "")
 
-    display_item_details(item)
-
-
-
-def display_item_details(item):
-    
     if item["type"] == "equipment":
-
-        print(f"Niveau : {item['item_level']}")
+        
+        print(
+            f"{couleur}{name} ({RARITY[rarity]}){reset} "
+            f"{DIM}Niv.{item.get('item_level', 1)}{RESET} - "
+            f"{DIM}{description}{RESET}")
 
         bonus_text = []
 
-        for stat, value in item["bonus"].items():
+        for stat, value in item.get("bonus", {}).items():
+            bonus_text.append(f"{STAT_NAMES.get(stat, stat)} +{value}")
 
-            stat_name = STAT_NAMES.get(stat, stat)
+        if bonus_text:
+            print("   " + " | ".join(bonus_text))
 
-            bonus_text.append(f"{stat_name} : +{value}")
-
-        print(" - ".join(bonus_text))
 
     elif item["type"] == "consumable":
-
-        print(f"x{item['quantity']}")
+        print(
+            f"{couleur}{name} ({RARITY[rarity]}){reset} "
+            f"x{item['quantity']}")
 
 
 def display_inventory(inventory):
@@ -109,22 +107,20 @@ def display_inventory(inventory):
 
     for i, item in enumerate(inventory):
         print(f"{i} - ", end="")
-        display_item(item)
+        display_item_details(item)
     
 
 
 def display_equipment(character):
     print(f"\nÉquipement de {character.name} :")
-    for slot, item_id in character.equipment.items():
-        if item_id is None:
+
+    for slot, item in character.equipment.items():
+
+        if item is None:
             continue
-        name = ITEMS[item_id]["name"]
-        description = ITEMS[item_id]["description"]
-        item = ITEMS[item_id]
-        slot=SLOTS.get(slot, slot)
-        couleur = couleurs.get(item["rarity"], "")
-        reset = couleurs["reset"]
-        print(f" {slot} → {couleur}{name}{reset} - {DIM}{description}{RESET}")
+
+        print(f"{SLOTS.get(slot, slot)} → ", end="")
+        display_item_details(item)
 
 #--------------------------------------------------- ENNEMIS et LOOTS ---------------------------------------------------
 
@@ -132,58 +128,100 @@ def display_enemy(enemy):
     rarity = enemy.rarity
     couleur = couleurs.get(rarity, "")
     reset = couleurs["reset"]
+    stats = get_stats(enemy)
 
     print("\n" + " " * 10 + f"{RED}-ENNEMI-{RESET}" + " " * 10 + "\n")
+
     print(f"{couleur}{enemy.name} ({RARITY[rarity]}){reset}")
-    print(f"PV : {enemy.life}")
-    print(f"Puissance : {enemy.base_stats['power']}")
-    print(f"Vitesse : {enemy.base_stats['speed']}")
-    print(f"Défense : {enemy.base_stats['defense']}")
+
+    if stats['mana_max'] > 0:
+        print(f"Mana : {enemy.mana}/{stats['mana_max']}")
+
+    print(
+        f"PV : {enemy.life}/{stats['life_max']} - "
+        f"Puissance : {enemy.base_stats['power']} - "
+        f"Vitesse : {enemy.base_stats['speed']} - "
+        f"Défense : {enemy.base_stats['defense']}")
 
 
 def display_enemy_light(enemy):
-    print(f"\n{enemy.name}")
-    print(f"PV restants : {enemy.life}")
+
+    section(f"{enemy.name}")
+
+    stats = get_stats(enemy)
+
+    if stats['mana_max'] > 0:
+        print(f"Mana : {enemy.mana}/{stats['mana_max']}")
+
+    print(
+        f"PV restants : {enemy.life}/{stats['life_max']} - "
+        f"Puissance : {enemy.base_stats['power']} - "
+        f"Vitesse : {enemy.base_stats['speed']} - "
+        f"Défense : {enemy.base_stats['defense']}")
+        
+    print("")
+
+    if enemy.effects:
+    
+        print("Effets actifs :")
+    
+        for i, effect in enumerate(enemy.effects, start=1):
+            print(
+                f"{i} - {effect.name} "
+                f"({effect.duration} tours)"
+            )
+    
+    else:
+        print("Aucun effet actif.")
+
+    print("")
 
 
 def display_loot(loot):
-    separator()
+
     print("Butin obtenu :")
 
     for i, item in enumerate(loot):
         print(f"{i} - ", end="")
-        display_item(item)
+        display_item_details(item)
         
 #--------------------------------------------------- PERSONNAGE, EQUIPE ---------------------------------------------------
 
 def display_character(character):
 
-    separator()
-    header(f"{character.name}")
-    stats = get_stats(character)
-    print(f"PV : {character.life}/{stats['life_max']}")
+    section(f"{character.name}")
 
-    if character.mana is not None:
+    stats = get_stats(character)
+
+    if stats['mana_max'] > 0:
         print(f"Mana : {character.mana}/{stats['mana_max']}")
-    print(f"Puissance : {stats['power']}") 
-    print(f"Vitesse : {stats['speed']}")
-    print(f"Défense : {stats['defense']}")
+    
+    print(
+        f"PV : {character.life}/{stats['life_max']} - "
+        f"Puissance : {character.base_stats['power']} - "
+        f"Vitesse : {character.base_stats['speed']} - "
+        f"Défense : {character.base_stats['defense']}")
+    
+    print("")
+
+    if character.effects:
+
+        print("Effets actifs :")
+
+        for i, effect in enumerate(character.effects, start=1):
+            print(
+                f"{i} - {effect.name} "
+                f"({effect.duration} tours)"
+            )
+
+    else:
+        print("Aucun effet actif.")
 
 
 def display_player_team(player_team):
 
     for character in player_team:
-        separator()
-        header(f"{character.name}")
-        stats = get_stats(character)
-        print(f"PV : {character.life}/{stats['life_max']}")
-        
-        if character.mana is not None:
-            print(f"Mana : {character.mana}/{stats['mana_max']}")
-        print(f"Puissance : {stats['power']}") 
-        print(f"Vitesse : {stats['speed']}")
-        print(f"Défense : {stats['defense']}")
-
+        display_character(character)
         separator()
         display_equipment(character)
 
@@ -199,8 +237,17 @@ def display_combat_state(context):
     separator()
 
 
+def display_boss_name(enemy_id):
 
-def display_zone_progress(zone):
+    enemy = get_enemy_by_id(enemy_id, ENEMIES)
+
+    if enemy:
+        return enemy.name
+
+    return "Inconnu"
+
+
+def display_zone_progress(zone, game):
 
     separator()
 
@@ -222,45 +269,72 @@ def display_zone_progress(zone):
 
     print()
 
+    # ------------------------------------------- découvertes
 
-    # discovery
     if zone.flags:
         print("\n📜 Découvertes :")
 
     for flag in zone.flags:
 
-        event = FOREST_EVENTS.get(flag)
+        event = get_event_by_flag(flag, FOREST_EVENTS)
 
         if event:
             print(f"- {event.name}")
-
         else:
             print(f"- Découverte inconnue ({flag})")
 
+    # -------------------------------------------- quêtes
 
-    # ennemis vaincus
+    print("\n📜 Quêtes actives :")
+
+    if game.active_quests:
+
+        for quest in game.active_quests:
+
+            print(f"🌲 {quest.name}")
+            print(f"   {quest.description}")
+            print(
+                f"   Progression : "
+                f"{quest.progress}/{quest.amount}"
+            )
+
+            print(
+                f"   Récompense : "
+                f"{quest.reward_xp} XP"
+            )
+
+            if quest.reward_items:
+                print(
+                    f"   Objets : {', '.join(quest.reward_items)}"
+                )
+
+    else:
+        print("- Aucune quête active")
+
+    # ------------------------------------------ ennemis vaincus
+
     print("\n⚔️ Ennemis vaincus :")
 
     if zone.enemy_kills:
 
         for enemy_id, count in zone.enemy_kills.items():
-
             enemy = get_enemy_by_id(enemy_id, ENEMIES) # récupère l'objet "ennemi" grâce à son id.
-
-        print(f"- {enemy.name} : {count}")
+            print(f"- {enemy.name} : {count}")
 
     else:
         print("- Aucun ennemi vaincu")
 
     print("")
 
-    # sous-boss, boss
+    # ------------------------------------------- sous-boss, boss
 
     if zone.sub_boss_unlocked:
+        sub_boss = display_boss_name(zone.sub_boss)
+
         if zone.sub_boss_defeated:
-            print(f"🥈 Sous-boss : {zone.sub_boss} vaincu")
+            print(f"🥈 Sous-boss : {sub_boss} vaincu")
         else:
-            print(f"🥈 Sous-boss disponible : {zone.sub_boss}")
+            print(f"🥈 Sous-boss disponible : {sub_boss}")
 
     else:
         print("🥈 Sous-boss : inconnu")
@@ -269,10 +343,12 @@ def display_zone_progress(zone):
 
 
     if zone.boss_unlocked:
+        boss = display_boss_name(zone.boss)
+
         if zone.boss_defeated:
-            print(f"🥇 Boss : {zone.boss} vaincu")
+            print(f"🥇 Boss : {boss} vaincu")
         else:
-            print(f"🥇 Boss disponible : {zone.boss}")
+            print(f"🥇 Boss disponible : {boss}")
 
     else:
         print("🥇 Boss : inconnu")

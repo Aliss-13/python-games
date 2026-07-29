@@ -1,6 +1,10 @@
 def separator():
     print("\n" + "-" * 40)
 
+
+def separator_bis():
+    print("_" * 40)
+
 def header(title):
     print("\n" + " " * 10 + f"-{title}-" + " " * 10 + "\n")
 

@@ -1,5 +1,7 @@
 import random
 from data import ITEMS
+from item_generator import generate_item
+from inventory import add_item
 
 
 FOREST_LOOTS = {
@@ -215,41 +217,23 @@ def generate_loot(enemy, zone):
         if not items:
             continue
 
-        item = random.choice(zone_profile["loots"][rarity])
+        item_id = random.choice(items)
 
-        loot.append(create_loot_item(item, zone)) # create_loot_item utilise scale_bonus_item
+        item_level = enemy.level
 
+        item = generate_item(item_id, item_level)
+
+        if item:
+            loot.append(item)
 
     return loot
 
 
 def add_loot(inventory, loot):
 
-    for loot_item in loot:
-
-        for item in inventory:
-
-            if (
-                item["id"] == loot_item["id"] 
-                and item["type"] == loot_item["type"]
-                and (loot_item["type"] == "consumable"
-                or item["item_level"] == loot_item["item_level"])):
-                    
-                    item["quantity"] += loot_item["quantity"]
-                    break
-
-        else:
-            inventory.append({
-                "id": loot_item["id"],
-                "name": loot_item["name"],
-                "type": loot_item["type"],
-                "rarity": loot_item["rarity"],
-                "quantity": loot_item["quantity"],
-                "item_level": loot_item["item_level"],
-            })
-
-            if loot_item["type"] == "equipment":
-                inventory[-1]["bonus"] = loot_item["bonus"]
+    for item in loot:
+        add_item(inventory, item)
+    
 
 
 

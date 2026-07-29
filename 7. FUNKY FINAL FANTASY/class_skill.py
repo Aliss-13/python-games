@@ -168,21 +168,20 @@ SKILLS = [
         name="Corruption 🫟",
         cost=0,
         target="enemies",
-        actions=["damage", "apply_effect"],
-        power=10,
-        damage_type="magical",
+        actions=["apply_effect"],
         effects=[SkillEffect(effect_id="corruption", chance=1, target="skill_target")]
     ),
 
     Skill(
         id="dark_ritual",
         name="Rituel sombre 🕯️",
-        cost=0,
+        cost=10,
         target="enemies",
         actions=["damage", "apply_effect"],
-        power=20,
+        power=10,
         damage_type="magical",
-        effects=[SkillEffect(effect_id="dread", chance=0.4, target="skill_target")]
+        effects=[SkillEffect(effect_id="dread", chance=0.4, target="skill_target")],
+        message="{caster} lance {skill} (-{cost} mana, {remaining_mana} mana restant) !"
     ),
 
     Skill(
@@ -190,7 +189,7 @@ SKILLS = [
         name="Sacrifice 🗡️",
         cost=15,
         cost_type="mana",
-        target="enemies",
+        target="enemy",
         actions=["damage", "apply_effect"],
         power=30,
         damage_type="physical",
@@ -328,8 +327,8 @@ SKILLS = [
         cost=10,
         cost_type="mana",
         target="enemy",
-        actions=["damage"],
-        power=80,
+        actions=["apply_effect"],
+        power=0,
         damage_type="magical",
         effects=[SkillEffect(effect_id="greek_fire", chance=1, target="skill_target")],
         message="{caster} prépare un baril ̗🛢️ (-{cost} mana, {remaining_mana} mana restant) !"

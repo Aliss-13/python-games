@@ -1,5 +1,5 @@
 from display import display_equipment, display_inventory
-from sac_a_dos import equip_from_inventory, use_item
+from inventory import equip_from_inventory, use_item
 from class_skill import get_target_name
 from ui import section, separator
 from class_skillcontext import SkillContext

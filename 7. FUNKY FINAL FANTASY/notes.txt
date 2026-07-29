@@ -420,3 +420,32 @@ list d'objets avec un id	>  get_xxx_by_id()
 list simple	                >  boucle for ou index [0]
 objet avec attribut	        >  .attribut
 
+
+def debug_level(game, level):
+
+    for character in game.player_team:
+
+        while character.level < level:
+
+            character.level += 1
+            level_up(character)
+
+    print(f"Équipe passée niveau {level}")
+
+
+boucke while fait : 
+niveau actuel : 1
+
+→ level = 2
+→ increase_stats()
+
+→ level = 3
+→ increase_stats()
+
+→ level = 4
+→ increase_stats()
+
+
+character.effects.extend(new_effects)
+
+append() met la liste dans la liste. extend() ajoute les éléments de la liste.

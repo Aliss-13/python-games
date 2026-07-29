@@ -28,7 +28,7 @@ def menu_zone(game, context):
         choix = input("> ").lower()
 
         if choix == "1":
-            combat(game)
+            combat(game, context=None)
 
         elif choix == "2":
             display_player_team(game.player_team)
@@ -37,7 +37,7 @@ def menu_zone(game, context):
             menu_inventory(context)
 
         elif choix == "4":
-            display_zone_progress(game.current_zone)
+            display_zone_progress(game.current_zone, game)
 
         elif choix == "5":
             SaveManager.save(game)

@@ -1,18 +1,6 @@
 # dans Data, stocker uniquement des structures
 # pas de fonction !
 
-
-inventory = [
-    {
-        "id": "phoenix_feather",
-        "quantity": 1,
-        "type": "consumable",
-        "rarity": "rare",
-        "quantity": 1,
-        "item_level": 1,
-    }
-]
-
 ITEMS = {
 
 #---------------------------- Consommables ------------------------------------------------
@@ -518,7 +506,3 @@ ITEMS = {
         "cost": 70
     }
 }
-
-player_team = []
-
-enemy_team = []

@@ -27,7 +27,7 @@ class Enemy:
         self.name = name
         self.rarity = rarity
         self.tier = tier
-        self.life = base_stats["life_max"]
+        self.life = base_stats.get("life_max",0)
         self.mana = base_stats.get("mana_max",0)
         self.base_stats = base_stats
         self.level = level
@@ -116,7 +116,7 @@ ENEMIES = [
         tier=2,
         base_stats={"life_max": 200, "mana_max": 0, "power": 40, "speed": 20, "defense": 10}, 
         skills = [get_skill("bite")],
-        zone_progress = 2,
+        zone_progress = 1,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=25
     ),
@@ -128,7 +128,7 @@ ENEMIES = [
         tier=3,
         base_stats={"life_max": 240, "mana_max": 0, "power": 50, "speed": 25, "defense": 15}, 
         skills = [get_skill("bite")],
-        zone_progress = 3,
+        zone_progress = 2,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=35
     ),
@@ -154,7 +154,7 @@ ENEMIES = [
         tier=2,
         base_stats={"life_max": 250, "mana_max": 0, "power": 40, "speed": 10, "defense": 10}, 
         skills = [get_skill("peck")],
-        zone_progress = 2,
+        zone_progress = 1,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=25
     ),
@@ -166,7 +166,7 @@ ENEMIES = [
         tier=3,
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 7}, 
         skills = [get_skill("peck")],
-        zone_progress = 3,
+        zone_progress = 2,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=35
     ),
@@ -178,19 +178,19 @@ ENEMIES = [
         tier=3,
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 10}, 
         skills = [get_skill("rage")],
-        zone_progress = 3,
+        zone_progress = 2,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=35
     ),
 
     Enemy(
-        id="doomed_baby_samuel",
+        id="baby_samuel",
         name="Bébé Samuel",
         rarity="rare",
         tier=3,
-        base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 20, "defense": 5}, 
+        base_stats={"life_max": 260, "mana_max": 0, "power": 40, "speed": 20, "defense": 5}, 
         skills = [get_skill("babys_wail")],
-        zone_progress = 4,
+        zone_progress = 2,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=35
     ),
@@ -202,7 +202,7 @@ ENEMIES = [
         name="Black Phillip 🐐",
         rarity="epic",
         tier=4,
-        base_stats={"life_max": 350, "mana_max": 100, "power": 50, "speed": 9, "defense": 12},
+        base_stats={"life_max": 450, "mana_max": 200, "power": 60, "speed": 20, "defense": 20},
 
         skills=[
             get_skill("charge"),
@@ -210,11 +210,11 @@ ENEMIES = [
             get_skill("black_flame")
         ],
 
-        zone_progress = 10, 
+        zone_progress = 4, 
 
         rotation=[
             get_skill("charge"),
-            get_skill("charge"),
+            get_skill("black_flame"),
             get_skill("dark_stare"),
             get_skill("black_flame")
         ],
@@ -227,7 +227,7 @@ ENEMIES = [
         name="The VVitch",
         rarity="legendary",
         tier=5,
-        base_stats={"life_max": 450, "mana_max": 120, "power": 50, "speed": 9, "defense": 15},
+        base_stats={"life_max": 450, "mana_max": 200, "power": 60, "speed": 20, "defense": 20},
 
         skills=[
             get_skill("corruption"),
@@ -235,7 +235,7 @@ ENEMIES = [
             get_skill("sacrifice")
         ],
 
-        zone_progress = 20, 
+        zone_progress = 6, 
 
         rotation=[
             get_skill("corruption"),
@@ -269,7 +269,7 @@ ENEMIES = [
         tier=2,
         base_stats={"life_max": 220, "mana_max": 0, "power": 35, "speed": 10, "defense": 10}, 
         skills = [get_skill("dull_thud")],
-        zone_progress = 2,
+        zone_progress = 1,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=25
     ),
@@ -281,7 +281,7 @@ ENEMIES = [
         tier=3,
         base_stats={"life_max": 260, "mana_max": 0, "power": 40, "speed": 12, "defense": 15}, 
         skills = [get_skill("dull_thud")],
-        zone_progress = 3,
+        zone_progress = 2,
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
         xp=35
     ),

@@ -6,7 +6,8 @@ import sys
 from class_character import Character, CHARACTERS, get_character_by_id
 from class_enemy import ENEMIES
 from class_zone import ZONES, get_zone_by_id
-from data import inventory
+from class_quest import Quest, FOREST_QUESTS
+from class_gamestate import GameState
 
 SAVE_FILE = "funky_final_fantasy.json"
 
@@ -29,11 +30,12 @@ class SaveManager:
 
         data = {
             "version": cls.SAVE_VERSION,
-            "team": [character.to_dict() for character in game.player_team],
-            "enemy_team": [enemy.to_dict() for enemy in game.enemy_team],
+            "team": cls.save_characters(game.player_team),
+            "enemy_team": cls.save_enemy_progress(game.enemy_team),
             "inventory": game.inventory,
-            "zone": game.current_zone.to_dict()
-            
+            "zone": cls.save_zone(game.current_zone),
+            "active_quests": [q.to_dict() for q in game.active_quests],
+            "completed_quests": [q.to_dict() for q in game.completed_quests],
         }
 
         with open(cls.SAVE_PATH, "w", encoding="utf-8") as file:
@@ -61,10 +63,17 @@ class SaveManager:
         enemy_team = cls.load_enemy_progress(data.get("enemy_team", []))
         inventory = data.get("inventory", [])
         zone = cls.load_zone(data.get("zone"))
-        
-        print("⌛ Partie chargée.")
+        loaded_active_quests = cls.load_quest_list(data.get("active_quests", []))
+        loaded_completed_quests = cls.load_quest_list(data.get("completed_quests", []))
 
-        return player_team, enemy_team, copy.deepcopy(inventory), zone
+        return GameState(
+            player_team=player_team,
+            enemy_team=enemy_team,
+            inventory=copy.deepcopy(inventory),
+            current_zone=zone,
+            active_quests=loaded_active_quests,
+            completed_quests=loaded_completed_quests,
+        )
 
 
     @classmethod
@@ -112,8 +121,25 @@ class SaveManager:
 
     
     @classmethod
-    def new_game(cls):
+    def load_quest_list(cls, quest_data_list):
 
+        quests = []
+
+        for data in quest_data_list:
+
+            quest = Quest.from_dict(
+                data,
+                FOREST_QUESTS
+            )
+
+            quests.append(quest)
+
+        return quests
+    
+    
+    @classmethod
+    def new_game(cls):
+        
         player_team = [
             get_character_by_id("warrior", CHARACTERS),
             get_character_by_id("warlock", CHARACTERS),
@@ -121,10 +147,26 @@ class SaveManager:
         ]
 
         enemy_team = []
-        
+
+        inventory = [
+            {
+                "id": "phoenix_feather",
+                "quantity": 1,
+                "type": "consumable",
+                "rarity": "rare",
+                "quantity": 1,
+                "item_level": 1,
+            }
+        ]
+
         zone = ZONES[0]
 
-        return player_team, enemy_team, inventory, zone
+        return GameState(
+        player_team=player_team,
+        enemy_team=enemy_team,
+        inventory=inventory,
+        current_zone=zone,
+    )
 
 
     @classmethod

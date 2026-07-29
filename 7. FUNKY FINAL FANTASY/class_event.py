@@ -11,21 +11,27 @@ class Event:
         enemies=None,
         repeatable=False,
         ignore_rarity=False,
-        
+        start_quests=None
     ):
 
         self.id = id
         self.name = name
         self.event_type = event_type
+        self.event_category = event_category
         self.progress = progress
         self.flag = flag
         self.enemies = enemies or []
         self.repeatable = repeatable
         self.ignore_rarity = ignore_rarity
-        self.event_category = event_category
-        
+        self.start_quests = start_quests or []
 
 
+def get_event_by_flag(flag, events):
+
+    return next(
+        (event for event in events.values() if event.flag == flag),
+        None
+    )
 
 FOREST_EVENTS = {
 
@@ -35,7 +41,8 @@ FOREST_EVENTS = {
         event_type="discovery",
         event_category="normal",
         progress=1,
-        flag="strange_tree",
+        flag="strange_tree_found",
+        start_quests=["discover_strange_tree"]
     ),
 
     "abandoned_hut" : Event(
@@ -44,7 +51,8 @@ FOREST_EVENTS = {
         event_type="discovery",
         event_category= "normal",
         progress=2,
-        flag="abandoned_hut",
+        flag="hut_found",
+        start_quests=["discover_hut"]
     ),
 
     "raven_attack" : Event(
@@ -70,7 +78,7 @@ FOREST_EVENTS = {
         name="Ennemi rare !",
         event_type="combat",
         event_category= "normal",
-        enemies=["putrid_great_raven", "recluse", "werewolf", "doomed_baby_samuel"],
+        enemies=["putrid_great_raven", "recluse", "werewolf", "baby_samuel"],
         repeatable=True,
         ignore_rarity=True
         ),
@@ -90,7 +98,7 @@ FOREST_EVENTS = {
         event_type="combat",
         event_category="boss",
         enemies=["the_vvitch"],
-        ignore_rarity=True
+        ignore_rarity=True,
         )
 }
 
