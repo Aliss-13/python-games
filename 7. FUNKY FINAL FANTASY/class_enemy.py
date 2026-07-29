@@ -199,7 +199,7 @@ ENEMIES = [
 
     Enemy(
         id="black_phillip",
-        name="Black Phillip 🐐",
+        name="Black Phillip",
         rarity="epic",
         tier=4,
         base_stats={"life_max": 450, "mana_max": 200, "power": 60, "speed": 20, "defense": 20},

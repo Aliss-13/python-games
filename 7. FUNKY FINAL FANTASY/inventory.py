@@ -1,8 +1,16 @@
 from data import ITEMS
-
 # ----------------------------------------- Ajout, retrait, sélection dans l'inventaire --------------------------------------------------------
 
 def add_item(inventory, item):
+
+    if item["type"] == "consumable":
+
+        for existing in inventory:
+
+            if existing["id"] == item["id"]:
+                existing["quantity"] += item.get("quantity", 1)
+                return
+
     inventory.append(item.copy())
 
 
@@ -16,6 +24,9 @@ def remove_item(inventory, index):
 
 def get_item(inventory, choix):
 
+    if not isinstance(choix, int):
+        return None
+    
     if choix < 0 or choix >= len(inventory):
         return None
 
@@ -150,34 +161,64 @@ def equip_from_inventory(character, inventory):
         print("Choix invalide.")
         return
 
-    item_inv = inventory[choix] # objet réel (avec item_level et bonus scalés)
-    item_id, item_data = get_item(inventory, choix) # données de base (slot, classe, etc.)
+    item = get_item(inventory, choix) # objet réel (avec item_level et bonus scalés)
 
-    if item_id is None:
+    if item is None:
         return
 
-    if item_data["type"] == "consumable":
+    if item["type"] == "consumable":
         print("Cet objet est un consommable.")
         return
 
-    if character.character_class not in item_data["class"]:
+    if character.character_class not in item["class"]:
         print("Classe incompatible")
         return
 
-    slot = item_data["slot"]
+    slot = item["slot"]
 
     ancien = character.equipment.get(slot)
 
     if ancien:
         for stat, val in ancien["bonus"].items():
-            character.bonus[stat] -= val
+            character.bonus[stat] = character.bonus.get(stat, 0) - val
         inventory.append(ancien.copy())
 
-    character.equipment[slot] = item_inv.copy()
+    character.equipment[slot] = item.copy()
 
-    for stat, val in item_inv["bonus"].items():
-        character.bonus[stat] += val
+    for stat, val in item["bonus"].items():
+        character.bonus[stat] = character.bonus.get(stat, 0) + val
 
     remove_item(inventory, choix)
 
-    print(f"{character.name} équipe {item_data['name']}")
+    print(f"{character.name} équipe {item['name']}")
+
+# ----------------------------------------- Vente --------------------------------------------------------
+
+def sell_item(game, choix):
+
+    if choix < 0 or choix >= len(game.inventory):
+        return
+
+
+    item = game.inventory[choix]
+
+    value = ITEMS[item["id"]].get("cost", 0)
+
+
+    if value == 0:
+        print("Cet objet ne peut pas être vendu.")
+        return
+
+
+    quantity = item.get("quantity", 1)
+
+    gain = value * quantity
+
+    game.gold += gain
+
+    remove_item(game.inventory, choix)
+
+    print(
+        f"💰 Vous vendez {item['name']} "
+        f"pour {gain} pièces."
+    )

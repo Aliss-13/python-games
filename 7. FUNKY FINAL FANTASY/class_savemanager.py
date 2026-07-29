@@ -8,6 +8,7 @@ from class_enemy import ENEMIES
 from class_zone import ZONES, get_zone_by_id
 from class_quest import Quest, FOREST_QUESTS
 from class_gamestate import GameState
+from item_generator import generate_item
 
 SAVE_FILE = "funky_final_fantasy.json"
 
@@ -24,6 +25,13 @@ class SaveManager:
 
     SAVE_PATH = os.path.join(get_base_dir.__func__(), SAVE_FILE)
 
+# ----------------------------------------------------- SAVE --------------------------------------------
+
+    @classmethod
+    def update_save(cls, data):
+        data.setdefault("version", 1)
+        return data
+
 
     @classmethod
     def save(cls, game):
@@ -32,27 +40,69 @@ class SaveManager:
             "version": cls.SAVE_VERSION,
             "team": cls.save_characters(game.player_team),
             "enemy_team": cls.save_enemy_progress(game.enemy_team),
-            "inventory": game.inventory,
+            "inventory": cls.save_inventory(game.inventory),
             "zone": cls.save_zone(game.current_zone),
-            "active_quests": [q.to_dict() for q in game.active_quests],
-            "completed_quests": [q.to_dict() for q in game.completed_quests],
+            "active_quests": cls.save_quest_list(game.active_quests),
+            "completed_quests": cls.save_quest_list(game.completed_quests),
+            "gold": game.gold
         }
 
         with open(cls.SAVE_PATH, "w", encoding="utf-8") as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
-        print("📜 Partie sauvegardée.")
+        print("")
+        print("   🔖 Partie sauvegardée.   ")
 
+
+    @classmethod
+    def save_characters(cls, player_team):
+        return [character.to_dict() for character in player_team]
+
+
+    @classmethod
+    def save_enemy_progress(cls, enemy_team):
+
+        return [
+            {
+                "id": enemy.id,
+                "defeated": enemy.defeated,
+            }
+            for enemy in enemy_team
+        ]
+
+
+    @classmethod
+    def save_inventory(cls, inventory):
+        return copy.deepcopy(inventory)
+
+    
+    @classmethod
+    def save_zone(cls, zone):
+        return zone.to_dict()
+
+
+    @classmethod
+    def save_quest_list(cls, quests):
+        return [quest.to_dict() for quest in quests]
+
+# ----------------------------------------------------- LOAD --------------------------------------------
 
     @classmethod
     def load(cls):
 
         if not os.path.exists(cls.SAVE_PATH):
-            print("Aucune sauvegarde.")
+            print("")
+            print("      Aucune sauvegarde.      ")
+            print("   🧭 Nouvelle aventure !   ")
+            print("")
             return False
 
         with open(cls.SAVE_PATH, "r", encoding="utf-8") as file:
             data = json.load(file)
+            print("")
+            print("      Sauvegarde trouvée.      ")
+            print("     ⌛ Partie chargée !     ")
+            print("")
 
         data = cls.update_save(data)
 
@@ -61,18 +111,20 @@ class SaveManager:
 
         # données qui peuvent évoluer
         enemy_team = cls.load_enemy_progress(data.get("enemy_team", []))
-        inventory = data.get("inventory", [])
+        inventory = cls.load_inventory(data.get("inventory", []))
         zone = cls.load_zone(data.get("zone"))
         loaded_active_quests = cls.load_quest_list(data.get("active_quests", []))
         loaded_completed_quests = cls.load_quest_list(data.get("completed_quests", []))
+        gold = data.get("gold", 0)
 
         return GameState(
             player_team=player_team,
             enemy_team=enemy_team,
-            inventory=copy.deepcopy(inventory),
+            inventory=inventory,
             current_zone=zone,
             active_quests=loaded_active_quests,
             completed_quests=loaded_completed_quests,
+            gold=gold
         )
 
 
@@ -102,6 +154,24 @@ class SaveManager:
                 enemy.defeated = saved_enemy.get("defeated", False)
 
         return enemy_team
+
+
+    @classmethod
+    
+    def load_inventory(cls, inventory_data):
+
+        inventory = []
+
+        for item in inventory_data:
+
+            new_item = copy.deepcopy(item)
+
+            new_item.setdefault("item_level", 1)
+            new_item.setdefault("bonus", {})
+
+            inventory.append(new_item)
+
+        return inventory
 
     
     @classmethod
@@ -136,7 +206,8 @@ class SaveManager:
 
         return quests
     
-    
+# ----------------------------------------------------- NEW GAME --------------------------------------------
+
     @classmethod
     def new_game(cls):
         
@@ -148,16 +219,7 @@ class SaveManager:
 
         enemy_team = []
 
-        inventory = [
-            {
-                "id": "phoenix_feather",
-                "quantity": 1,
-                "type": "consumable",
-                "rarity": "rare",
-                "quantity": 1,
-                "item_level": 1,
-            }
-        ]
+        inventory = [generate_item("phoenix_feather")]
 
         zone = ZONES[0]
 
@@ -169,11 +231,5 @@ class SaveManager:
     )
 
 
-    @classmethod
-  
-    def update_save(cls, data):
-
-        data.setdefault("version", 1)
-
-        return data
+    
     

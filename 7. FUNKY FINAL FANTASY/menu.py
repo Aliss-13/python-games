@@ -1,5 +1,4 @@
-from ui import section
-from display import display_player_team, display_zone_progress
+from display import display_player_team, display_zone_progress, section
 from menu_combat import menu_inventory
 from combat import combat
 from class_savemanager import SaveManager
@@ -35,6 +34,7 @@ def menu_zone(game, context):
 
         elif choix == "3":
             menu_inventory(context)
+            print(f"Or : {game.gold}")
 
         elif choix == "4":
             display_zone_progress(game.current_zone, game)

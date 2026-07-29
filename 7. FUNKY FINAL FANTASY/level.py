@@ -43,6 +43,7 @@ def level_up(character):
 
 
 def increase_stats(character):
+    print("")
     print(f"----{character.name}----")
     print(f"{character.name} passe niveau {character.level} !")
 

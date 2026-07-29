@@ -2,7 +2,7 @@ import random
 from class_event import FOREST_EVENTS, Event
 from loot_tables import LOOT_ZONES_PROFILES
 from class_enemy import get_enemy_by_id, ENEMIES
-from class_quest import FOREST_QUESTS, process_game_event
+from class_quest import start_quest, process_game_event
 from display import display_boss_name
 from class_gameevent import GameEvent
 
@@ -179,27 +179,14 @@ def get_zone_by_id(zone_id, zones):
         None
     )
 
-#---------------------------------------------------- Quêtes -----------------------------------------
-
-def start_quest(game, quest_id):
-
-    quest = FOREST_QUESTS[quest_id]
-
-    if quest is None:
-        print(f"Quête inconnue : {quest_id}")
-        return
-
-    game.active_quests.append(quest)
-
-    print(f"📜 Nouvelle quête : {quest.name}")
-
 #---------------------------------------------------- Exploration -----------------------------------------
 
 def add_zone_progress_discovery(zone, event):
 
     amount = event.progress
     zone.progress += amount
-    print(f"🌲 Découverte : +{amount} progression de zone !")
+    print(f"Découverte : +{amount} progression de zone !")
+    print("")
     zone.check_unlocks()
 
 
@@ -209,16 +196,17 @@ def add_zone_progress_combat(zone, enemy):
     zone.progress += amount
         
     print(
-        f"🌲 Victoire sur {enemy.name} :"
+        f"Victoire sur {enemy.name} :"
         f" +{amount} progression de zone !"
-        )
+    )
+    print("")
     zone.check_unlocks()
 
 
 def explore(zone, game):
 
     if not zone.discovered:
-        print(f"\n🌲 Vous entrez dans : {zone.name}")
+        print(f"\nVous entrez dans : {zone.name}")
         zone.discovered = True
 
 
@@ -255,7 +243,7 @@ def explore(zone, game):
 
 def resolve_event(zone, event, game):
 
-    print(f"\n🌲 {event.name}")
+    print(f"\n{event.name}")
 
     if event.start_quests:
         for quest_id in event.start_quests:

@@ -1,21 +1,29 @@
 import random
-from display import display_enemy, display_enemy_light, display_loot
-from ui import separator, header, separator_bis
+
+from display import display_enemy, display_enemy_light, display_loot, display_character, display_discovery, header, separator
+
 from class_enemy import create_enemy, ENEMIES
+
+from class_quest import process_game_event
+
 from skill_engine import execute_skill
 from class_skillcontext import SkillContext
-from class_combatcontext import CombatContext
+
+from class_zone import explore, add_zone_progress_combat
+
+from class_effect import remove_effect_malus, remove_effect_bonus
 from effects import start_of_turn
+
+from class_combatcontext import CombatContext
+from class_gameevent import GameEvent
+from class_savemanager import SaveManager
+
 from level import scale_enemy_team, level_up, xp_required
 from loot_tables import generate_loot, add_loot
 from inventory import get_stats
-from class_savemanager import SaveManager
+
 from menu_combat import menu_tour
-from class_zone import explore, add_zone_progress_combat
-from class_effect import remove_effect_malus, remove_effect_bonus
-from display import display_character, display_discovery
-from class_gameevent import GameEvent
-from class_quest import process_game_event
+
 
 RARE_CHANCE = 0.05
 
@@ -187,6 +195,7 @@ def restore_team_after_combat(player_team):
 
         character.effects.clear()
         
+    print("")
     print("✨ Votre équipe récupère tous ses PV et son mana.")
 
 
@@ -195,14 +204,10 @@ def register_defeated_enemies(game, context):
     for enemy in context.enemy_team:
 
         if enemy.life <= 0:
-
             context.zone.enemy_kills[enemy.id] = (context.zone.enemy_kills.get(enemy.id, 0) + 1)
-
+            add_zone_progress_combat(context.zone, enemy)
             event = GameEvent("kill", enemy.id)
             process_game_event(game, event)
-
-        add_zone_progress_combat(context.zone, enemy)
-
 
 def handle_defeated_enemies(game, context):
 
@@ -211,18 +216,18 @@ def handle_defeated_enemies(game, context):
     for enemy in context.enemy_team:
 
         if is_dead(enemy):
-            separator_bis()
+            print("")
             print(f"{enemy.name} disparaît !")
             enemy.defeated = True
 
             register_defeated_enemies(game, context)
-            separator_bis()
+            print("")
             gain_xp_combat(context)
 
             loot.extend(generate_loot(enemy, context.zone))
 
     add_loot(game.inventory, loot)
-    separator_bis()
+    print("")
     display_loot(loot)
 
     return loot
@@ -297,7 +302,7 @@ def end_combat(game, context):
     restore_team_after_combat(game.player_team)
 
     SaveManager.save(game)
-    
+    print("")
     print("Victoire totale !")
     
 

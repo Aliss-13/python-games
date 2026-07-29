@@ -1,7 +1,7 @@
 from display import display_equipment, display_inventory
 from inventory import equip_from_inventory, use_item
 from class_skill import get_target_name
-from ui import section, separator
+from display import section, separator, sell_item
 from class_skillcontext import SkillContext
 from skill_engine import execute_skill
 
@@ -51,7 +51,8 @@ def character_inventory_menu(context, character):
         print("")
         print("[1] Équiper")
         print("[2] Utiliser objet")
-        print("[3] Retour")
+        print("[3] Vendre objet")
+        print("[4] Retour")
 
         choix = input("> ")
 
@@ -62,6 +63,16 @@ def character_inventory_menu(context, character):
             use_item(context.player_team, context.inventory)
 
         elif choix == "3":
+            display_inventory(context.inventory)
+
+            try:
+                choix = int(input("Objet à vendre : "))
+            except ValueError:
+                return
+
+            sell_item(context.inventory, choix)
+
+        elif choix == "4":
             return
 
         else:

@@ -34,7 +34,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "common", 
         "bonus": {"defense": 5},
-        "scaling": 0.5,
+        "scaling": {"defense": 0.5},
         "cost": 20
     },
 
@@ -46,7 +46,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "common", 
         "bonus": {"power": 5, "speed": 5},
-        "scaling": 0.5,
+        "scaling": {"power": 0.5, "speed": 0.5},
         "cost": 20
     },
 
@@ -58,7 +58,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "uncommon", 
         "bonus": {"life_max": 8, "defense": 5},
-        "scaling": 0.75,
+        "scaling": {"life_max": 0.75, "defense": 0.75},
         "cost": 30
     },
 
@@ -70,7 +70,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "uncommon", 
         "bonus": {"mana_max": 8, "power": 5},
-        "scaling": 0.75,
+        "scaling": {"mana_max": 0.75, "power": 0.75},
         "cost": 30
     },
 
@@ -83,7 +83,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "rare", 
         "bonus": {"life_max": 12, "power": 10, "defense": 8},
-        "scaling": 1,
+        "scaling": {"life_max": 1, "power": 1, "defense": 1},
         "cost": 30
     },
 
@@ -95,7 +95,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "rare", 
         "bonus": {"mana_max": 15, "power": 10, "speed": 8},
-        "scaling": 1,
+        "scaling": {"mana_max": 1, "power": 1, "speed": 1},
         "cost": 30
     },
 
@@ -107,7 +107,7 @@ ITEMS = {
         "slot": "head", 
         "rarity": "epic", 
         "bonus": {"mana_max": 20, "power": 12, "speed": 10},
-        "scaling": 1.5,
+        "scaling": {"mana_max": 1.5, "power": 1.5, "speed": 1.5},
         "cost": 30
     },
 
@@ -121,7 +121,7 @@ ITEMS = {
         "slot": "hands", 
         "rarity": "common", 
         "bonus": {"power": 10},
-        "scaling": 0.5,
+        "scaling": {"power": 0.5},
         "cost": 20
     },
 
@@ -133,7 +133,7 @@ ITEMS = {
         "slot": "hands", 
         "rarity": "common", 
         "bonus": {"power": 5, "speed": 5},
-        "scaling": 0.5,
+        "scaling": {"power": 0.5, "speed": 0.5},
         "cost": 20
     },
 
@@ -145,7 +145,7 @@ ITEMS = {
         "slot": "hands", 
         "rarity": "uncommon", 
         "bonus": {"life_max": 8, "defense": 5},
-        "scaling": 0.75,
+        "scaling": {"life_max": 0.75, "defense": 0.75},
         "cost": 30
     },
 
@@ -157,7 +157,7 @@ ITEMS = {
         "slot": "hands", 
         "rarity": "uncommon", 
         "bonus": {"mana_max": 8, "power": 5},
-        "scaling": 0.75,
+        "scaling": {"mana_max": 0.75, "power": 0.75},
         "cost": 30
     },
 
@@ -169,7 +169,7 @@ ITEMS = {
         "slot": "hands", 
         "rarity": "rare", 
         "bonus": {"mana_max": 10, "power": 5, "speed": 5},
-        "scaling": 0.75,
+        "scaling": {"mana_max": 0.75, "power": 0.75, "speed": 0.75},
         "cost": 50
     },
 
@@ -177,11 +177,11 @@ ITEMS = {
         "name": "Anneau d'obsidienne",
         "description": "La noirceur vous va si bien...",
         "type": "equipment", 
-        "class": ["hand-to-hand"], 
+        "class": ["hand-to-hand", "magic"], 
         "slot": "hands", 
         "rarity": "rare", 
         "bonus": {"life_max": 10, "power": 5, "defense": 5},
-        "scaling": 1,
+        "scaling": {"life_max": 1, "power": 1, "defense": 1},
         "cost": 50
     },
 
@@ -189,11 +189,11 @@ ITEMS = {
         "name": "Chevalière de Black Phillip",
         "description": "Vous aimez vivre délicieusement.",
         "type": "equipment", 
-        "class": ["hand-to-hand"], 
+        "class": ["hand-to-hand", "magic"], 
         "slot": "hands", 
         "rarity": "epic", 
         "bonus": {"power": 15, "speed": 15, "defense": 5},
-        "scaling": 1.5,
+        "scaling": {"power": 1.5, "speed": 1.5, "defense": 1.5},
         "cost": 70
     },
 
@@ -207,7 +207,7 @@ ITEMS = {
         "slot": "legs", 
         "rarity": "common", 
         "bonus": {"defense": 8},
-        "scaling": 0.5,
+        "scaling": {"defense": 0.5},
         "cost": 20
     },
 
@@ -219,7 +219,7 @@ ITEMS = {
         "slot": "legs", 
         "rarity": "common", 
         "bonus": {"power": 7, "speed": 7},
-        "scaling": 0.5,
+        "scaling": {"power": 0.5, "speed": 0.5},
         "cost": 20
     },
 
@@ -231,7 +231,7 @@ ITEMS = {
         "slot": "legs", 
         "rarity": "uncommon", 
         "bonus": {"life_max": 10, "defense": 8},
-        "scaling": 0.75,
+        "scaling": {"life_max": 0.75, "defense": 0.75},
         "cost": 30
     },
 
@@ -243,7 +243,7 @@ ITEMS = {
         "slot": "legs", 
         "rarity": "uncommon", 
         "bonus": {"mana_max": 15, "power": 8},
-        "scaling": 0.75,
+        "scaling": {"mana_max": 0.75, "power": 0.75},
         "cost": 30
     },
 
@@ -256,7 +256,7 @@ ITEMS = {
         "slot": "legs", 
         "rarity": "rare", 
         "bonus": {"power": 10, "speed": 8, "defense": 12},
-        "scaling": 1,
+        "scaling": {"power": 1, "speed": 1, "defense": 1},
         "cost": 50
     },
 
@@ -270,7 +270,7 @@ ITEMS = {
         "slot": "feet", 
         "rarity": "common", 
         "bonus": {"speed": 3},
-        "scaling": 0.5,
+        "scaling": {"speed": 0.5},
         "cost": 20
     },
 
@@ -282,7 +282,7 @@ ITEMS = {
         "slot": "feet", 
         "rarity": "uncommon", 
         "bonus": {"speed" : 5},
-        "scaling": 0.75,
+        "scaling": {"speed": 0.75},
         "cost": 30
     },
 
@@ -294,7 +294,7 @@ ITEMS = {
         "slot": "feet", 
         "rarity": "rare", 
         "bonus": {"speed" : 8},
-        "scaling": 1,
+        "scaling": {"speed" : 1},
         "cost": 50
     },
 
@@ -306,7 +306,7 @@ ITEMS = {
         "slot": "feet", 
         "rarity": "epic", 
         "bonus": {"power": 10, "speed" : 10},
-        "scaling": 1.5,
+        "scaling": {"power": 1.5, "speed" : 1.5},
         "cost": 70
     },
 
@@ -320,7 +320,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "common", 
         "bonus": {"mana_max": 10},
-        "scaling": 0.5,
+        "scaling": {"mana_max": 0.5},
         "cost": 20
     },
 
@@ -332,7 +332,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "uncommon", 
         "bonus": {"mana_max": 15, "power": 5},
-        "scaling": 0.75,
+        "scaling": {"mana_max": 0.75, "power": 0.75},
         "cost": 30
     },
 
@@ -344,7 +344,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "rare", 
         "bonus": {"mana_max": 20, "power": 10, "defense": 5},
-        "scaling": 1,
+        "scaling": {"mana_max": 1, "power": 1, "defense": 1},
         "cost": 50
     },
 
@@ -356,7 +356,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "epic", 
         "bonus": {"mana_max": 25, "power": 10, "defense": 10},
-        "scaling": 1.5,
+        "scaling": {"mana_max": 1.5, "power": 1.5, "defense": 1.5},
         "cost": 70
     },
 
@@ -368,7 +368,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "common", 
         "bonus": {"life_max" : 20},
-        "scaling": 0.5,
+        "scaling": {"life_max" : 0.5},
         "cost": 20
     },
 
@@ -380,7 +380,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "uncommon", 
         "bonus": {"life_max": 10, "defense" : 5},
-        "scaling": 0.75,
+        "scaling": {"life_max": 0.75, "defense": 0.75},
         "cost": 30
     },
 
@@ -392,7 +392,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "rare", 
         "bonus": {"life_max": 15, "power": 10, "defense" : 10},
-        "scaling": 1,
+        "scaling": {"life_max": 1, "power": 1, "defense" : 1},
         "cost": 50
     },
 
@@ -404,7 +404,7 @@ ITEMS = {
         "slot": "chest", 
         "rarity": "epic", 
         "bonus": {"life_max": 20, "power": 15, "defense" : 15},
-        "scaling": 1.5,
+        "scaling": {"life_max": 1.5, "power": 1.5, "defense" : 1.5},
         "cost": 70
     },
 
@@ -418,7 +418,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "common", 
         "bonus": {"power" : 10},
-        "scaling": 0.5,
+        "scaling": {"power" : 0.5},
         "cost": 20
     },
 
@@ -430,7 +430,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "uncommon", 
         "bonus": {"power" : 20},
-        "scaling": 0.75,
+        "scaling": {"power": 0.75},
         "cost": 30
     },
 
@@ -442,7 +442,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "rare", 
         "bonus": {"power" : 30, "speed": 10},
-        "scaling": 1,
+        "scaling": {"power" : 1, "speed": 1},
         "cost": 50
     },
 
@@ -454,7 +454,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "epic", 
         "bonus": {"life_max": 10, "power" : 35, "speed": 12},
-        "scaling": 1.5,
+        "scaling": {"life_max": 1.5, "power" : 1.5, "speed": 1.5},
         "cost": 70
     },
     
@@ -466,7 +466,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "common", 
         "bonus": {"power" : 10},
-        "scaling": 0.5,
+        "scaling": {"power" : 0.5},
         "cost": 20
     },
 
@@ -478,7 +478,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "uncommon", 
         "bonus": {"power" : 15, "speed": 5},
-        "scaling": 0.75,
+        "scaling": {"power": 0.75, "speed": 0.75},
         "cost": 30
     },
 
@@ -490,7 +490,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "rare", 
         "bonus": {"power" : 20, "speed": 10},
-        "scaling": 1,
+        "scaling": {"power" : 1, "speed": 1},
         "cost": 50
     },
 
@@ -502,7 +502,7 @@ ITEMS = {
         "slot": "weapon", 
         "rarity": "epic", 
         "bonus": {"mana_max": 15, "power" : 25, "speed": 15},
-        "scaling": 1.5,
+        "scaling": {"mana_max": 1.5, "power" : 1.5, "speed": 1.5},
         "cost": 70
     }
 }

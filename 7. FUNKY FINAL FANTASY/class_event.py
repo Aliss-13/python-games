@@ -60,7 +60,8 @@ FOREST_EVENTS = {
         name="Attaque de corbeau",
         event_type="combat",
         event_category= "normal",
-        enemies=["sick_raven", "sick_great_raven"],
+        enemies=["sick_raven", "sick_great_raven", "putrid_great_raven"],
+        start_quests=["raven_hunt"],
         repeatable=True
     ),
 
@@ -69,7 +70,8 @@ FOREST_EVENTS = {
         name="Nid d'araignées",
         event_type="combat",
         event_category= "normal",
-        enemies=["black_spider", "black_widow"],
+        enemies=["black_spider", "black_widow", "recluse"],
+        start_quests=["spider_hunt"],
         repeatable=True
     ),
 
@@ -79,6 +81,7 @@ FOREST_EVENTS = {
         event_type="combat",
         event_category= "normal",
         enemies=["putrid_great_raven", "recluse", "werewolf", "baby_samuel"],
+        start_quests=["rare_enemies"],
         repeatable=True,
         ignore_rarity=True
         ),

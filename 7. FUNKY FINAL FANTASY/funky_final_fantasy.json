@@ -1,0 +1,240 @@
+{
+    "version": 1,
+    "team": [
+        {
+            "id": "warrior",
+            "name": "Guerrier",
+            "character_class": "hand-to-hand",
+            "skills": [
+                "attack",
+                "powerful_blow",
+                "spinning_attack"
+            ],
+            "base_stats": {
+                "life_max": 120,
+                "mana_max": 0,
+                "power": 25,
+                "speed": 13,
+                "defense": 10
+            },
+            "level": 2,
+            "xp": 35.0,
+            "equipment": {
+                "weapon": null,
+                "head": null,
+                "chest": null,
+                "hands": null,
+                "legs": null,
+                "feet": null
+            },
+            "effects": [],
+            "bonus": {
+                "life_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 0
+            }
+        },
+        {
+            "id": "warlock",
+            "name": "Mage",
+            "character_class": "magic",
+            "skills": [
+                "spark",
+                "fireball",
+                "pyrotechnic_explosion"
+            ],
+            "base_stats": {
+                "life_max": 90,
+                "mana_max": 60,
+                "power": 20,
+                "speed": 17,
+                "defense": 7
+            },
+            "level": 2,
+            "xp": 35.0,
+            "equipment": {
+                "weapon": null,
+                "head": null,
+                "chest": null,
+                "hands": null,
+                "legs": null,
+                "feet": null
+            },
+            "effects": [],
+            "bonus": {
+                "life_max": 0,
+                "mana_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 0
+            }
+        },
+        {
+            "id": "priest",
+            "name": "Prêtre",
+            "character_class": "magic",
+            "skills": [
+                "simple_healing",
+                "blessing",
+                "radiant_protection"
+            ],
+            "base_stats": {
+                "life_max": 80,
+                "mana_max": 60,
+                "power": 25,
+                "speed": 15,
+                "defense": 12
+            },
+            "level": 2,
+            "xp": 35.0,
+            "equipment": {
+                "weapon": null,
+                "head": null,
+                "chest": null,
+                "hands": null,
+                "legs": null,
+                "feet": null
+            },
+            "effects": [],
+            "bonus": {
+                "life_max": 0,
+                "mana_max": 0,
+                "power": 0,
+                "speed": 0,
+                "defense": 0
+            }
+        }
+    ],
+    "enemy_team": [],
+    "inventory": [
+        {
+            "id": "phoenix_feather",
+            "name": "Plume de phénix",
+            "description": "Résurrection personnage avec 50 PV",
+            "type": "consumable",
+            "rarity": "rare",
+            "quantity": 2,
+            "item_level": 1,
+            "bonus": {},
+            "cost": 0
+        },
+        {
+            "id": "star_patterned_hose",
+            "name": "Chausses étoilées",
+            "description": "Pour des cuisses qui mettent des étoiles plein les yeux !",
+            "type": "equipment",
+            "rarity": "uncommon",
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": {
+                "mana_max": 15,
+                "power": 8
+            },
+            "cost": 30,
+            "slot": "legs",
+            "class": [
+                "magic"
+            ]
+        },
+        {
+            "id": "the_kings_breastplate",
+            "name": "Plastron du Roi",
+            "description": "Orné de symboles à la feuille d'or.",
+            "type": "equipment",
+            "rarity": "rare",
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": {
+                "life_max": 16,
+                "power": 11,
+                "defense": 11
+            },
+            "cost": 50,
+            "slot": "chest",
+            "class": [
+                "hand-to-hand"
+            ]
+        },
+        {
+            "id": "solar_orb",
+            "name": "Orbe solaire",
+            "description": "Il émet des rayons flamboyants.",
+            "type": "equipment",
+            "rarity": "rare",
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": {
+                "power": 21,
+                "speed": 11
+            },
+            "cost": 50,
+            "slot": "weapon",
+            "class": [
+                "magic"
+            ]
+        },
+        {
+            "id": "shiny_gloves",
+            "name": "Gants rutilants",
+            "description": "Protège bien vos doigts.",
+            "type": "equipment",
+            "rarity": "uncommon",
+            "quantity": 1,
+            "item_level": 1,
+            "bonus": {
+                "life_max": 8,
+                "defense": 5
+            },
+            "cost": 30,
+            "slot": "hands",
+            "class": [
+                "hand-to-hand"
+            ]
+        }
+    ],
+    "zone": {
+        "id": "dark_forest",
+        "progress": 2,
+        "flags": [],
+        "discovered": true,
+        "sub_boss_unlocked": false,
+        "boss_unlocked": false,
+        "sub_boss_defeated": false,
+        "boss_defeated": false,
+        "enemy_kills": {
+            "werewolf": 1
+        }
+    },
+    "active_quests": [
+        {
+            "id": "rare_enemies",
+            "progress": 0,
+            "target_progress": {
+                "putrid_great_raven": 0,
+                "recluse": 0,
+                "werewolf": 1,
+                "baby_samuel": 0
+            },
+            "completed": false,
+            "reward_items": [
+                "nothingness"
+            ]
+        }
+    ],
+    "completed_quests": [
+        {
+            "id": "kill_the_werewolf",
+            "progress": 1,
+            "target_progress": {
+                "werewolf": 0
+            },
+            "completed": true,
+            "reward_items": [
+                "phoenix_feather",
+                "star_patterned_hose"
+            ]
+        }
+    ],
+    "gold": 0
+}
