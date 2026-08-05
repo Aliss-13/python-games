@@ -1,4 +1,4 @@
-from class_skilleffect import SkillEffect
+from skills.class_skilleffect import SkillEffect
 
 class Skill:
 
@@ -26,59 +26,6 @@ class Skill:
         self.damage_type = damage_type
         self.effects = effects or []
         self.message = message
-
-
-def unlock_skills(character):
-
-    unlocks = SKILL_UNLOCKS.get(character.id, {})
-
-    if character.level in unlocks:
-
-        for skill_id in unlocks[character.level]:
-
-            skill = get_skill(skill_id)
-
-            if skill not in character.skills:
-                character.skills.append(skill)
-                print(f"{character.name} apprend {skill.name} !")
-
-
-def get_target_name(skill):
-    return TARGET_NAMES.get(skill.target)
-
-
-def get_skill(skill_id):
-
-    for skill in SKILLS:
-        if skill.id == skill_id:
-            return skill
-
-    return None
-
-
-
-TARGET_NAMES = {
-    "enemy": "Ennemi",
-    "enemies": "Tous les ennemis",
-    "self": "Soi",
-    "ally": "Allié",
-    "allies": "Tous les alliés"
-}
-
-
-def display_skill_message(context):
-
-    values = {
-        "caster": context.caster.name,
-        "skill": context.skill.name,
-        "cost": context.skill.cost,
-        "remaining_life": context.caster.life,
-        "remaining_mana": context.caster.mana
-    }
-
-    print(
-        context.skill.message.format(**values)
-    )
 
 
 SKILLS = [
@@ -152,7 +99,7 @@ SKILLS = [
 
     Skill(
         id="peck",
-        name="Coup de bec 🐦‍⬛",
+        name="Coup de bec 🐦",
         cost=0,
         target="enemy",
         actions=["damage", "apply_effect"],
@@ -379,42 +326,3 @@ SKILLS = [
         effects=[SkillEffect(effect_id="melancholy", chance=0.3, target="enemy")]
     ),
 ]
-
-COST_TYPES = [
-    "mana",
-    "life"
-]
-
-SKILL_UNLOCKS = {
-
-    "warlock": {
-
-        1: ["spark", "fireball"],
-        2: ["pyrotechnic_explosion"],
-        3: ["greek_fire"]
-
-    },
-
-    "warrior": {
-
-        1: ["attack", "powerful_blow"],
-        2: ["spinning_attack"],
-        3: ["war_cry"]
-
-    },
-
-    "priest": {
-
-        1: ["simple_healing", "blessing"],
-        2: ["radiant_protection"], 
-        3: ["penance"] 
-
-    }
-
-}
-
-
-
-
-
-

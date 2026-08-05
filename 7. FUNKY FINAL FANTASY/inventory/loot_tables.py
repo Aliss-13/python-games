@@ -1,7 +1,8 @@
 import random
-from data import ITEMS
-from item_generator import generate_item
-from inventory import add_item
+from inventory.data import ITEMS
+from inventory.item_generator import generate_item
+
+
 
 
 FOREST_LOOTS = {
@@ -21,7 +22,8 @@ FOREST_LOOTS = {
     ],
 
     "uncommon": [
-        "invigorating_potion",
+        "mana_potion",
+        "life_potion",
         "shiny_helmet",
         "mysterious_headband",
         "shiny_gloves",
@@ -37,6 +39,8 @@ FOREST_LOOTS = {
 
     "rare": [
         "phoenix_feather",
+        "iron_skin_potion",
+        "greater_healing_potion",
         "great_golden_helm",
         "new_moon_tiara",
         "cosmic_mittens",
@@ -138,6 +142,68 @@ LOOT_ENEMIES_PROFILES = {
 }
 
 
+ENEMY_SPECIFIC_LOOTS = {
+
+    "black_spider": {
+        "items": {
+            "spider_silk": 0.5
+        }
+    },
+
+    "black_widow": {
+        "items": {
+            "spider_silk": 0.8
+        }
+    },
+
+    "recluse": {
+        "items": {
+            "spider_silk": 1.0
+        }
+    },
+
+
+    "sick_raven": {
+        "items": {
+            "black_feather": 0.6
+        }
+    },
+
+    "sick_great_raven": {
+        "items": {
+            "black_feather": 0.8
+        }
+    }
+}
+
+def generate_enemy_specific_loots(enemy):
+
+    loot = []
+
+    profile = ENEMY_SPECIFIC_LOOTS.get(enemy.id)
+
+    if not profile:
+        return loot
+
+
+    for item_id, chance in profile["items"].items():
+
+        if random.random() <= chance:
+
+            item = {
+                "id": item_id,
+                "name": ITEMS[item_id]["name"],
+                "description": ITEMS[item_id]["description"],
+                "type": ITEMS[item_id]["type"],
+                "rarity": ITEMS[item_id]["rarity"],
+                "quantity": 1
+            }
+
+            loot.append(item)
+
+    return loot
+
+
 def scale_item_bonus(item, item_level): # utilisée dans create_loot_item
 
     if item["type"] != "equipment":
@@ -163,6 +229,7 @@ def create_loot_item(item_id, zone): # utilisée dans generate_loot
     loot = {
         "id": item_id,
         "name": base_item["name"],
+        "description": base_item["description"],
         "rarity": base_item["rarity"],
         "type": base_item["type"],
         "quantity": 1,
@@ -229,14 +296,3 @@ def generate_loot(enemy, zone):
     return loot
 
 
-def add_loot(inventory, loot):
-
-    for item in loot:
-        add_item(inventory, item)
-    
-
-
-
-
-
-    

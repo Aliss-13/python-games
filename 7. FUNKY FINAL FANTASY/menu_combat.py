@@ -1,12 +1,18 @@
 from display import display_equipment, display_inventory
-from inventory import equip_from_inventory, use_item
-from class_skill import get_target_name
-from display import section, separator, sell_item
-from class_skillcontext import SkillContext
-from skill_engine import execute_skill
+from display import section, separator, LIGHT_PINK, RESET
+
+from inventory.inventory import equip_from_inventory, use_item, sell_item
+
+from skills.class_skillcontext import SkillContext
+from skills.skill_engine import execute_skill
+from skills.skills import get_target_name
+
+# =================================================== GAMESTATE MENUS ===================================================
 
 
-def menu_inventory(context):
+
+
+def menu_inventory(game):
 
     while True:
 
@@ -15,10 +21,11 @@ def menu_inventory(context):
         print("Choisir un personnage :")
         print()
 
-        for index, character in enumerate(context.player_team, start=1):
+        for index, character in enumerate(game.player_team, start=1):
             print(f"[{index}] {character.name}")
 
         print("[0] Retour")
+        print(f"💰 = {game.gold} pièces d'or")
 
         choix = input("> ")
 
@@ -29,11 +36,11 @@ def menu_inventory(context):
 
             index = int(choix) - 1
 
-            if 0 <= index < len(context.player_team):
+            if 0 <= index < len(game.player_team):
 
-                character_inventory_menu(
-                    context,
-                    context.player_team[index]
+                menu_character_inventory(
+                    game,
+                    game.player_team[index]
                 )
 
             else:
@@ -43,11 +50,11 @@ def menu_inventory(context):
             print("Choix invalide.")
 
 
-def character_inventory_menu(context, character):
+def menu_character_inventory(game, character):
     display_equipment(character)
     while True:
         
-        display_inventory(context.inventory)
+        display_inventory(game.inventory)
         print("")
         print("[1] Équiper")
         print("[2] Utiliser objet")
@@ -57,20 +64,20 @@ def character_inventory_menu(context, character):
         choix = input("> ")
 
         if choix == "1":
-            equip_from_inventory(character, context.inventory)
+            equip_from_inventory(character, game.inventory)
 
         elif choix == "2":
-            use_item(context.player_team, context.inventory)
+            use_item(game.player_team, game.inventory)
 
         elif choix == "3":
-            display_inventory(context.inventory)
+            display_inventory(game.inventory)
 
             try:
                 choix = int(input("Objet à vendre : "))
             except ValueError:
                 return
 
-            sell_item(context.inventory, choix)
+            sell_item(game, choix)
 
         elif choix == "4":
             return
@@ -78,6 +85,7 @@ def character_inventory_menu(context, character):
         else:
             print("Choix invalide")
 
+# =================================================== CONTEXT MENUS ===================================================
 
 def menu_skill(context, character):
 
@@ -120,11 +128,12 @@ def menu_skill(context, character):
             execute_skill(skill_context)
             return
 
+
 def menu_tour(context, character):
 
     while True:
 
-        section("Actions")
+        section(f"{LIGHT_PINK}Actions{RESET}")
         print("[s] Skill")
         print("[i] Inventaire")
         print("[q] Fin du tour")
@@ -139,7 +148,7 @@ def menu_tour(context, character):
      
         # INVENTAIRE
         elif choix == "i":
-            character_inventory_menu(context, character)
+            menu_character_inventory(context.game, character)
             # on reste dans le tour
 
         # FIN VOLONTAIRE

@@ -1,8 +1,8 @@
 from combat import combat, generate_enemy_team, scale_enemy_team
-from level import level_up
-from class_event import Event
+from events.class_event import Event
 from class_combatcontext import CombatContext
-from inventory import get_stats
+from protagonists.get_stats import get_stats
+from protagonists.level import level_up
 
 def debug_level(game, target_level):
 

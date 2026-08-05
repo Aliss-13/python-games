@@ -1,5 +1,5 @@
 import copy
-from class_skill import unlock_skills
+from skills.skills import unlock_skills
 
 def xp_required(level):
     return 50 * level ** 1.5 # niveau 1 : 50 - niveau 5 : ~559 - niveau 10 : ~1581

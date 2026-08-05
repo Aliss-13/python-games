@@ -28,13 +28,8 @@ try:
 
     display_inventory(game.inventory)
 
-    menu_zone(game, context)
+    menu_zone(game)
   
 except Exception as e:
     traceback.print_exc()
     input("Appuie sur entrée pour quitter")
-
-
-
-
-

@@ -1,8 +1,10 @@
+from inventory.data import ITEMS
 
-from data import ITEMS
-from class_event import FOREST_EVENTS, get_event_by_flag
-from class_enemy import get_enemy_by_id, ENEMIES
-from inventory import get_stats, remove_item
+from events.class_event import FOREST_EVENTS, get_event_by_flag
+
+from protagonists.data_enemies import ENEMIES
+from protagonists.utils_enemies import get_enemy_by_id
+from protagonists.get_stats import get_stats 
 
 
 couleurs = {
@@ -35,7 +37,8 @@ SLOTS = {
 
 RED = "\033[91m"
 GREEN = "\033[92m"
-YELLOW = "\033[93m"
+YELLOW = "\033[33m"
+LIGHT_YELLOW = "\033[93m"
 CYAN = "\033[96m"
 BLUE = "\033[94m"
 DIM = "\033[2m"
@@ -62,16 +65,10 @@ def ligne(txt):
     print(f"- {txt}")
 
 def section(title):
-    print(f"\n{LIGHT_PINK}--- {title} ---{RESET}")
+    print(f"\n--- {title} ---")
 
 def input_prompt(txt):
     return input(f"> {txt} ")
-
-
-def display_discovery(event):
-
-    print("\n📜 Découverte !")
-    print(f"🌲 {getattr(event, 'name', '')}")
 
 #--------------------------------------------------- OBJETS ---------------------------------------------------
 def display_item_details(item):
@@ -82,7 +79,7 @@ def display_item_details(item):
 
     name = item["name"]
 
-    if item["type"] == "consumable":
+    if item["type"] in ["consumable", "base_craft"]:
 
         return (
             f"{couleur}{name} ({RARITY[rarity]}){reset} "
@@ -123,15 +120,16 @@ def display_inventory(inventory):
 
 
 def display_equipment(character):
-    print(f"\n{YELLOW}Équipement de {character.name} :{RESET}")
+    print(f"\nÉquipement de {character.name} :")
 
     for slot, item in character.equipment.items():
 
         if item is None:
             continue
 
-        print(f"{SLOTS.get(slot, slot)} → ", end="")
-        display_item_details(item)
+        print(f"{SLOTS.get(slot, slot)} → {display_item_details(item)}", end="")
+        print()
+        
 
 #--------------------------------------------------- ENNEMIS et LOOTS ---------------------------------------------------
 
@@ -202,7 +200,7 @@ def display_loot(loot):
 
 def display_character(character):
 
-    section(f"{YELLOW}{character.name}{RESET}")
+    section(f"{LIGHT_YELLOW}{character.name}{RESET}")
 
     stats = get_stats(character)
 
@@ -235,7 +233,6 @@ def display_player_team(player_team):
 
     for character in player_team:
         display_character(character)
-        separator()
         display_equipment(character)
 
 
@@ -291,7 +288,7 @@ def display_zone_progression(zone):
 def display_zone_discoveries(zone):
 
     if zone.flags:
-        print(f"\n📜 {YELLOW}Découvertes :{RESET}")
+        print(f"\n📜 {LIGHT_YELLOW}Découvertes :{RESET}")
         print("")
     
         for flag in zone.flags:
@@ -306,7 +303,7 @@ def display_zone_discoveries(zone):
 
 def display_zone_quests(game):
 
-    print(f"\n📜 {YELLOW}Quêtes actives :{RESET}")
+    print(f"\n📜 {LIGHT_YELLOW}Quêtes actives :{RESET}")
     print("")
 
     if game.active_quests:
@@ -317,42 +314,73 @@ def display_zone_quests(game):
 
             print(f"{quest.description}")
 
-            if quest.objective_type == "kill_each":
+            if quest.quest_type == "kill_each":
 
                 completed = sum(
                                 1
-                                for count in quest.target_progress.values()
-                                if count >= quest.amount
+                                for objective, count in quest.objectives_progress.items()
+                                if count >= quest.objectives[objective]
                             )
 
                 print(
                     f"Progression : "
-                    f"{completed}/{len(quest.target_progress)}"
+                    f"{completed}/{len(quest.objectives_progress)}"
                 )
 
-                for enemy_id, count in quest.target_progress.items():
+                for enemy_id, count in quest.objectives_progress.items():
                     enemy = get_enemy_by_id(enemy_id, ENEMIES)
-                    symbole = "✔️" if count >= quest.amount else "❌"
-                    print(f"{symbole} {enemy.name}")
+                    required = quest.objectives[enemy_id]
+                    symbole = "✔️" if count >= required else "❌"
 
-            else:
+                    print(
+                            f"{symbole} {enemy.name} "
+                            f"{count}/{required}"
+                    )
+
+            elif quest.quest_type in ["collect_each", "discover_each"]:
+
+                completed = sum(
+                                1
+                                for objective, count in quest.objectives_progress.items()
+                                if count >= quest.objectives[objective]
+                )
+
                 print(
                     f"Progression : "
-                    f"{quest.progress}/{quest.amount}"
+                    f"{completed}/{len(quest.objectives)}"
+                )
+                print()
+                for objective, count in quest.objectives_progress.items():
+                    required = quest.objectives[objective]
+                    symbole = "✔️" if count >= required else "❌"
+                    name = get_objective_name(objective)
+                    print(f"{symbole} {name} {count}/{required}")
+
+                    
+            elif quest.quest_type == "kill_group":
+
+                print(
+                    f"Progression : "
+                    f"{quest.progress}/{quest.objectives['required']}"
                 )
 
-            print(f"XP gagnée : {quest.reward_xp} XP")
+            print(f"Expérience : {quest.reward_xp} XP")
 
             display_zone_quests_loots(quest)
+
             print()
-    else:
-        print("- Aucune quête active")
 
 
 def display_zone_quests_loots(quest):
 
-    print("Loots :")
-    
+    if quest.reward_items == []:
+        print()
+
+    else:
+        print("")
+        print("Gratification matérielle :")
+
+
     for item_id in quest.reward_items:
     
         data = ITEMS.get(item_id)
@@ -360,7 +388,7 @@ def display_zone_quests_loots(quest):
         if not data:
             print(f"- Objet inconnu ({item_id})")
             continue
-    
+
         rarity = data.get("rarity", "common").lower()
         couleur = couleurs.get(rarity, "")
         reset = couleurs["reset"]
@@ -377,11 +405,9 @@ def display_zone_quests_loots(quest):
                 print(f"- {STAT_NAMES.get(stat, stat)}")
     
             print(
-                f"{YELLOW}⚠️ Les valeurs seront révélées "
+                f"{LIGHT_YELLOW}⚠️ Les valeurs seront révélées "
                 f"après validation de la quête.{RESET}"
             )
-    
-        print("")
 
 
 def display_zone_defeated_enemies(zone):
@@ -438,42 +464,22 @@ def display_zone_progress(zone, game):
     display_zone_defeated_enemies(zone)
     display_zone_boss_status(zone)
 
-#--------------------------------------------------- VENTE ITEMS ---------------------------------------------------
 
-def sell_item(game):
+def get_objective_name(objective_id):
 
-    display_inventory(game.inventory)
+    # objet
+    if objective_id in ITEMS:
+        return ITEMS[objective_id]["name"]
 
-    try:
-        choix = int(input("Objet à vendre : "))
+    # découverte / événement
+    event = get_event_by_flag(objective_id, FOREST_EVENTS)
+    if event:
+        return event.name
 
-    except ValueError:
-        return
+    # ennemi
+    enemy = get_enemy_by_id(objective_id, ENEMIES)
+    if enemy:
+        return enemy.name
 
-
-    if choix < 0 or choix >= len(game.inventory):
-        return
-
-
-    item = game.inventory[choix]
-
-    value = ITEMS[item["id"]].get("cost", 0)
-
-
-    if value == 0:
-        print("Cet objet ne peut pas être vendu.")
-        return
-
-
-    quantity = item.get("quantity", 1)
-
-    gain = value * quantity
-
-    game.gold += gain
-
-    remove_item(game.inventory, choix)
-
-    print(
-        f"💰 Vous vendez {item['name']} "
-        f"pour {gain} pièces."
-    )
+    # secours
+    return objective_id

@@ -1,157 +1,75 @@
 import random
-from inventory import get_stats
 
-class Effect:
+from protagonists.get_stats import get_stats
+from protagonists.utils_characters import get_live_characters
+from effects.class_effect import Effect, EFFECTS
 
-    def __init__(
-        self,
-        id,
-        name,
-        type,
-        duration,
-        value=0,
-        scaling=None,
-        stackable=False,
-        source=None
-    ):
-        self.id = id
-        self.name = name
-        self.type = type
-        self.duration = duration
-        self.value = value
-        self.scaling = scaling
-        self.stackable = stackable
-        self.source = source
+from protagonists.status import check_death
 
 
-    def to_dict(self):
+def start_of_turn(target):
 
-        return {
-            "id": self.id,
-            "name": self.name,
-            "type": self.type,
-            "duration": self.duration,
-            "value": self.value,
-            "scaling": self.scaling,
-            "stackable": self.stackable,
-            "source": self.source
-        }
+    new_effects = []
 
-EFFECTS = {
-
-    # damage_over_time
-    "burn": {
-        "name": "Brûlure 🔥",
-        "type": "damage_over_time",
-        "duration": 3,
-        "value": 4,
-        "scaling": "level",
-        "stackable": True, 
-    },
-
-    "poison": {
-        "name": "Poison 🦠",
-        "type": "damage_over_time",
-        "duration": 3,
-        "value": 5,
-        "scaling": "level",
-        "stackable": True
-    },
-
-    "hemorrhage": {
-        "name": "Hémorragie 🩸",
-        "type": "damage_over_time",
-        "duration": 3,
-        "value": 6,
-        "scaling": "level",
-        "stackable": True
-    },
-
-    "corruption": {
-        "name": "Corruption 🫟",
-        "type": "damage_over_time",
-        "duration": 3,
-        "value": 6,
-        "scaling": "level",
-        "stackable": True
-    },
-
-    "melancholy": {
-        "name": "Mélancolie 🎭",
-        "type": "damage_over_time",
-        "duration": 3,
-        "value": 5,
-        "scaling": "level",
-        "stackable": True
-    },
-
-    # damage
-    "greek_fire": {
-        "name": "Feu grégeois 🛢️",
-        "type": "delayed_damage",
-        "duration": 3,
-        "value": 80,
-        "scaling": "level",
-        "stackable": False
-    },
+    for effect in target.effects:
 
 
-    # heal_over_time
-    "regeneration": {
-        "name": "Régénération 🌟",
-        "type": "heal_over_time",
-        "duration": 3,
-        "value": 6,
-        "scaling": "level",
-        "stackable": True
-    },
+        if effect.type == "damage_over_time":
+
+            apply_damage_effect(
+                effect.source,
+                target,
+                effect
+            )
+
+            effect.duration -= 1
 
 
-    # forced_target
-    "taunt": {
-        "name": "Provocation 🗣️",
-        "type": "forced_target",
-        "duration": 3,
-        "stackable": False
-    },
+        elif effect.type == "heal_over_time":
 
-    "stun": {
-        "name": "Etourdissement 😵",
-        "type": "incapacitating",
-        "duration": 2,
-        "stackable": False
-    },
+            apply_healing_effect(
+                effect.source,
+                target,
+                effect
+            )
+
+            effect.duration -= 1
 
 
-    # defense_bonus
-    "light_prism": {
-        "name": "Prisme lumineux 🔶",
-        "type": "defense_bonus",
-        "duration": 3,
-        "value": 4,
-        "scaling": "level",
-        "stackable": False
-    },
+        elif effect.type == "delayed_damage":
 
-    "shield": {
-        "name": "Bouclier 🛡️",
-        "type": "defense_bonus",
-        "duration": 2,
-        "value": 7,
-        "scaling": "level",
-        "stackable": False
-    },
+            effect.duration -= 1
 
-    # defense_malus
-    "dread": {
-        "name": "Terreur 👁️‍🗨️",
-        "type": "defense_malus",
-        "duration": 3,
-        "value": 4,
-        "scaling": "level",
-        "stackable": False
-    }
-}
+            if effect.duration <= 0:
+
+                print(f"{effect.name} fait du dégât !")
+                apply_damage_effect(effect.source, target, effect)
+
+
+        elif effect.type in IMMEDIATE_EFFECT:
+            effect.duration -= 1
+
+
+        elif effect.type in EFFECT_DURATION_ONLY:
+            effect.duration -= 1
+
+
+        else:
+            print(f"Effet inconnu : {effect.name}")
+            continue
+
+
+        if effect.duration > 0:
+            new_effects.append(effect)
+
+        else:
+            remove_effect_bonus(target, effect)
+            remove_effect_malus(target, effect)
+            print(f"L'effet {effect.name} disparaît de {target.name}.")
+
+    target.effects = new_effects
+
+
 
 
 def create_effect(effect_id, source=None):
@@ -206,7 +124,6 @@ def get_taunt_target(player_team):
 
 
 def apply_choose_target(player_team):
-    from class_character import get_live_characters
 
     targets = get_live_characters(player_team)
 
@@ -251,6 +168,8 @@ def apply_damage_effect(source, target, effect):
         f"{target.name} subit {effect.name} "
         f"(-{damage} PV → PV : {target.life}/{stats["life_max"]}) !"
         )
+
+    check_death(target)
 
 
 def apply_healing_effect(source, target, effect):
@@ -298,7 +217,8 @@ def apply_defense_malus(character, target, effect):
         f"{target.name} subit {effect.name} "
         f"(-{malus} défense) !"
     )
-   
+
+
 IMMEDIATE_EFFECT = ["defense_bonus", "defense_malus", "damage_over_time", "heal_over_time"]
 
 EFFECT_DURATION_ONLY = {
@@ -326,6 +246,3 @@ EFFECT_TYPE_LABEL = {
     "defense_malus": "malus de défense"
 
 }
-
-
-

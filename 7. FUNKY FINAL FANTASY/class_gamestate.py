@@ -8,6 +8,8 @@ class GameState:
         current_zone,
         active_quests=None,
         completed_quests=None,
+        met_npcs=None,
+        discovered_shops=None,
         gold=0
     ):
         self.player_team = player_team
@@ -16,4 +18,7 @@ class GameState:
         self.current_zone = current_zone
         self.active_quests = active_quests or []
         self.completed_quests = completed_quests or []
+        self.met_npcs = met_npcs or []
+        self.discovered_shops = discovered_shops or []
         self.gold = gold
+        

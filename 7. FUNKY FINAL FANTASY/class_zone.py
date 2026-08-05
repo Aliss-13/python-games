@@ -1,10 +1,19 @@
 import random
-from class_event import FOREST_EVENTS, Event
-from loot_tables import LOOT_ZONES_PROFILES
-from class_enemy import get_enemy_by_id, ENEMIES
-from class_quest import start_quest, process_game_event
+
+from inventory.inventory import add_item
+from inventory.data import ITEMS
+from inventory.loot_tables import LOOT_ZONES_PROFILES
+
+from events.class_gameevent import GameEvent    
+from events.class_event import FOREST_EVENTS, Event 
+
+from protagonists.data_enemies import ENEMIES
+from protagonists.utils_enemies import get_enemy_by_id
+
+from quests.quests import start_quest, process_game_event
+
 from display import display_boss_name
-from class_gameevent import GameEvent
+
 
 
 class Zone:
@@ -112,6 +121,18 @@ class Zone:
             return 3
 
 
+    def add_progress(self, amount):
+
+        if amount <= 0:
+            return
+
+        self.progress += amount
+
+        print(f"Vous gagnez +{amount} progression de zone !")
+
+        self.check_unlocks()
+
+
     def check_unlocks(self):
 
         if (
@@ -165,8 +186,8 @@ ZONES = [
 
         recommended_level=1,
 
-        sub_boss_progress=10,
-        boss_progress=20
+        sub_boss_progress=20,
+        boss_progress=35
     )
 
 ]
@@ -180,28 +201,6 @@ def get_zone_by_id(zone_id, zones):
     )
 
 #---------------------------------------------------- Exploration -----------------------------------------
-
-def add_zone_progress_discovery(zone, event):
-
-    amount = event.progress
-    zone.progress += amount
-    print(f"Découverte : +{amount} progression de zone !")
-    print("")
-    zone.check_unlocks()
-
-
-def add_zone_progress_combat(zone, enemy):
-
-    amount = enemy.zone_progress
-    zone.progress += amount
-        
-    print(
-        f"Victoire sur {enemy.name} :"
-        f" +{amount} progression de zone !"
-    )
-    print("")
-    zone.check_unlocks()
-
 
 def explore(zone, game):
 
@@ -249,9 +248,7 @@ def resolve_event(zone, event, game):
         for quest_id in event.start_quests:
             start_quest(game, quest_id)
 
-    if event.event_type == "discovery":
-
-        add_zone_progress_discovery(zone, event)
+    if event.event_type == "discovery": #------------ découverte
 
         if event.flag and event.flag not in zone.flags:
             zone.flags.append(event.flag)
@@ -259,17 +256,41 @@ def resolve_event(zone, event, game):
         game_event = GameEvent("discovery", event.flag)
         process_game_event(game, game_event)
 
-        return {
-            "type": "discovery",
-            "event": event
+        return {"type": "discovery", "event": event}
+
+
+    if event.event_type == "collect": #------------ récolte
+
+        item_data = ITEMS[event.target]
+
+        item = {
+            "id": event.target,
+            "name": item_data["name"],
+            "description": item_data["description"],
+            "type": item_data["type"],
+            "rarity": item_data["rarity"],
+            "quantity": event.amount
         }
 
-    elif event.event_type == "combat":
+        add_item(game.inventory, item)
+        
+        print(f"🌿 Vous récoltez {item['name']} x{event.amount} !")
 
-        return {
-            "type": "combat",
-            "event": event
-        }
+        process_game_event(
+            game,
+            GameEvent(
+                event_type=event.event_type,
+                target=event.target,
+                amount=event.amount
+            )
+        )
+
+        return {"type": "collect", "event": event}
+
+
+    elif event.event_type == "combat": #------------ combat
+
+        return {"type": "combat", "event": event}
 
     else:
         raise ValueError(f"Type d'événement inconnu : {event.event_type}")

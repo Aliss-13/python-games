@@ -1,6 +1,9 @@
 import random
-from inventory import get_stats
-from class_effect import create_effect, EFFECT_HANDLERS, IMMEDIATE_EFFECT
+from protagonists.get_stats import get_stats
+from protagonists.status import check_death
+from effects.effects import create_effect, EFFECT_HANDLERS, IMMEDIATE_EFFECT
+from skills.class_skill import SKILLS
+
 
 #------------------------------------ EFFETS ---------------------------------------------------
 
@@ -83,15 +86,6 @@ def pay_skill_cost(context):
 
 #------------------------------------ VIE RESTANTE ---------------------------------------------------
 
-def check_death(target):
-
-    if target.life <= 0:
-        target.life = 0
-        return True
-
-    return False
-
-
 def display_remaining_life(targets):
 
     for target in targets:
@@ -145,6 +139,7 @@ def apply_skill_damage_to_targets(context):
     
     for target in targets:
         deal_damage(context.caster, target, context.skill)
+        check_death(target)
 
     return targets
 
@@ -185,3 +180,95 @@ def heal_target(context, target):
 
     if real_healing > 0:
         print(f"{target.name} gagne {real_healing} PV → PV : {target.life}/{stats_target['life_max']} !")
+
+
+
+
+
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+COST_TYPES = [
+    "mana",
+    "life"
+]
+
+SKILL_UNLOCKS = {
+
+    "warlock": {
+
+        1: ["spark", "fireball"],
+        2: ["pyrotechnic_explosion"],
+        3: ["greek_fire"]
+
+    },
+
+    "warrior": {
+
+        1: ["attack", "powerful_blow"],
+        2: ["spinning_attack"],
+        3: ["war_cry"]
+
+    },
+
+    "priest": {
+
+        1: ["simple_healing", "blessing"],
+        2: ["radiant_protection"], 
+        3: ["penance"] 
+
+    }
+
+}
+
+
+def unlock_skills(character):
+
+    unlocks = SKILL_UNLOCKS.get(character.id, {})
+
+    if character.level in unlocks:
+
+        for skill_id in unlocks[character.level]:
+
+            skill = get_skill(skill_id)
+
+            if skill not in character.skills:
+                character.skills.append(skill)
+                print(f"{character.name} apprend {skill.name} !")
+
+
+def get_target_name(skill):
+    return TARGET_NAMES.get(skill.target)
+
+
+def get_skill(skill_id):
+
+    for skill in SKILLS:
+        if skill.id == skill_id:
+            return skill
+
+    return None
+
+
+TARGET_NAMES = {
+    "enemy": "Ennemi",
+    "enemies": "Tous les ennemis",
+    "self": "Soi",
+    "ally": "Allié",
+    "allies": "Tous les alliés"
+}
+
+
+def display_skill_message(context):
+
+    values = {
+        "caster": context.caster.name,
+        "skill": context.skill.name,
+        "cost": context.skill.cost,
+        "remaining_life": context.caster.life,
+        "remaining_mana": context.caster.mana
+    }
+
+    print(
+        context.skill.message.format(**values)
+    )

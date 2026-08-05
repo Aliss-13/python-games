@@ -3,12 +3,18 @@ import json
 import os
 import sys
 
-from class_character import Character, CHARACTERS, get_character_by_id
-from class_enemy import ENEMIES
+from protagonists.class_character import Character
+from protagonists.data_characters import CHARACTERS
+from protagonists.utils_characters import get_character_by_id
+from protagonists.data_enemies import ENEMIES
+
 from class_zone import ZONES, get_zone_by_id
-from class_quest import Quest, FOREST_QUESTS
+
+from quests.class_quest import Quest, FOREST_QUESTS
+
 from class_gamestate import GameState
-from item_generator import generate_item
+
+from inventory.item_generator import generate_item
 
 SAVE_FILE = "funky_final_fantasy.json"
 
@@ -44,7 +50,8 @@ class SaveManager:
             "zone": cls.save_zone(game.current_zone),
             "active_quests": cls.save_quest_list(game.active_quests),
             "completed_quests": cls.save_quest_list(game.completed_quests),
-            "gold": game.gold
+            "gold": game.gold,
+            "met_npcs": list(game.met_npcs)
         }
 
         with open(cls.SAVE_PATH, "w", encoding="utf-8") as file:
@@ -116,6 +123,7 @@ class SaveManager:
         loaded_active_quests = cls.load_quest_list(data.get("active_quests", []))
         loaded_completed_quests = cls.load_quest_list(data.get("completed_quests", []))
         gold = data.get("gold", 0)
+        met_npcs = data.get("met_npcs", [])
 
         return GameState(
             player_team=player_team,
@@ -124,7 +132,8 @@ class SaveManager:
             current_zone=zone,
             active_quests=loaded_active_quests,
             completed_quests=loaded_completed_quests,
-            gold=gold
+            gold=gold,
+            met_npcs=met_npcs
         )
 
 

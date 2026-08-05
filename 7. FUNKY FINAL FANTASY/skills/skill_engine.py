@@ -1,5 +1,4 @@
-from skills import apply_skill_effects, apply_skill_healing, pay_skill_cost, apply_skill_damage_to_targets
-from class_skill import display_skill_message
+from skills.skills import apply_skill_effects, apply_skill_healing, pay_skill_cost, apply_skill_damage_to_targets, display_skill_message
 
 def execute_skill(context):
 

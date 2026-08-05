@@ -9,21 +9,88 @@ ITEMS = {
         "description": "Résurrection personnage avec 50 PV",
         "type": "consumable", 
         "rarity": "rare", 
-        "effect": "resurrection",
-        "healing": 50,
+        "effects": {"resurrection": 50},
         "cost": 0
     },
 
-    "invigorating_potion": {
-        "name": "Potion revigorante",
-        "description": "+80 PV",
+    "mana_potion": {
+        "name": "Potion de mana",
+        "description": "+80 mana",
         "type": "consumable", 
         "rarity": "uncommon", 
-        "effect": "gain_life", 
-        "healing": 80,
+        "effects": {"restore_mana": 80}, 
         "cost": 10
     },
 
+    "life_potion": {
+        "name": "Potion de vie",
+        "description": "+80 PV",
+        "type": "consumable", 
+        "rarity": "uncommon", 
+        "effects": {"heal": 80},
+        "cost": 10
+    },
+
+
+    "greater_healing_potion": {
+        "name": "Grande potion de soin",
+        "description": "Soigne tous les alliés de 100 PV",
+        "type": "consumable",
+        "rarity": "rare",
+        "effects": {"heal_all": 100},
+        "cost": 50
+    },
+
+
+    "iron_skin_potion": {
+        "name": "Potion de peau de fer",
+        "description": "+20 défense pendant 3 tours",
+        "type": "consumable",
+        "rarity": "rare",
+        "effects": {"iron_skin": 1},
+        "cost": 75
+    },
+
+#---------------------------- Base craft ------------------------------------------------
+    "red_apple": {
+        "name": "Pomme rouge",
+        "description": "Une pomme rouge, on dirait de la Red Delicious... Est ce qu'elle est bio ?",
+        "type": "base_craft",
+        "rarity": "common",
+        "cost": 5,
+    },
+
+    "dark_mushroom": {
+        "name": "Champignon sombre",
+        "description": "Un champignon noir aux propriétés étranges.",
+        "type": "base_craft",
+        "rarity": "common",
+        "cost": 5,
+    },
+
+    "spider_silk": {
+        "name": "Soie d'araignée",
+        "description": "Brille légèrement.",
+        "type": "base_craft",
+        "rarity": "uncommon",
+        "cost": 10,
+    },
+
+    "log": {
+        "name": "Bûche",
+        "description": "Une bûche. Pratique pour construire des trucs.",
+        "type": "base_craft",
+        "rarity": "common",
+        "cost": 5,
+    },
+
+    "black_feather": {
+        "name": "Plume noire",
+        "description": "Une plume noire avec des tons bleutés.",
+        "type": "base_craft",
+        "rarity": "common",
+        "cost": 5,
+    },
 #---------------------------- Tête ------------------------------------------------
 
     "iron_helmet" : {
@@ -348,6 +415,18 @@ ITEMS = {
         "cost": 50
     },
 
+    "raven_dress" : {
+        "name": "Robe du Corbeau",
+        "description": "Magnifique robe brodée de noir avec des reflets bleutés. Du bel artisanat.",
+        "type": "equipment", 
+        "class": ["magic"], 
+        "slot": "chest", 
+        "rarity": "rare", 
+        "bonus": {"mana_max": 10, "power": 15, "speed": 5},
+        "scaling": {"mana_max": 1, "power": 1, "speed": 1},
+        "cost": 50
+    },
+
     "radiance" : {
         "name": "Radiance",
         "description": "Lunettes de soleil obligatoires !",
@@ -436,7 +515,7 @@ ITEMS = {
 
     "scimitar" : {
         "name": "Cimeterre",
-        "description": "Tu l'as vu ma grosse lame ?",
+        "description": "Tu l'as vue ma grosse lame ?",
         "type": "equipment", 
         "class": ["hand-to-hand"], 
         "slot": "weapon", 

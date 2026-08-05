@@ -1,9 +1,12 @@
-from data import ITEMS
+from inventory.data import ITEMS
+from inventory.item_generator import generate_item
+from inventory.apply_item_effect import apply_item_effect
+from inventory.class_shop import FOREST_SHOPS
 # ----------------------------------------- Ajout, retrait, sélection dans l'inventaire --------------------------------------------------------
 
 def add_item(inventory, item):
 
-    if item["type"] == "consumable":
+    if item["type"] in ["consumable", "base_craft"]:
 
         for existing in inventory:
 
@@ -39,58 +42,6 @@ def get_item(inventory, choix):
 
 # ----------------------------------------- Consommables --------------------------------------------------------
 
-def apply_item_effect(player_team, item):
-    
-    effect = item.get("effect")
-
-    for character in player_team:
-        stats = get_stats(character)
-
-    if effect == "gain_pv":
-        allies = [character for character in player_team if character.life > 0 and character.life < stats["life_max"]]
-
-        if not allies:
-            return
-        
-        target = min(allies, key=lambda character: character.life/stats["life_max"])
-        # key (= critère de comparaison) lambda range les personnages en fonction de leur pourcentage de vie
-        # cible le personnage qui a le moins de vie en pourcentage
-        stats_target = get_stats(target)
-        healing = item["healing"]
-        life_before_heal = target.life
-        target.life = min(target.life + healing, stats_target["life_max"])
-        real_healing = target.life - life_before_heal
-
-        if real_healing > 0:
-            print(f"{target.name} gagne {real_healing} PV → PV : {target.life}/{stats_target["life_max"]} !")
-
-        if real_healing == 0:
-            print(f"{target.name} est déjà au maximum de ses PV !")
-
-
-    if effect == "resurrection":
-        
-        dead = [character for character in player_team if character.life <= 0]
-        if not dead:
-            print("Personne à ressusciter.")
-            return
-
-        print("\nCibles :")
-
-        for i, character in enumerate(dead):
-            print(f"{i} - {character.name}")
-
-            try:
-                target_choice = int(input("Choisir cible : "))
-            except ValueError:
-                return
-    
-            target = dead[target_choice]
-            stats_target = get_stats(target)
-            target.life = min(item["healing"], stats_target["life_max"])
-            print(f"{target.name} revient à la vie avec {item['healing']} PV !")
-
-
 def use_item(player_team, inventory):
 
     try:
@@ -110,26 +61,17 @@ def use_item(player_team, inventory):
 
     item_id = item["id"]
     
-    if item["type"] != "consumable":
-        print("Cet objet n'est pas un consommable.")
+    if item["type"] in ["equipment", "base_craft"]:
+        print("Cet objet n'est pas consommable.")
         return
     
-    apply_item_effect(player_team, item)
-    
-    remove_item(inventory, choix)
-    print(f"{ITEMS[item_id]["name"]} disparaît de l'inventaire !")
+    success = apply_item_effect(player_team, item)
+
+    if success:
+        remove_item(inventory, choix)
+        print(f"{ITEMS[item_id]["name"]} disparaît de l'inventaire !")
 
 # ----------------------------------------- Statistiques de base + bonus --------------------------------------------------------
-
-def get_stats(entite):
-
-    stats = entite.base_stats.copy()
-
-    for key, value in entite.bonus.items():
-        stats[key] = stats.get(key, 0) + value
-
-    return stats
-
 
 def get_item_stats(item):
 
@@ -166,8 +108,8 @@ def equip_from_inventory(character, inventory):
     if item is None:
         return
 
-    if item["type"] == "consumable":
-        print("Cet objet est un consommable.")
+    if item["type"] in ["consumable", "base_craft"]:
+        print("Cet objet ne peut être équipé.")
         return
 
     if character.character_class not in item["class"]:
@@ -222,3 +164,37 @@ def sell_item(game, choix):
         f"💰 Vous vendez {item['name']} "
         f"pour {gain} pièces."
     )
+
+# ----------------------------------------- Boutique --------------------------------------------------------
+
+def shop_menu(game, merchant):
+    while True:
+        print(f"\n🏪 {merchant.name}")
+        print(f"Or : {game.gold}\n")
+
+        for i, item_id in enumerate(merchant.inventory):
+            item = ITEMS[item_id]
+            print(f"[{i}] {item['name']} - {item['cost']} or")
+
+        print("[v] Vendre des objets")
+        print("[0] Retour")
+
+        choix = input("> ")
+
+        item = generate_item(item_id, game.current_zone.progress)
+
+        if game.gold >= ITEMS[item_id]["cost"]:
+            game.gold -= ITEMS[item_id]["cost"]
+            add_item(game.inventory, item)
+            print(f"Vous achetez {item['name']}.")
+        else:
+            print("Pas assez d'or.")
+
+
+def unlock_shop(game, shop_id):
+
+    if shop_id not in game.discovered_shops:
+
+        game.discovered_shops.append(shop_id)
+
+        print(f"🏪 Nouvelle boutique découverte : {FOREST_SHOPS[shop_id].name}")

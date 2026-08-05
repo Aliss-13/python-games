@@ -1,4 +1,4 @@
-from data import ITEMS
+from inventory.data import ITEMS
 
 
 def generate_item(item_id, item_level=1):
@@ -7,6 +7,9 @@ def generate_item(item_id, item_level=1):
         return None
 
     data = ITEMS[item_id]
+
+    if data["type"] == "base_craft":
+        pass
 
     item = {
         "id": item_id,

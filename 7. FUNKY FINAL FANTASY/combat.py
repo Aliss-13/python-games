@@ -1,26 +1,29 @@
 import random
 
-from display import display_enemy, display_enemy_light, display_loot, display_character, display_discovery, header, separator
+from display import display_enemy, display_enemy_light, display_loot, display_character, header, separator
 
-from class_enemy import create_enemy, ENEMIES
+from protagonists.data_enemies import ENEMIES
+from protagonists.utils_enemies import create_enemy
+from protagonists.get_stats import get_stats
+from protagonists.level import scale_enemy_team, level_up, xp_required
+from protagonists.status import is_dead
 
-from class_quest import process_game_event
+from quests.quests import process_game_event, add_loot
 
-from skill_engine import execute_skill
-from class_skillcontext import SkillContext
+from events.class_gameevent import GameEvent
 
-from class_zone import explore, add_zone_progress_combat
+from skills.skill_engine import execute_skill
+from skills.class_skillcontext import SkillContext
 
-from class_effect import remove_effect_malus, remove_effect_bonus
-from effects import start_of_turn
+from class_zone import explore
+
+from effects.effects import start_of_turn, remove_effect_malus, remove_effect_bonus
 
 from class_combatcontext import CombatContext
-from class_gameevent import GameEvent
+
 from class_savemanager import SaveManager
 
-from level import scale_enemy_team, level_up, xp_required
-from loot_tables import generate_loot, add_loot
-from inventory import get_stats
+from inventory.loot_tables import generate_loot, generate_enemy_specific_loots
 
 from menu_combat import menu_tour
 
@@ -205,7 +208,6 @@ def register_defeated_enemies(game, context):
 
         if enemy.life <= 0:
             context.zone.enemy_kills[enemy.id] = (context.zone.enemy_kills.get(enemy.id, 0) + 1)
-            add_zone_progress_combat(context.zone, enemy)
             event = GameEvent("kill", enemy.id)
             process_game_event(game, event)
 
@@ -220,21 +222,22 @@ def handle_defeated_enemies(game, context):
             print(f"{enemy.name} disparaît !")
             enemy.defeated = True
 
-            register_defeated_enemies(game, context)
+            
             print("")
             gain_xp_combat(context)
 
             loot.extend(generate_loot(enemy, context.zone))
+            loot.extend(generate_enemy_specific_loots(enemy))
 
-    add_loot(game.inventory, loot)
-    print("")
-    display_loot(loot)
+    register_defeated_enemies(game, context)
+
+    add_loot(game, loot)
+
+    if loot:
+        print("")
+        display_loot(loot)
 
     return loot
-
-
-def is_dead(entity):
-    return entity.life <= 0
 
 
 def remove_dead_entities(context):
@@ -251,7 +254,7 @@ def result_explore(game):
         return None
 
     if result["type"] == "discovery":
-        display_discovery(result["event"])
+        print("Le brouillard se dissipe sur la carte.")
 
     elif result["type"] == "nothing":
         print("Il ne se passe rien...")
