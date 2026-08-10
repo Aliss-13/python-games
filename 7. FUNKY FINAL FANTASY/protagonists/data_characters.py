@@ -1,9 +1,6 @@
 from skills.skills import get_skill
 from protagonists.class_character import Character
 
-
-CLASS = ["magic", "hand-to-hand", "distance"]
-
 CHARACTERS = [
 
     Character(
@@ -38,7 +35,7 @@ CHARACTERS = [
     Character(
         id = "warrior",
         name = "Guerrier",
-        character_class = "hand-to-hand",
+        character_class = "hand_to_hand",
         skills = [get_skill("attack"), get_skill("powerful_blow")],
         base_stats = {"life_max": 100, "mana_max": 0, "power": 20,"speed": 8, "defense": 8},
         effects = [],

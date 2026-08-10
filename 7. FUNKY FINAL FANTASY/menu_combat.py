@@ -9,9 +9,6 @@ from skills.skills import get_target_name
 
 # =================================================== GAMESTATE MENUS ===================================================
 
-
-
-
 def menu_inventory(game):
 
     while True:

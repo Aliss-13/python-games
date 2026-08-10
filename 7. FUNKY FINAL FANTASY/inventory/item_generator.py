@@ -17,6 +17,7 @@ def generate_item(item_id, item_level=1):
         "description": data.get("description", ""),
         "type": data["type"],
         "rarity": data["rarity"],
+        "effects": data.get("effects", {}),
         "quantity": 1,
         "item_level": item_level,
         "bonus": {},
@@ -26,7 +27,7 @@ def generate_item(item_id, item_level=1):
     if data["type"] == "equipment":
 
         item["slot"] = data.get("slot")
-        item["class"] = data.get("class", [])
+        item["character_class"] = data.get("character_class", [])
 
         for stat, value in data["bonus"].items():
             scaling = data.get("scaling", {}).get(stat, 0)

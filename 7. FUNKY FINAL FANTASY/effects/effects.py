@@ -159,6 +159,9 @@ def calculate_effect_value(source, effect):
 
 def apply_damage_effect(source, target, effect):
 
+    if target.life <= 0:
+        return
+    
     stats = get_stats(target)
 
     damage = calculate_effect_value(source, effect)

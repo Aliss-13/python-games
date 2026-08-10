@@ -3,19 +3,21 @@ import random
 from display import display_enemy, display_enemy_light, display_loot, display_character, header, separator
 
 from protagonists.data_enemies import ENEMIES
-from protagonists.utils_enemies import create_enemy
+from protagonists.utils_enemies import create_enemy, get_enemy_by_id
 from protagonists.get_stats import get_stats
 from protagonists.level import scale_enemy_team, level_up, xp_required
 from protagonists.status import is_dead
 
 from quests.quests import process_game_event, add_loot
+from quests.unlock_dialogues import unlock_dialogues_for_defeated_unique_enemies
 
 from events.class_gameevent import GameEvent
 
 from skills.skill_engine import execute_skill
 from skills.class_skillcontext import SkillContext
 
-from class_zone import explore
+from zones.utils_zones import explore
+from zones.end_zone import is_zone_complete, display_zone_end
 
 from effects.effects import start_of_turn, remove_effect_malus, remove_effect_bonus
 
@@ -24,12 +26,12 @@ from class_combatcontext import CombatContext
 from class_savemanager import SaveManager
 
 from inventory.loot_tables import generate_loot, generate_enemy_specific_loots
+from inventory. inventory import menu_shop
 
 from menu_combat import menu_tour
 
 
 RARE_CHANCE = 0.05
-
 #----------------------------------------- Ordre en fonction de la rapidité ----------------------------------------------
 
 def speed_order(context: CombatContext):
@@ -206,11 +208,30 @@ def register_defeated_enemies(game, context):
 
     for enemy in context.enemy_team:
 
-        if enemy.life <= 0:
-            context.zone.enemy_kills[enemy.id] = (context.zone.enemy_kills.get(enemy.id, 0) + 1)
-            event = GameEvent("kill", enemy.id)
-            process_game_event(game, event)
+        if not is_dead(enemy):
+            continue
 
+        enemy.defeated = True
+
+        if enemy.is_unique:
+            if enemy.id not in game.defeated_unique_enemies:
+                game.defeated_unique_enemies.append(enemy.id)
+
+            unlock_dialogues_for_defeated_unique_enemies(
+                game,
+                enemy.id
+            )
+
+        context.zone.enemy_kills[enemy.id] = (
+            context.zone.enemy_kills.get(enemy.id, 0) + 1
+        )
+
+        process_game_event(
+            game,
+            GameEvent("kill", enemy.id)
+        )
+    
+    
 def handle_defeated_enemies(game, context):
 
     loot = []
@@ -218,12 +239,8 @@ def handle_defeated_enemies(game, context):
     for enemy in context.enemy_team:
 
         if is_dead(enemy):
-            print("")
-            print(f"{enemy.name} disparaît !")
             enemy.defeated = True
 
-            
-            print("")
             gain_xp_combat(context)
 
             loot.extend(generate_loot(enemy, context.zone))
@@ -237,6 +254,9 @@ def handle_defeated_enemies(game, context):
         print("")
         display_loot(loot)
 
+    if is_zone_complete(game):
+        display_zone_end(game)
+
     return loot
 
 
@@ -246,36 +266,53 @@ def remove_dead_entities(context):
             enemy.defeated = True
 
 
-def result_explore(game):
+def handle_explore(game):
 
     result = explore(game.current_zone, game)
 
     if not result:
-        return None
+        return
 
-    if result["type"] == "discovery":
-        print("Le brouillard se dissipe sur la carte.")
+    if result["type"] == "combat":
+
+        context = prepare_combat(
+            game,
+            result["event"]
+        )
+
+        if context:
+            combat(context)
+
+    elif result["type"] == "shop":
+        menu_shop(game)
+        return
+
+    elif result["type"] == "discovery":
+        pass
+
+    elif result["type"] == "collect":
+        pass
 
     elif result["type"] == "nothing":
         print("Il ne se passe rien...")
+        
 
-    return result
+def prepare_combat(game, event):
 
+    DEBUG_ENEMY = None
 
-def prepare_combat(game):
+    if DEBUG_ENEMY:
+        enemy_team = [
+            create_enemy(DEBUG_ENEMY)
+        ]
 
-    explore_result = result_explore(game)
-
-    if explore_result is None:
-        return None
-
-    if explore_result["type"] != "combat":
-        return None
-
-    enemy_team = generate_enemy_team(
+    else:
+        enemy_team = generate_enemy_team(
+        game,
         game.current_zone,
-        explore_result["event"]
+        event
     )
+    
 
     enemy_team = scale_enemy_team(
         game.player_team,
@@ -288,7 +325,7 @@ def prepare_combat(game):
         inventory=game.inventory,
         zone=game.current_zone,
         game=game,
-        event=explore_result["event"]
+        event=event
     )
 
 
@@ -305,20 +342,15 @@ def end_combat(game, context):
     restore_team_after_combat(game.player_team)
 
     SaveManager.save(game)
-    print("")
-    print("Victoire totale !")
     
 
-def combat(game, context=None):
-
-    if context is None:
-        context = prepare_combat(game)
+def combat(context):
 
     if context is None:
         return
 
     separator()
-    
+
     for enemy in context.enemy_team:
         display_enemy(enemy)
 
@@ -331,7 +363,7 @@ def combat(game, context=None):
             return
 
         if turn_result == "victoire":
-            end_combat(game, context)
+            end_combat(context.game, context)
             return
 
 
@@ -358,57 +390,115 @@ def gain_xp_combat(context):
 
 #----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------
 
-def generate_enemy_team(zone, event):
+def can_spawn_enemy(game, enemy):
+    if enemy.is_unique and enemy.id in game.defeated_unique_enemies:
+        return False
+    
+    return True
 
-# Boss et sous-boss : toujours seuls
+
+def generate_enemy_team(game, zone, event):
+
+    # --------------------------------------------------
+    # BOSS / SOUS-BOSS
+    # --------------------------------------------------
 
     if event.event_category in ["boss", "sub_boss"]:
-        return [
-            create_enemy(event.enemies[0])
+
+        enemy = get_enemy_by_id(event.enemies[0], ENEMIES)
+
+        if enemy.is_unique and enemy.id in game.defeated_unique_enemies:
+            return []
+
+        return [create_enemy(enemy.id)]
+    
+    # --------------------------------------------------
+    # ENNEMIS DISPONIBLES
+    # --------------------------------------------------
+    
+    available_enemies = [
+        enemy
+        for enemy in ENEMIES
+        if enemy.id in event.enemies
+        and not (
+            enemy.is_unique
+            and enemy.id in game.defeated_unique_enemies
+        )
+    ]
+
+    # --------------------------------------------------
+    # ENNEMI RARE
+    # --------------------------------------------------
+
+    if event.event_category == "rare_combat":
+
+        rare_available = [
+            enemy
+            for enemy in available_enemies
+            if enemy.rarity == "rare"
         ]
 
-    # ensuite seulement la logique normale
+        if not rare_available:
+            return []
+        
+        team = [create_enemy(random.choice(rare_available).id)]
+
+        return team
+       
+    # --------------------------------------------------
+    # PARAMÈTRES DU COMBAT NORMAL
+    # --------------------------------------------------
+
     if zone.difficulty == 1:
         enemy_count = 1
         possible_rarity = ["common"]
 
     elif zone.difficulty == 2:
-        enemy_count = random.choice([1, 2])
+        enemy_count = random.choice([2, 3])
         possible_rarity = ["common", "uncommon"]
 
     else:
         enemy_count = random.choice([2, 3])
         possible_rarity = ["common", "uncommon"]
 
+    # --------------------------------------------------
+    # ENNEMIS NORMAUX
+    # --------------------------------------------------
+
     if event.ignore_rarity:
-        available = [
-            enemy for enemy in ENEMIES
-            if enemy.id in event.enemies
-        ]
+
+        available = [enemy for enemy in available_enemies if not enemy.is_unique]
 
     else:
+
         available = [
-            enemy for enemy in ENEMIES
-            if enemy.id in event.enemies
-            and enemy.rarity in possible_rarity
+            enemy
+            for enemy in available_enemies
+            if enemy.rarity in possible_rarity
+            and not enemy.is_unique
         ]
 
-    # On cherche d'abord les rares éventuels
-    rare_enemies = [
-        enemy for enemy in ENEMIES
-        if enemy.id in event.enemies
-        and enemy.rarity == "rare"
+    # --------------------------------------------------
+    # UNIQUE
+    # --------------------------------------------------
+
+    unique_available = [
+        enemy
+        for enemy in available_enemies
+        if enemy.is_unique
+        and enemy.rarity in possible_rarity
     ]
 
-    # Chance d'apparition d'un rare
-    if rare_enemies and random.random() < RARE_CHANCE:
+    if unique_available:
+        enemy = random.choice(unique_available)
+        return [create_enemy(enemy.id)]
 
-        return [
-            create_enemy(random.choice(rare_enemies).id)
-        ]
+    # --------------------------------------------------
+    # ÉQUIPE NORMALE
+    # --------------------------------------------------
 
-    # Sinon équipe normale
-    return [
-        create_enemy(random.choice(available).id)
-        for _ in range(enemy_count)
-    ]
+    if not available:
+        return []
+    
+    return [create_enemy(random.choice(available).id) for _ in range(enemy_count)]
+    

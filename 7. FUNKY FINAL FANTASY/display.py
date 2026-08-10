@@ -24,6 +24,10 @@ RARITY = {
     "legendary": "légendaire"
 }
 
+CHARACTER_CLASS = {
+    "hand_to_hand": "Corps à corps",
+    "magic": "Magie"
+}
 
 SLOTS = {
     "head": "Tête",
@@ -89,17 +93,26 @@ def display_item_details(item):
 
     if item["type"] == "equipment":
 
+        classes = item.get("character_class", [])
+
+        if isinstance(classes, list):
+            class_name = ", ".join(CHARACTER_CLASS.get(c, c) for c in classes)
+
+        else:
+            class_name = CHARACTER_CLASS.get(classes, classes)
+
         bonus_text = []
 
         for stat, value in item.get("bonus", {}).items():
             bonus_text.append(f"{STAT_NAMES.get(stat, stat)} +{value}")
 
-        bonus = " | ".join(bonus_text)
+        bonus = ", ".join(bonus_text)
 
         return (
-            f"{couleur}{name} ({RARITY[rarity]}){reset} "
-            f"Niv.{item.get('item_level',1)} "
-            f"[{bonus}] - "
+            f"{couleur}{name}{reset} "
+            f"- {class_name} "
+            f"- Niv.{item.get('item_level',1)} - "
+            f"{bonus} - "
             f"{DIM}{item.get('description','')}{RESET}"
         )
 
@@ -271,18 +284,30 @@ def display_zone_progression(zone):
     print(f"    {zone.description}    ")
     print()
 
-    print(f"        {BLUE}Progression : {zone.progress}/{zone.boss_progress}{RESET}        ")
+    print(f"        {BLUE}Progression : {zone.progress}/{zone.total_progress}{RESET}        ")
 
     # barre visuelle
-    bar_size = 20
+    bar_size = 35
 
     filled = int(bar_size * zone.progress / zone.boss_progress)
 
     bar = "█" * filled + "." * (bar_size - filled)
 
-    print(f"        {BLUE}{bar}{RESET}        ")
+    print(f"{BLUE}{bar}{RESET}")
 
     print()
+
+
+def display_completed_quests(game):
+
+    print(f"\n📖 {GREEN}Quêtes terminées :{RESET}\n")
+
+    if not game.completed_quests:
+        print("- Aucune quête terminée")
+        return
+
+    for quest in game.completed_quests:
+        print(f"✔ {GREEN}{quest.name}{RESET}")
 
 
 def display_zone_discoveries(zone):
@@ -316,40 +341,40 @@ def display_zone_quests(game):
 
             if quest.quest_type == "kill_each":
 
-                completed = sum(
-                                1
-                                for objective, count in quest.objectives_progress.items()
-                                if count >= quest.objectives[objective]
-                            )
+                progress = quest.get_progress(game)
 
-                print(
-                    f"Progression : "
-                    f"{completed}/{len(quest.objectives_progress)}"
-                )
+                completed = sum(1 for objective, count in progress.items() if count >= quest.objectives[objective])
 
-                for enemy_id, count in quest.objectives_progress.items():
-                    enemy = get_enemy_by_id(enemy_id, ENEMIES)
-                    required = quest.objectives[enemy_id]
+                print(f"Progression : {completed}/{len(quest.objectives)}")
+    
+                for objective, count in progress.items():
+                    required = quest.objectives[objective]
                     symbole = "✔️" if count >= required else "❌"
+                    name = get_objective_name(objective)
+                    print(f"{symbole} {name} {count}/{required}")
 
-                    print(
-                            f"{symbole} {enemy.name} "
-                            f"{count}/{required}"
-                    )
 
-            elif quest.quest_type in ["collect_each", "discover_each"]:
+            elif quest.quest_type == "collect_items":
 
-                completed = sum(
-                                1
-                                for objective, count in quest.objectives_progress.items()
-                                if count >= quest.objectives[objective]
-                )
+                progress = quest.get_progress(game)
 
-                print(
-                    f"Progression : "
-                    f"{completed}/{len(quest.objectives)}"
-                )
-                print()
+                completed = sum(1 for objective, count in progress.items() if count >= quest.objectives[objective])
+
+                print(f"Progression : {completed}/{len(quest.objectives)}")
+                
+                for objective, count in progress.items():
+                    required = quest.objectives[objective]
+                    symbole = "✔️" if count >= required else "❌"
+                    name = get_objective_name(objective)
+                    print(f"{symbole} {name} {count}/{required}")
+
+
+            elif quest.quest_type == "discover_each":
+
+                completed = sum(1 for objective, count in quest.objectives_progress.items() if count >= quest.objectives[objective])
+
+                print(f"Progression : {completed}/{len(quest.objectives)}")
+                
                 for objective, count in quest.objectives_progress.items():
                     required = quest.objectives[objective]
                     symbole = "✔️" if count >= required else "❌"
@@ -359,10 +384,7 @@ def display_zone_quests(game):
                     
             elif quest.quest_type == "kill_group":
 
-                print(
-                    f"Progression : "
-                    f"{quest.progress}/{quest.objectives['required']}"
-                )
+                print(f"Progression : {quest.progress}/{quest.objectives['required']}")
 
             print(f"Expérience : {quest.reward_xp} XP")
 
@@ -459,6 +481,7 @@ def display_zone_boss_status(zone):
 
 def display_zone_progress(zone, game):
     display_zone_progression(zone)
+    display_completed_quests(game)
     display_zone_discoveries(zone)
     display_zone_quests(game)
     display_zone_defeated_enemies(zone)
@@ -483,3 +506,5 @@ def get_objective_name(objective_id):
 
     # secours
     return objective_id
+
+

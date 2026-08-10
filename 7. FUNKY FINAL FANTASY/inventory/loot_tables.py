@@ -2,9 +2,6 @@ import random
 from inventory.data import ITEMS
 from inventory.item_generator import generate_item
 
-
-
-
 FOREST_LOOTS = {
 
     "common": [
@@ -173,6 +170,12 @@ ENEMY_SPECIFIC_LOOTS = {
         "items": {
             "black_feather": 0.8
         }
+    },
+
+    "putrid_great_raven": {
+        "items": {
+            "black_feather": 1.0
+            }
     }
 }
 

@@ -8,9 +8,11 @@ from protagonists.data_characters import CHARACTERS
 from protagonists.utils_characters import get_character_by_id
 from protagonists.data_enemies import ENEMIES
 
-from class_zone import ZONES, get_zone_by_id
+from zones.data_zones import ZONES
+from zones.utils_zones import get_zone_by_id
 
-from quests.class_quest import Quest, FOREST_QUESTS
+from quests.class_quest import Quest
+from quests.data_quests import FOREST_QUESTS
 
 from class_gamestate import GameState
 
@@ -50,8 +52,11 @@ class SaveManager:
             "zone": cls.save_zone(game.current_zone),
             "active_quests": cls.save_quest_list(game.active_quests),
             "completed_quests": cls.save_quest_list(game.completed_quests),
+            "defeated_unique_enemies": list(game.defeated_unique_enemies),
             "gold": game.gold,
-            "met_npcs": list(game.met_npcs)
+            "met_npcs": list(game.met_npcs),
+            "npcs_with_new_dialogue": list(game.npcs_with_new_dialogue),
+            "unlocked_shops": list(game.unlocked_shops)
         }
 
         with open(cls.SAVE_PATH, "w", encoding="utf-8") as file:
@@ -122,8 +127,11 @@ class SaveManager:
         zone = cls.load_zone(data.get("zone"))
         loaded_active_quests = cls.load_quest_list(data.get("active_quests", []))
         loaded_completed_quests = cls.load_quest_list(data.get("completed_quests", []))
+        defeated_unique_enemies = data.get("defeated_unique_enemies", [])
         gold = data.get("gold", 0)
         met_npcs = data.get("met_npcs", [])
+        npcs_with_new_dialogue = data.get("npcs_with_new_dialogue", [])
+        unlocked_shops = data.get("unlocked_shops", [])
 
         return GameState(
             player_team=player_team,
@@ -132,8 +140,12 @@ class SaveManager:
             current_zone=zone,
             active_quests=loaded_active_quests,
             completed_quests=loaded_completed_quests,
+            defeated_unique_enemies=defeated_unique_enemies,
             gold=gold,
-            met_npcs=met_npcs
+            met_npcs=met_npcs,
+            npcs_with_new_dialogue=npcs_with_new_dialogue,
+            unlocked_shops=unlocked_shops
+
         )
 
 

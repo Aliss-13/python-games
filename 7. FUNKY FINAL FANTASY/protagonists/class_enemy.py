@@ -14,7 +14,8 @@ class Enemy:
         effects=None,
         xp=0,
         is_boss=False,
-        is_sub_boss=False
+        is_sub_boss=False, 
+        is_unique=None
     ):
 
         self.id = id
@@ -33,6 +34,7 @@ class Enemy:
         self.xp = xp
         self.is_boss = is_boss
         self.is_sub_boss = is_sub_boss
+        self.is_unique = (is_unique if is_unique is not None else is_boss or is_sub_boss)
         self.defeated = False
 
 
@@ -45,9 +47,3 @@ class Enemy:
 
     def __repr__(self):
         return f"{self.name} - {self.rarity}"
-
-
-
-
-
-  

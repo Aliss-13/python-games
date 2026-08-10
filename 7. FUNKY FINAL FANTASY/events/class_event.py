@@ -12,6 +12,7 @@ class Event:
         flag=None,
         enemies=None,
         repeatable=False,
+        shop_id=None,
         ignore_rarity=False,
         start_quests=None
     ):
@@ -20,12 +21,13 @@ class Event:
         self.name = name
         self.event_type = event_type
         self.event_category = event_category
-        self.target=target
-        self.amount=amount
+        self.target = target
+        self.amount = amount
         self.rewards = rewards
         self.flag = flag
         self.enemies = enemies or []
         self.repeatable = repeatable
+        self.shop_id = shop_id
         self.ignore_rarity = ignore_rarity
         self.start_quests = start_quests or []
 
@@ -39,11 +41,14 @@ def get_event_by_flag(flag, events):
 
 FOREST_EVENTS = {
 
-    "village_shop_found" : Event(
-        id="village_shop_found",
+    "forest_shop_found" : Event(
+        id="forest_shop_found",
         name="Une petite boutique cachée",
         event_type="shop",
-        target="village_shop",
+        event_category="shop",
+        flag="forest_shop_discovered",
+        target="forest_shop",
+        shop_id="forest_shop",
         repeatable=False
     ),
 
@@ -51,7 +56,7 @@ FOREST_EVENTS = {
         id="strange_tree",
         name="Arbre étrange",
         event_type="discovery",
-        event_category="normal",
+        event_category="location",
         flag="strange_tree_found",
         start_quests=["forest_mysteries"]
     ),
@@ -60,7 +65,7 @@ FOREST_EVENTS = {
         id="abandoned_hut",
         name="Cabane abandonnée",
         event_type="discovery",
-        event_category= "normal",
+        event_category= "location",
         flag="hut_found",
         start_quests=["forest_mysteries"]
     ),
@@ -69,7 +74,7 @@ FOREST_EVENTS = {
         id="stone_circle",
         name="Cercle de pierres",
         event_type="discovery",
-        event_category="normal",
+        event_category="location",
         flag="stone_circle_found",
         start_quests=["forest_mysteries"]
     ),
@@ -78,7 +83,7 @@ FOREST_EVENTS = {
         id="dark_clearing",
         name="Clairière sombre",
         event_type="discovery",
-        event_category= "normal",
+        event_category= "location",
         flag="dark_clearing_found",
         start_quests=["forest_mysteries"]
     ),
@@ -133,8 +138,8 @@ FOREST_EVENTS = {
         repeatable=True
     ),
             
-    "red_apples_patch_1": Event(
-        id="log_patch_2",
+    "red_apples_patch_2": Event(
+        id="red_apples_patch_2",
         name="Vous tombez sur un pommier rempli de pommes bien rouges. On est en plein hiver mais bon, vous les cueillez quand même...",
         event_type="collect",
         event_category="resource",
@@ -145,19 +150,39 @@ FOREST_EVENTS = {
 
     "raven_attack" : Event(
         id="raven_attack",
-        name="Attaque de corbeau",
+        name="Attaque de corbeaux",
         event_type="combat",
-        event_category= "normal",
+        event_category= "common_combat",
         enemies=["sick_raven", "sick_great_raven", "putrid_great_raven"],
         start_quests=["raven_hunt"],
         repeatable=True
     ),
 
+    "raven_ambush" : Event(
+        id="raven_ambush",
+        name="Embuscade de corbeaux",
+        event_type="combat",
+        event_category= "common_combat",
+        enemies=["sick_raven", "sick_great_raven", "putrid_great_raven"],
+        start_quests=["raven_hunt"],
+        repeatable=True
+        ),
+
     "spider_nest" : Event(
         id="spider_nest",
         name="Nid d'araignées",
         event_type="combat",
-        event_category= "normal",
+        event_category= "common_combat",
+        enemies=["black_spider", "black_widow", "recluse"],
+        start_quests=["spider_hunt"],
+        repeatable=True
+    ),
+
+    "spider_tree" : Event(
+        id="spider_tree",
+        name="Arbre à araignées",
+        event_type="combat",
+        event_category= "common_combat",
         enemies=["black_spider", "black_widow", "recluse"],
         start_quests=["spider_hunt"],
         repeatable=True
@@ -167,7 +192,7 @@ FOREST_EVENTS = {
         id="rare_encounter",
         name="Ennemi rare !",
         event_type="combat",
-        event_category= "normal",
+        event_category= "rare_combat",
         enemies=["putrid_great_raven", "recluse", "werewolf", "baby_samuel"],
         start_quests=["rare_enemies"],
         repeatable=True,

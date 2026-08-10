@@ -71,7 +71,7 @@ ENEMIES = [
         base_stats={"life_max": 240, "mana_max": 0, "power": 50, "speed": 25, "defense": 15}, 
         skills = [get_skill("bite")],
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
-        xp=35
+        xp=35,
     ),
 
 # =============================================== CORBEAUX
@@ -106,7 +106,7 @@ ENEMIES = [
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 7}, 
         skills = [get_skill("peck")],
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
-        xp=35
+        xp=35,
     ),
 
     Enemy(
@@ -117,7 +117,8 @@ ENEMIES = [
         base_stats={"life_max": 260, "mana_max": 0, "power": 50, "speed": 15, "defense": 10}, 
         skills = [get_skill("rage")],
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
-        xp=35
+        xp=35,
+        is_unique=True
     ),
 
     Enemy(
@@ -128,7 +129,8 @@ ENEMIES = [
         base_stats={"life_max": 260, "mana_max": 0, "power": 40, "speed": 20, "defense": 5}, 
         skills = [get_skill("babys_wail")],
         bonus = {"life_max": 0, "mana_max": 0, "power": 0,"speed": 0, "defense": 0},
-        xp=35
+        xp=35,
+        is_unique=True
     ),
 
 # =============================================== BOSS
@@ -153,7 +155,7 @@ ENEMIES = [
             get_skill("black_flame")
         ],
         xp=80,
-        is_sub_boss=True
+        is_sub_boss=True,
     ),
 
     Enemy(
@@ -177,7 +179,7 @@ ENEMIES = [
         ],
 
         xp=100,
-        is_boss=True
+        is_boss=True,
         ),
 
 # =============================================== ORCS

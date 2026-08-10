@@ -1,51 +1,50 @@
 import random
-from display import display_player_team, display_zone_progress, section
+from display import display_player_team, display_zone_progress
 from menu_combat import menu_inventory
-from combat import combat
+from combat import handle_explore
 from class_savemanager import SaveManager
-from protagonists.class_npc import get_available_npcs
-from quests.quests import start_quest
+from npcs.utils_npcs import get_available_npcs
+from quests.talk_to_npcs import talk_to_npc
+
+from inventory.inventory import menu_shop
 
 def menu_zone(game):
 
     while True:
+        
+        actions = {
+            "1": ("Explorer", lambda: handle_explore(game)),
+            "2": ("Discuter avec les habitants", lambda: socialize(game)),
+            "3": ("Boutique (verrouillée)", None),
+            "4": ("Equipe", lambda: display_player_team(game.player_team)),
+            "5": ("Inventaire", lambda: menu_inventory(game)),
+            "6": ("Progression", lambda: display_zone_progress(game.current_zone, game)),
+            "7": ("Sauvegarder", lambda: SaveManager.save(game)),
+            "8": ("Quitter", None)
+        }
 
-        section("Actions")
-        print("[1] Explorer")
-        print("[2] Discuter avec les habitants")
-        print("[3] Equipe")
-        print("[4] Inventaire")
-        print("[5] Progression")
-        print("[6] Sauvegarder")
-        print("[7] Quitter")
+        if game.unlocked_shops:
+            actions["3"] = ("Boutique", lambda: menu_shop(game))
 
-        choix = input("> ").lower()
+        print("\n")
+        
+        for key, (name, _) in sorted(actions.items()):
+            print(f"[{key}] {name}")
 
-        if choix == "1":
-            combat(game)
+        choix = input("> ")
 
-        elif choix == "2":
-            socialize(game)
-
-        elif choix == "3":
-            display_player_team(game.player_team)
-
-        elif choix == "4":
-            menu_inventory(game)
+        if choix in actions:
+            name, action = actions[choix]
             
-
-        elif choix == "5":
-            display_zone_progress(game.current_zone, game)
-
-        elif choix == "6":
-            SaveManager.save(game)
-
-        elif choix == "7":
-            print("À bientôt.")
-            return
+            if action:
+                action()
+               
+            else:
+                print("À bientôt.")
+                return
 
         else:
-            print("Choix invalide")
+            print("Choix invalide.")
 
 
 def socialize(game):
@@ -61,15 +60,7 @@ def socialize(game):
 
     npc = random.choice(available_npcs)
 
-    game.met_npcs.append(npc.id)
-
     print(f"\n👤 Vous rencontrez {npc.name}")
     print("")
-    print(npc.description)
 
-    if npc.dialogues:
-        print("")
-        print(npc.dialogues)
-
-    for quest_id in npc.quests:
-        start_quest(game, quest_id)
+    talk_to_npc(game, npc)

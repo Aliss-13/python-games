@@ -17,7 +17,7 @@ def apply_item_effect(player_team, item):
         elif effect == "heal_all":
             success |= heal_all(player_team, amount)
 
-        elif effect == "gain_mana":
+        elif effect == "restore_mana":
             success |= restore_mana(player_team, amount)
 
         elif effect == "resurrection":

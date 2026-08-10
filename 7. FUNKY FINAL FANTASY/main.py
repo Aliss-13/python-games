@@ -2,7 +2,9 @@ import traceback
 from display import display_inventory, display_character, display_zone_light
 from class_savemanager import SaveManager
 from class_combatcontext import CombatContext
-from debug import debug_level, debug_enemy
+
+# from debug import debug_combat
+
 from menu import menu_zone
 
 try:
@@ -27,6 +29,8 @@ try:
         display_character(character)
 
     display_inventory(game.inventory)
+
+    # debug_combat(game)
 
     menu_zone(game)
   

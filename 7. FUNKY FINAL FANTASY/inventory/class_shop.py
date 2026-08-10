@@ -1,15 +1,16 @@
 class Shop:
-    def __init__(self, id, name, inventory):
+    def __init__(self, id, name, inventory, level=1):
         self.id = id
         self.name = name
         self.inventory = inventory
+        self.level=level
 
 
 
 FOREST_SHOPS = {
-    "village_shop": Shop(
-        id="village_shop",
-        name="Boutique du village",
+    "forest_shop": Shop(
+        id="forest_shop",
+        name="Boutique de la forêt",
         inventory=[
             "life_potion",
             "mana_potion",
@@ -19,6 +20,7 @@ FOREST_SHOPS = {
             "iron_sword",
             "shiny_staff"
 
-        ]
+        ],
+        level=3
     )
 }
