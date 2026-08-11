@@ -258,15 +258,12 @@ def gain_xp_quest(game, quest):
     reward_xp = quest.reward_xp
 
     for character in game.player_team:
-
         character.xp += reward_xp
-
         print(f"{character.name} gagne {reward_xp} XP !")
 
+    for character in game.player_team:
         while character.xp >= xp_required(character.level):
-
             character.xp -= xp_required(character.level)
-
             level_up(character)
 
 

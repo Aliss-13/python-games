@@ -377,15 +377,11 @@ def gain_xp_combat(context):
 
             for character in context.player_team:
                 character.xp += xp_reward
+                print(f"{character.name} gagne {xp_reward} XP !")
 
-                print(
-                    f"{character.name} gagne {xp_reward} XP !"
-                )
-
+            for character in context.player_team:
                 while character.xp >= xp_required(character.level):
-
                     character.xp -= xp_required(character.level)
-
                     level_up(character)
 
 #----------------------------------------- Génération de l'équipe ennemie ----------------------------------------------

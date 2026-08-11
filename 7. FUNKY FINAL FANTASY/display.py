@@ -12,7 +12,7 @@ couleurs = {
     "uncommon": "\033[92m",   # vert
     "rare" : "\033[94m",        # bleu
     "epic": "\033[95m",       # violet
-    "legendary" : "\033[93m",   # orange
+    "legendary" : "\033[38;5;208m",   # orange
     "reset" : "\033[0m"
 }
 
@@ -48,6 +48,7 @@ BLUE = "\033[94m"
 DIM = "\033[2m"
 LIGHT_PINK = "\033[38;5;218m"
 PURPLE = "\033[95m"
+ORANGE = "\033[38;5;208m"
 RESET = "\033[0m"
 
 
@@ -74,6 +75,30 @@ def section(title):
 def input_prompt(txt):
     return input(f"> {txt} ")
 
+
+def get_bar_color(current, maximum):
+
+    ratio = current / maximum
+
+    if ratio > 0.6:
+        return "\033[92m"   # vert
+
+    elif ratio > 0.3:
+        return "\033[93m"   # jaune
+
+    else:
+        return "\033[91m"   # rouge
+
+
+def display_gauges_simple(icon, current, maximum):
+
+    if maximum <= 0:
+        return f"{icon} --%"
+
+    percentage = (current / maximum) * 100
+    color = get_bar_color(current, maximum)
+    return f"{icon} {color}{percentage:.0f}%{RESET}"
+
 #--------------------------------------------------- OBJETS ---------------------------------------------------
 def display_item_details(item):
 
@@ -86,12 +111,20 @@ def display_item_details(item):
     if item["type"] in ["consumable", "base_craft"]:
 
         return (
-            f"{couleur}{name} ({RARITY[rarity]}){reset} "
+            f"{couleur}{name}{reset} "
             f"x{item.get('quantity', 1)} - "
             f"{DIM}{item.get('description','')}{RESET}"
         )
 
     if item["type"] == "equipment":
+
+        slot = item.get("slot")
+
+        if isinstance(slot, list):
+            slot_name = ", ".join(SLOTS.get(slot, slot) for slot in slot)
+        
+        else:
+             slot_name = SLOTS.get(slot, slot)
 
         classes = item.get("character_class", [])
 
@@ -110,18 +143,22 @@ def display_item_details(item):
 
         return (
             f"{couleur}{name}{reset} "
+            f"- {LIGHT_PINK}{slot_name}{RESET} "
             f"- {class_name} "
             f"- Niv.{item.get('item_level',1)} - "
             f"{bonus} - "
             f"{DIM}{item.get('description','')}{RESET}"
         )
 
-    return f"{couleur}{name} ({RARITY[rarity]}){reset}"
+    return f"{couleur}{name}{reset}"
 
 
 def display_inventory(inventory):
     separator()
     header("Inventaire")
+
+    print(f"{DIM}Commun{RESET} - {GREEN}Inhabituel{RESET} - {BLUE}Rare{RESET} - {PURPLE}Epique{RESET} - {ORANGE}Légendaire{RESET}")
+    print()
 
     if not inventory:
         print("Vide.")
@@ -143,7 +180,6 @@ def display_equipment(character):
         print(f"{SLOTS.get(slot, slot)} → {display_item_details(item)}", end="")
         print()
         
-
 #--------------------------------------------------- ENNEMIS et LOOTS ---------------------------------------------------
 
 def display_enemy(enemy):
@@ -154,16 +190,18 @@ def display_enemy(enemy):
 
     print("\n" + " " * 10 + f"{RED}-ENNEMI-{RESET}" + " " * 10 + "\n")
 
-    print(f"{couleur}{enemy.name} ({RARITY[rarity]}){reset}")
+    print(f"{couleur}{enemy.name}{reset}")
 
     if stats['mana_max'] > 0:
-        print(f"Mana : {enemy.mana}/{stats['mana_max']}")
+        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])}")
+
+    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])}")
 
     print(
-        f"PV : {enemy.life}/{stats['life_max']} - "
-        f"Puissance : {enemy.base_stats['power']} - "
-        f"Vitesse : {enemy.base_stats['speed']} - "
-        f"Défense : {enemy.base_stats['defense']}")
+            f"Puissance : {enemy.base_stats['power']} - "
+            f"Vitesse : {enemy.base_stats['speed']} - "
+            f"Défense : {enemy.base_stats['defense']}"
+    )
 
 
 def display_enemy_light(enemy):
@@ -173,10 +211,11 @@ def display_enemy_light(enemy):
     stats = get_stats(enemy)
 
     if stats['mana_max'] > 0:
-        print(f"Mana : {enemy.mana}/{stats['mana_max']}")
+        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])}")
+
+    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])}")
 
     print(
-        f"PV restants : {enemy.life}/{stats['life_max']} - "
         f"Puissance : {enemy.base_stats['power']} - "
         f"Vitesse : {enemy.base_stats['speed']} - "
         f"Défense : {enemy.base_stats['defense']}")
@@ -210,7 +249,28 @@ def display_loot(loot):
         print(f"{i} - {display_item_details(item)}")
         
 #--------------------------------------------------- PERSONNAGE, EQUIPE ---------------------------------------------------
+def display_character_for_menu(character):
 
+    section(f"{LIGHT_YELLOW}{character.name}{RESET}")
+
+    print(f"Niveau : {character.level}")
+
+    stats = get_stats(character)
+
+    if character.base_stats["mana_max"] > 0:
+        print(f"{BLUE}Mana : {character.mana}/{stats["mana_max"]}{RESET}")
+            
+    print(f"{GREEN}PV : {character.life}/{stats['life_max']}{RESET}")
+
+    print(
+            f"Puissance : {character.base_stats['power']} - "
+            f"Vitesse : {character.base_stats['speed']} - "
+            f"Défense : {character.base_stats['defense']}"
+    )
+    
+    print("")
+
+   
 def display_character(character):
 
     section(f"{LIGHT_YELLOW}{character.name}{RESET}")
@@ -218,13 +278,14 @@ def display_character(character):
     stats = get_stats(character)
 
     if stats['mana_max'] > 0:
-        print(f"{CYAN}Mana : {character.mana}/{stats['mana_max']}{RESET}")
+        print(f"{display_gauges_simple("🪄 ", character.mana, stats['mana_max'])}")
     
+    print(f"{display_gauges_simple("🫀 ", character.life, stats['life_max'])}")
     print(
-        f"PV : {character.life}/{stats['life_max']} - "
-        f"Puissance : {character.base_stats['power']} - "
-        f"Vitesse : {character.base_stats['speed']} - "
-        f"Défense : {character.base_stats['defense']}")
+            f"Puissance : {character.base_stats['power']} - "
+            f"Vitesse : {character.base_stats['speed']} - "
+            f"Défense : {character.base_stats['defense']}"
+    )
     
     print("")
 
@@ -245,7 +306,7 @@ def display_character(character):
 def display_player_team(player_team):
 
     for character in player_team:
-        display_character(character)
+        display_character_for_menu(character)
         display_equipment(character)
 
 
