@@ -171,7 +171,7 @@ SIDE_QUESTS = {
     "name": "La Severus Rogue",
     "description": "Vendre 1 exemplaire de chaque potion.",
     "condition": lambda witch: all(
-        witch.sales.get(item_id, 0) >= 2
+        witch.sales.get(item_id, 0) >= 1
         for item_id, data in recipes.ITEMS.items()
         if data["type"] == "potion"
         )
@@ -181,7 +181,7 @@ SIDE_QUESTS = {
     "name": "La Flitwick",
     "description": "Vendre 1 exemplaire de chaque sortilège.",
     "condition": lambda witch: all(
-        witch.sales.get(item_id, 0) >= 2
+        witch.sales.get(item_id, 0) >= 1
         for item_id, data in recipes.ITEMS.items()
         if data["type"] == "magic_scroll"
         )
@@ -191,7 +191,7 @@ SIDE_QUESTS = {
     "name": "La Jeff Bezos",
     "description": "Vendre 1 exemplaire de chaque grimoire.",
     "condition": lambda witch: all(
-        witch.sales.get(item_id, 0) >= 2
+        witch.sales.get(item_id, 0) >= 1
         for item_id, data in recipes.ITEMS.items()
         if data["type"] == "spell_book"
         )

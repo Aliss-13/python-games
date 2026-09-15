@@ -12,7 +12,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 10, 
         "xp": 5,
-        "upgrade_level": 0,
         "upgrade_cost": 50
     },
 
@@ -27,7 +26,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 12, 
         "xp": 6,
-        "upgrade_level": 0,
         "upgrade_cost": 50
     },
 
@@ -42,7 +40,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 25, 
         "xp": 15,
-        "upgrade_level": 0,
         "upgrade_cost": 60
     },
 
@@ -57,7 +54,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 30, 
         "xp": 20,
-        "upgrade_level": 0,
         "upgrade_cost": 70
     },
 
@@ -72,7 +68,6 @@ ITEMS = {
         "demand": 0.6,
         "price": 40, 
         "xp": 25,
-        "upgrade_level": 0,
         "upgrade_cost": 80
     },
 
@@ -87,7 +82,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 60, 
         "xp": 40,
-        "upgrade_level": 0,
         "upgrade_cost": 100
     },
 
@@ -102,7 +96,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 100, 
         "xp": 80,
-        "upgrade_level": 0,
         "upgrade_cost": 140
     },
 
@@ -119,7 +112,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 15, 
         "xp": 10,
-        "upgrade_level": 0,
         "upgrade_cost": 50
     }, 
 
@@ -134,7 +126,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 20, 
         "xp": 15,
-        "upgrade_level": 0,
         "upgrade_cost": 60
     }, 
 
@@ -149,7 +140,6 @@ ITEMS = {
         "demand": 0.7,
         "price": 22, 
         "xp": 17,
-        "upgrade_level": 0,
         "upgrade_cost": 60
     }, 
 
@@ -164,7 +154,6 @@ ITEMS = {
         "demand": 0.7,
         "price": 25, 
         "xp": 20,
-        "upgrade_level": 0,
         "upgrade_cost": 70
     }, 
 
@@ -179,7 +168,6 @@ ITEMS = {
         "demand": 0.5,
         "price": 45, 
         "xp": 30,
-        "upgrade_level": 0,
         "upgrade_cost": 80
     },
 
@@ -194,7 +182,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 80, 
         "xp": 60,
-        "upgrade_level": 0,
         "upgrade_cost": 120
     },
 
@@ -209,7 +196,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 40, 
         "xp": 40,
-        "upgrade_level": 0,
         "upgrade_cost": 80
     },
 
@@ -224,7 +210,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 60, 
         "xp": 60,
-        "upgrade_level": 0,
         "upgrade_cost": 90
     },
 
@@ -240,7 +225,6 @@ ITEMS = {
         "demand": 0.5,
         "price": 18, 
         "xp": 12,
-        "upgrade_level": 0,
         "upgrade_cost": 50
     },
 
@@ -254,7 +238,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 30, 
         "xp": 30,
-        "upgrade_level": 0,
         "upgrade_cost": 70
     },
 
@@ -268,7 +251,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 40, 
         "xp": 40,
-        "upgrade_level": 0,
         "upgrade_cost": 80
     },
 
@@ -282,7 +264,6 @@ ITEMS = {
         "demand": 0.8,
         "price": 60, 
         "xp": 45,
-        "upgrade_level": 0,
         "upgrade_cost": 80
     },
 
@@ -296,7 +277,6 @@ ITEMS = {
         "demand": 0.7,
         "price": 60, 
         "xp": 45,
-        "upgrade_level": 0,
         "upgrade_cost": 100
     },
 
@@ -310,7 +290,6 @@ ITEMS = {
         "demand": 0.6,
         "price": 70, 
         "xp": 50,
-        "upgrade_level": 0,
         "upgrade_cost": 110
     }, 
 
@@ -324,7 +303,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 80, 
         "xp": 70,
-        "upgrade_level": 0,
         "upgrade_cost": 110
     },
 
@@ -338,7 +316,6 @@ ITEMS = {
         "demand": 0.9,
         "price": 90, 
         "xp": 70,
-        "upgrade_level": 0,
         "upgrade_cost": 120
     }
 }
