@@ -4,16 +4,16 @@ class Skill:
 
      def __init__(
         self,
-        id,
-        name,
-        cost,
-        target,
-        actions,
-        power=0,
-        damage_type=None,
-        effects=None,
-        message="{caster} lance {skill} !",
-        cost_type=None
+        id: str,
+        name: str,
+        cost: int,
+        target: str,
+        actions: list[str],
+        power: int=0,
+        damage_type: str | None = None,
+        effects: list[SkillEffect] | None = None,
+        message: str="{caster} lance {skill} !",
+        cost_type: str | None = None
     ):
 
         self.id = id

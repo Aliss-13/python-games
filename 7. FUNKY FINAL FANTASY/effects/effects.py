@@ -1,10 +1,16 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from protagonists.class_character import Character
+
 import random
 
 from protagonists.get_stats import get_stats
 from protagonists.utils_characters import get_live_characters
-from effects.class_effect import Effect, EFFECTS
-
 from protagonists.status import check_death
+
+from effects.class_effect import Effect, EFFECTS
 
 
 def start_of_turn(target):
@@ -72,7 +78,7 @@ def start_of_turn(target):
 
 
 
-def create_effect(effect_id, source=None):
+def create_effect(effect_id: str, source=None) -> Effect:
 
     data = EFFECTS[effect_id]
 
@@ -87,13 +93,13 @@ def create_effect(effect_id, source=None):
         source=source
     )
 
-def get_effect_by_id(effect_id, effect_list):
+def get_effect_by_id(effect_id: str, effect_list: list[Effect]) -> Effect | None:
 
     for effect in effect_list:
         if effect.id == effect_id:
             return effect
         
-def remove_effect_bonus(target, effect):
+def remove_effect_bonus(target, effect: Effect) -> None:
 
     if effect.type != "defense_bonus":
         return
@@ -102,7 +108,7 @@ def remove_effect_bonus(target, effect):
         target.bonus["defense"] -= effect.applied_value
 
 
-def remove_effect_malus(target, effect):
+def remove_effect_malus(target, effect: Effect) -> None:
 
     if effect.type != "defense_malus":
         return
@@ -111,7 +117,7 @@ def remove_effect_malus(target, effect):
         target.bonus["defense"] += effect.applied_value
 
 
-def get_taunt_target(player_team):
+def get_taunt_target(player_team: list[Character]) -> Character | None:
 
     for character in player_team:
 
@@ -123,7 +129,7 @@ def get_taunt_target(player_team):
     return None
 
 
-def apply_choose_target(player_team):
+def apply_choose_target(player_team: list[Character]) -> Character | None:
 
     targets = get_live_characters(player_team)
 
@@ -138,7 +144,7 @@ def apply_choose_target(player_team):
     return random.choice(targets)
 
 
-def calculate_effect_value(source, effect):
+def calculate_effect_value(source, effect: Effect) -> int:
 
     value = effect.value
 
@@ -157,7 +163,7 @@ def calculate_effect_value(source, effect):
     return value
 
 
-def apply_damage_effect(source, target, effect):
+def apply_damage_effect(source, target, effect: Effect) -> None:
 
     if target.life <= 0:
         return
@@ -175,7 +181,7 @@ def apply_damage_effect(source, target, effect):
     check_death(target)
 
 
-def apply_healing_effect(source, target, effect):
+def apply_healing_effect(source, target, effect: Effect) -> None:
 
     stats = get_stats(target)
 
@@ -188,13 +194,13 @@ def apply_healing_effect(source, target, effect):
         )
 
 
-def apply_incapacitating_effect(entite, target, effect):
+def apply_incapacitating_effect(entite, target, effect: Effect) -> bool:
     print(f"{target.name} subit {effect.name} et est incapacité !")
     return any(effect.id == "stun" for effect in entite.effects)
     
 
 
-def apply_defense_bonus(character, target, effect):
+def apply_defense_bonus(character, target, effect: Effect) -> None:
 
     bonus = calculate_effect_value(character, effect)
 
@@ -208,7 +214,7 @@ def apply_defense_bonus(character, target, effect):
     )
 
 
-def apply_defense_malus(character, target, effect):
+def apply_defense_malus(character, target, effect: Effect) -> None:
 
     malus = calculate_effect_value(character, effect)
 

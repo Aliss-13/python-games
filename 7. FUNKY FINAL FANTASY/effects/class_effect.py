@@ -2,13 +2,13 @@ class Effect:
 
     def __init__(
         self,
-        id,
-        name,
-        type,
-        duration,
-        value=0,
-        scaling=None,
-        stackable=False,
+        id: str,
+        name: str,
+        type: str,
+        duration: int,
+        value: int=0,
+        scaling: str | None = None,
+        stackable: bool=False,
         source=None
     ):
         self.id = id
@@ -21,7 +21,7 @@ class Effect:
         self.source = source
 
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
 
         return {
             "id": self.id,

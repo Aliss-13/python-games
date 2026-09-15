@@ -1,20 +1,27 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from effects.class_effect import Effect
+
 from skills.skills import get_skill
+from skills.class_skill import Skill
 from effects.effects import create_effect
 
 
 class Character:
     def __init__(
             self, 
-            id, 
-            name, 
-            character_class, 
-            skills, 
-            base_stats, 
-            level=1, 
-            xp=0, 
-            equipment=None,
-            effects=None,
-            bonus=None,
+            id: str, 
+            name: str, 
+            character_class: str, 
+            skills: list[Skill], 
+            base_stats: dict[str, int], 
+            level: int=1, 
+            xp: float=0, 
+            equipment: dict | None = None,
+            effects: list[Effect] | None = None,
+            bonus: dict[str, int] | None = None,
             ):
         
         self.id = id
@@ -31,7 +38,7 @@ class Character:
         self.bonus = bonus or {}
 
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
 
         return {
             "id": self.id,
@@ -75,10 +82,10 @@ class Character:
             bonus=data.get("bonus", {})
         )
     @property
-    def has_mana(self):
+    def has_mana(self) -> bool:
         return self.base_stats["mana_max"] > 0
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.name} (lvl {self.level})"
 
     

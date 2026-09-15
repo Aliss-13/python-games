@@ -7,11 +7,11 @@ class World:
         self.time_of_day = "jour"  # jour / nuit
         self.day_count = 1
         self.season = "printemps"
-        self.season_day = 1
+        self.season_day = 1 
         self.actions_remaining = 7
         self.day_actions = 7
         self.night_actions = 3
-        self.in_winter = False
+        self.in_winter = True
         self.first_winter_survived = False
         self.areas = {
                     "forêt": {"🪵": 90, "🥩": 80, "🌿": 80},
@@ -52,6 +52,8 @@ class World:
             "season": self.season,
             "season_day": self.season_day,
             "actions_remaining": self.actions_remaining,
+            "in_winter": self.in_winter,
+            "first_winter_survived": self.first_winter_survived,
             "current_area" : self.current_area,
             "explored_areas" : list(self.explored_areas)
         }
@@ -63,6 +65,8 @@ class World:
         self.season = data["season"]
         self.season_day = data["season_day"]
         self.actions_remaining = data["actions_remaining"]
+        self.in_winter = data.get("in_winter", False)
+        self.first_winter_survived = data.get("first_winter_survived", False)
         self.current_area = data["current_area"]
         self.explored_areas = set(data.get("explored_areas", []))
         if not self.explored_areas:
@@ -94,8 +98,6 @@ class World:
 #============================ Cycle jour/nuit et cycle des saisons ===========================================
     def next_cycle(self, player):
       
-        self.update_cycle_durations()
-
         if self.time_of_day == "jour":
             self.time_of_day = "nuit"
             print("🌙 La nuit tombe...")
@@ -104,8 +106,10 @@ class World:
             self.time_of_day = "jour"
             self.day_count += 1
             self.season_progress()
-            self.check_events()
+            self.check_events(player)
             print(f"🌞 Jour {self.day_count} commence ({self.season})")
+
+        self.update_cycle_durations()
 
         player.apply_climate_conditions(self)
         player.produce_resources(self)
@@ -145,10 +149,13 @@ class World:
             self.in_winter = True
             print("❄️  L'hiver est là !")
 
-        elif self.in_winter and self.season == "printemps":
+        elif self.season == "hiver" and self.season_day > 10:
+            self.season = "printemps"
+            self.season_day = 1
             self.first_winter_survived = True
             self.in_winter = False
             print("🌸  Le printemps pointe son nez...")
+            print("  Vous avez survécu !")
 
         elif self.season == "printemps" and self.season_day > 10:
             self.season = "été"
@@ -168,51 +175,54 @@ class World:
         return 1.0
 
 #============================ Evènements ===========================================
-    def check_events(self):
+    def check_events(self, player):
 
-        self.attaque_monstres()
+        self.monster_attack(player)
 
-        self.tempête_neige()
+        self.snow_stom(player)
 
 
-    def attaque_monstres(self):
+    def monster_attack(self, player):
         if self.day_count == 15 and random.randint(1, 100) < 25:
             print("👹  Des créatures rôdent dans la nuit...")
             attack_damage = 20
             mentalhealth_damage = 10
 
-            if self.structures["faraday_cage"]:
+            if player.structures["faraday_cage"]:
                 attack_damage -= 7
                 mentalhealth_damage -=5
 
+            attack_damage = max(0, attack_damage)
+            mentalhealth_damage = max(0, mentalhealth_damage)
 
-                self.stamina -= attack_damage
-                self_mentalhealth -= mentalhealth_damage
-                print(f"Attaque de monstres (-{attack_damage} endurance - {mentalhealth_damage} santé mentale) !")
+            player.stamina -= attack_damage
+            player.mentalhealth -= mentalhealth_damage
+
+            print(f"Attaque de monstres (-{attack_damage} endurance - {mentalhealth_damage} santé mentale) !")
                 
-                if not self.is_alive():
-                    return False
+            if not player.is_alive():
+                return False
                 
-                return True
+            return True
             
 
-    def tempête_neige(self):
+    def snow_stom(self, player):
         if self.season == "hiver" and random.randint(1, 100) < 20:
             print("❄️  Une tempête de neige frappe le camp !")
             snow_damage = 30
 
-            if self.stuff["tête"] == "chapeau":
+            if player.stuff["tête"] == "chapeau":
                 snow_damage -= 8
 
-            if self.stuff["corps"] == "manteau":
+            if player.stuff["corps"] == "manteau":
                 snow_damage -= 15
 
             snow_damage = max(0, snow_damage)
 
-            self.stamina -= snow_damage
+            player.stamina -= snow_damage
             print(f"🌙 La tempête de neige te gèle (-{snow_damage} endurance).")
            
-            if not self.is_alive():
+            if not player.is_alive():
                 return False
                         
             return True
@@ -266,13 +276,6 @@ class World:
 
     def explore_area(self, player):
         
-        cost = 4
-
-        if not self.spend_action(cost):
-            return
-        
-        self.check_cycle(player)
-
         nearby_unknown = [
             area
             for area in self.connections[self.current_area]
@@ -288,7 +291,7 @@ class World:
         cost_satiety = 30
         cost_stamina = 30
         
-        # vérification AVANT de modifier
+        # vérification endurance et faim AVANT de modifier
         if player.stamina < cost_stamina: 
             print("Pas assez d'énergie pour partir en exploration.")
             return False
@@ -296,10 +299,20 @@ class World:
         if player.satiety < cost_satiety:
             print("Trop faim pour pour partir en exploration.")
             return False
+
+        # vérification nombre d'actions restantes AVANT de modifier
+        cost = 4
+
+        if not self.spend_action(cost): # self.spend_action consomme les actions restantes s'il y en a assez
+            return
         
+        self.check_cycle(player)
+
+        # application des coûts en endurance et faim
         player.satiety -= cost_satiety
         player.stamina -= cost_stamina
 
+        # résultat
         self.explored_areas.add(new_area)
             
         print(f"🔓 Nouvelle zone découverte : {new_area}")
@@ -307,13 +320,6 @@ class World:
 
     def move_player(self, player, new_area):
         
-        cost = 2
-
-        if not self.spend_action(cost):
-            return
-        
-        self.check_cycle(player)
-
         if new_area not in self.explored_areas:
             print("❌ Zone non explorée.")
             return False
@@ -333,10 +339,20 @@ class World:
         if player.satiety < cost_satiety:
             print("Trop faim pour pour partir en exploration.")
             return False
+
+        # vérification nombre d'actions restantes AVANT de modifier
+        cost = 2
+
+        if not self.spend_action(cost): # self.spend_action consomme les actions restantes s'il y en a assez
+            return
         
+        self.check_cycle(player)
+
+        # application des coûts en endurance et faim
         player.satiety -= cost_satiety
         player.stamina -= cost_stamina
-        
+
+        # résultat
         self.current_area = new_area
         
         print(f"🌍 Tu te déplaces vers {new_area}")

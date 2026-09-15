@@ -7,7 +7,7 @@ import save
 
 def main():
 
-    print("\n===== DO NOT STARVE PLS =====")
+    print("\n===== DO NOT STARVE PLEASE =====")
     print("\n« Tu vas mourir ici mon petit pote... »")
     print("")
    
