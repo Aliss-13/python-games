@@ -1,4 +1,4 @@
-🌲 DON'T STARVE PLS
+### 🌲 DON'T STARVE PLS
 
 « Tu vas mourir ici mon petit pote… »
 
@@ -11,7 +11,7 @@ Pour y parvenir, il faudra explorer le monde, récolter des ressources, fabrique
 Parce que manifestement, rester tranquillement chez soi en attendant les beaux jours était trop facile.
 
 
-🎮 Principe du jeu
+## 🎮 Principe du jeu
 
 Tu incarnes un survivant perdu dans un monde hostile.
 
@@ -43,7 +43,7 @@ Une fois toutes les pièces récupérées et les ressources nécessaires réunie
 Parce que survivre éternellement dans une forêt hostile n'était visiblement pas le projet.
 
 
-❤️ Survivre
+## ❤️ Survivre
 
 Trois jauges déterminent ton état :
 
@@ -58,9 +58,9 @@ Les actions de survie ont donc un coût : récolter des ressources consomme de l
 Il faudra apprendre à gérer tes ressources plutôt que de cliquer frénétiquement sur « récolter » jusqu'à ce que ton personnage rende l'âme.
 
 
-🌦️ Un monde qui évolue
+## 🌦️ Un monde qui évolue
 
-Le jeu fonctionne avec un cycle jour / nuit et quatre saisons.
+Le jeu fonctionne avec un **cycle jour / nuit** et **quatre saisons**.
 
 La nuit, des monstres rôdent, rendant les récoltes périlleuses.
 
@@ -77,9 +77,9 @@ L'hiver est particulièrement dangereux :
 Tonton Ned avait pourtant prévenu.
 
 
-🗺️ Exploration
+## 🗺️ Exploration
 
-Le monde est composé de plusieurs zones :
+Le monde est composé de plusieurs **zones** :
 
 🕳️ Grotte
 🏔️ Montagne
@@ -96,9 +96,9 @@ Les zones sont connectées entre elles. Elles contiennent des ressources ainsi q
 L'exploration permet également de rechercher les différentes pièces du Hollandais Volant.
 
 
-🌿 Récolte et ressources
+## 🌿 Récolte et ressources
 
-Les ressources sont obtenues grâce à des récoltes soumises à des probabilités.
+Les **ressources** sont obtenues grâce à des **récoltes** soumises à des probabilités.
 
 La quantité récoltée dépend notamment :
 
@@ -108,7 +108,7 @@ La quantité récoltée dépend notamment :
 - du hasard ;
 - des outils possédés.
 
-Certaines récoltes peuvent également produire du butin rare.
+Certaines récoltes peuvent également produire du **butin rare**.
 
 Par exemple :
 
@@ -117,7 +117,7 @@ Par exemple :
 Parce qu'il fallait bien une raison supplémentaire de retourner casser des cailloux.
 
 
-🛠️ Fabrication et progression
+## 🛠️ Fabrication et progression
 
 Les ressources récoltées peuvent être utilisées pour fabriquer différents équipements.
 
@@ -132,7 +132,7 @@ Les ressources récoltées peuvent être utilisées pour fabriquer différents �
 🥛 Laiterie
 🧀 Fromagerie
 
-Les structures permettent d'améliorer les conditions de survie et certaines produisent même des ressources automatiquement.
+Les **structures** permettent d'améliorer les conditions de survie et certaines produisent même des ressources automatiquement.
 
 🪓 Outils
 🪓 Hache
@@ -140,7 +140,7 @@ Les structures permettent d'améliorer les conditions de survie et certaines pro
 🗡️ Couteau de chasse
 𓌜 Faux
 
-Les outils améliorent les quantités récoltées.
+Les **outils** améliorent les quantités récoltées.
 
 🧥 Vêtements
 🎩 Chapeau
@@ -148,10 +148,10 @@ Les outils améliorent les quantités récoltées.
 🧤 Gants
 🥾 Bottes
 
-Les vêtements permettent notamment de réduire certains effets du froid ou le coût des actions.
+Les **vêtements** permettent notamment de réduire certains effets du froid ou le coût des actions.
 
 
-🧺 Transformation des ressources
+## 🧺 Transformation des ressources
 
 Les ressources peuvent également être transformées afin de débloquer de nouvelles possibilités :
 
@@ -163,7 +163,7 @@ Les ressources peuvent également être transformées afin de débloquer de nouv
 Certaines transformations nécessitent d'avoir construit les structures correspondantes.
 
 
-🍖 Gestion de la nourriture
+## 🍖 Gestion de la nourriture
 
 Plusieurs aliments peuvent être consommés avec des effets différents :
 
@@ -181,7 +181,7 @@ Chaque aliment peut modifier :
 La nourriture devient donc un véritable outil de gestion des ressources, et pas simplement une jauge à remplir.
 
 
-🧠 Santé mentale
+## 🧠 Santé mentale
 
 La survie ne concerne pas uniquement le corps.
 
@@ -195,11 +195,11 @@ La nuit, les conditions difficiles et certaines situations affectent également 
 On ne juge pas les méthodes thérapeutiques de ce survivant.
 
 
-🎯 Objectifs
+## 🎯 Objectifs
 
 Le jeu propose trois grands objectifs :
 
-    ❄️ Survivre à l'hiver
+❄️ **Survivre à l'hiver**
 
     Prépare-toi avant son arrivée.
 
@@ -208,16 +208,16 @@ Le jeu propose trois grands objectifs :
     Puis la confiance en tes décisions… »
 
 
-    🗺️ Explorer le monde : découvre toutes les zones de la carte et leurs environs.
+🗺️ **Explorer le monde** : découvre toutes les zones de la carte et leurs environs.
 
 
-    ⚓ Construire le Hollandais Volant 
+⚓ **Construire le Hollandais Volant** 
 
-    Retrouve les pièces nécessaires, rassemble les ressources et construis le navire permettant de quitter ce monde.
-    🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.
+Retrouve les pièces nécessaires, rassemble les ressources et construis le navire permettant de quitter ce monde.
+🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.
 
 
-💾 Sauvegarde
+## 💾 Sauvegarde
 
 La partie peut être sauvegardée et restaurée grâce à un fichier JSON.
 
@@ -236,7 +236,7 @@ Le système fonctionne également avec la version exécutable du jeu.
 
 
 
-🧩 Architecture
+### 🧩 Architecture
 
 Le projet est organisé en plusieurs modules afin de séparer les différentes responsabilités :
 
@@ -253,17 +253,17 @@ DON'T STARVE PLS/
 
 Quelques responsabilités principales :
 
-- player.py → statistiques, récolte, survie, sommeil et actions du joueur
-- world.py → monde, zones, saisons, cycles et exploration
-- buildings.py → structures, outils, vêtements et fabrication
-- food.py → nourriture et effets
-- display.py → affichage des jauges, carte, objectifs et informations
-- menu.py → navigation et interactions avec le joueur
-- save.py → sauvegarde et chargement JSON
-- main.py → lancement du jeu et boucle principale
+- **player.py** → statistiques, récolte, survie, sommeil et actions du joueur
+- **world.py** → monde, zones, saisons, cycles et exploration
+- **buildings.py** → structures, outils, vêtements et fabrication
+- **food.py** → nourriture et effets
+- **display.py** → affichage des jauges, carte, objectifs et informations
+- **menu.py** → navigation et interactions avec le joueur
+- **save.py** → sauvegarde et chargement JSON
+- **main.py** → lancement du jeu et boucle principale
 
 
-🛠️ Technologies
+## 🛠️ Technologies
 
 - Python 3
 - programmation orientée objet
@@ -275,14 +275,14 @@ Quelques responsabilités principales :
 - gestion d'un état de jeu persistant
 
 
-🚀 Installation
+## 🚀 Installation
 
-Prérequis : Python 3
-Lancement : depuis le dossier du projet, exécuter python main.py.
-Une version exécutable peut également être disponible dans les Releases du dépôt.
+Prérequis : **Python 3**
+Lancement : depuis le dossier du projet, exécuter python **main.py**.
+Une **version exécutable** peut également être disponible dans les Releases du dépôt.
 
 
-🎮 Quelques caractéristiques du jeu
+## 🎮 Quelques caractéristiques du jeu
 
 🌲 exploration
 🪵 récolte de ressources
@@ -303,7 +303,7 @@ Une version exécutable peut également être disponible dans les Releases du d�
 Parce qu'un jeu de survie sans fromage serait tout simplement une erreur de conception.
 
 
-📚 Ce que ce projet m'a permis de pratiquer
+## 📚 Ce que ce projet m'a permis de pratiquer
 
 Ce projet m'a permis de travailler notamment sur :
 
