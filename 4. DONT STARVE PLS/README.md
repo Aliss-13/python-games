@@ -1,4 +1,4 @@
-### 🌲 DON'T STARVE PLS
+# 🌲 DON'T STARVE PLS
 
 « Tu vas mourir ici mon petit pote… »
 
@@ -236,7 +236,7 @@ Le système fonctionne également avec la version exécutable du jeu.
 
 
 
-### 🧩 Architecture
+# 🧩 Architecture
 
 Le projet est organisé en plusieurs modules afin de séparer les différentes responsabilités :
 
