@@ -2,7 +2,7 @@
 # │
 # ├── give_client_reward()
 # ├── level_up()
-# ├── update_victory()
+# ├── update_victory_objectives()
 # ├── check_victory()
 # ├── crafted_everything()
 # └── éventuellement des fonctions de déblocage futures
@@ -35,12 +35,12 @@ def gain_rewards(witch, garden, result):
             print(f"✧.*{recipes.ITEMS[recipe]['name']}✧.*")
 
     level_up(witch, garden)
-    update_victory(witch)
+    update_victory_objectives(witch)
 
 
 # ==================================== OBJECTIFS DE VICTOIRE ====================================================
 
-def update_victory(witch):
+def update_victory_objectives(witch):
     update_craft_objective(witch)
     update_level_objective(witch)
     update_scarabac_objective(witch)
@@ -56,7 +56,10 @@ def update_scarabac_objective(witch):
 
 
 def check_victory(witch):
-
+    
+    if witch.has_won:
+        return True
+    
     if (
         all(witch.crafted_once.values())
         and witch.level >= 20

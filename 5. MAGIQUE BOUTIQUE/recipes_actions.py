@@ -3,7 +3,7 @@ from colors_and_names import RESET, DIM, TYPE_META
 from recipes import ITEMS
 from garden_ingredients import INGREDIENTS
 from clients import check_waiting_clients, serve_waiting_clients
-from progression import check_victory, update_victory
+from progression import check_victory, update_victory_objectives
 
 
 #============================= CRAFTING ====================================
@@ -88,7 +88,7 @@ def craft(witch, garden, item_name):
 
     witch.crafted_once[item_name] = True
 
-    update_victory(witch)
+    update_victory_objectives(witch)
     check_victory(witch)
 
     print(f"Vous avez créé {ITEMS[item_name]['name']} !")

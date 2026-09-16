@@ -231,7 +231,6 @@ def client(witch, garden):
     result_id = choice.result
 
     give_client_reward(witch, garden, result_id, choice.items)
-    level_up(witch, garden)
 
 
 # ========================================== RECOMPENSE =======================================================
@@ -294,6 +293,5 @@ def serve_waiting_clients(witch, garden, item_name):
 
         remove_items(witch, waiting.choice.items)
         give_client_reward(witch, garden, waiting.choice.result, waiting.choice.items)
-        level_up(witch, garden)
 
         witch.waiting_clients.remove(waiting)

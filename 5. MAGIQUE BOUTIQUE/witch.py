@@ -7,7 +7,7 @@ from recipes_actions import get_recipe_price, get_recipe_xp
 from colors_and_names import RESET, TYPE_META, SCARABAC_NAMES
 from garden_ingredients import INGREDIENTS
 
-from progression import level_up, check_victory, update_victory, register_sale
+from progression import level_up, check_victory, update_victory_objectives, register_sale
 
 from sale_dialogues import random_sale_dialogue
 
@@ -15,8 +15,7 @@ from clients import CLIENTS, check_client_event
 
 from clients_queue import WaitingClient
 
-from garden import Garden, garden_levels, update_garden
-garden = Garden(garden_levels)
+from garden import update_garden
 
 class Witch:
 
@@ -90,7 +89,8 @@ class Witch:
             "crafted_once": self.crafted_once,
             "scarabac": self.scarabac,
             "victory_objectives": self.victory_objectives,
-            "side_quests": self.side_quests
+            "side_quests": self.side_quests,
+            "has_won": self.has_won
         }
 
 
@@ -176,19 +176,7 @@ class Witch:
         saved_side_quests = data.get("side_quests", {})
         self.side_quests = {k: saved_side_quests.get(k, False) for k in self.side_quests}
 
-
-    def apply_result(self, result):
-        self.xp += result.xp
-        self.money += result.money
-
-        for item in result.items:
-            self.inventory[item] = self.inventory.get(item, 0) + 1
-
-
-crafted_once = {
-    item: False
-    for item in recipes.ITEMS
-}
+        self.has_won = data.get("has_won", False)
 
 
 #============================= RECOLTE ====================================
@@ -225,7 +213,7 @@ def try_drop_scarabac(witch):
     witch.scarabac[fragment] = True
     fragment_name = SCARABAC_NAMES.get(fragment, fragment)
     print(f"🪲 Fragment du Scarabac trouvé : {fragment_name} !")
-    update_victory(witch)
+    update_victory_objectives(witch)
     check_victory(witch)
 
 #============================= VENTE ====================================

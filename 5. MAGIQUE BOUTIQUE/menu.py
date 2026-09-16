@@ -1,10 +1,8 @@
 from witch import harvest, game_tick, display_shop_stock, display_inventory
 from recipes_actions import upgrade_recipe_menu, available_crafts, put_on_shelf
-from progression import display_scarabac_parts, display_remaining_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory
-from garden import Garden, garden_levels, display_garden
+from progression import display_scarabac_parts, display_remaining_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory_objectives
+from garden import display_garden
 from save import save_game
-
-garden = Garden(garden_levels)
 
 RED = "\033[91m"
 GREEN = "\033[92m"
@@ -69,7 +67,7 @@ def menu(witch, garden):
     
 
         elif choix == "7":
-            update_victory(witch)
+            update_victory_objectives(witch)
             display_victory(witch)
 
             display_scarabac_parts(witch)

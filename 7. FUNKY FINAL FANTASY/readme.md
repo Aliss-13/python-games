@@ -165,8 +165,8 @@ La vérification est centralisée dans **is_zone_complete(game)**
 
 Le message de fin de zone est déclenché après la résolution complète du combat final, plutôt que depuis la validation d'une quête.
 
-Exemple :
 
+```python
 ══════════════════════════════════════
        🌲 FORÊT OBSCURE CONQUISE 🌲
 ══════════════════════════════════════
@@ -180,7 +180,7 @@ ses secrets ont été révélés,
 et les habitants peuvent enfin respirer un peu.
 
               — FIN DE LA ZONE —
-
+```
 
 ## 🧪 Phase de test pré-release
 
