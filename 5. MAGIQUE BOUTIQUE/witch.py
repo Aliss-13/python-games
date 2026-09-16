@@ -146,10 +146,13 @@ class Witch:
 
             selected_choice = client.choices[choice_index]
 
+            arrival_time = waiting.get("arrival_time")
+
             self.waiting_clients.append(
                 WaitingClient(
                     client,
-                    selected_choice
+                    selected_choice,
+                    arrival_time
                 )
         )
 

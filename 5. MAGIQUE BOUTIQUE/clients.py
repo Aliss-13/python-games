@@ -196,10 +196,11 @@ def client(witch, garden):
         if answer.isdigit():
             answer = int(answer)
 
-        if 1 <= answer <= len(client.choices):
-            break
+            if 1 <= answer <= len(client.choices):
+                break
 
-        print("Choix invalide.")
+        else:
+            print("Saisie invalide.")
 
 
     choice_index = answer - 1
@@ -254,15 +255,19 @@ def display_waiting_clients(witch):
 
     print("\n=== CLIENTS EN ATTENTE ===")
 
+    current_time = time.time()
+
     if not witch.waiting_clients:
         print("Personne n'attend.")
 
     for waiting in witch.waiting_clients:
-        print(
-            f"- {waiting.client.name}"
-        )
+        time_remaining = max(0, waiting.client.patience - (current_time - waiting.arrival_time))
+        print(f"- {waiting.client.name} -")
+        print(f"Demande : {waiting.choice.text}")
+        print(f"Temps restant : {time_remaining:.0f} secondes")
+        print()
 
-
+        
 def check_waiting_clients(witch):
 
     current_time = time.time()

@@ -3,6 +3,7 @@ from recipes_actions import upgrade_recipe_menu, available_crafts, put_on_shelf
 from progression import display_scarabac_parts, display_remaining_recipes, display_side_quests, SIDE_QUESTS, display_victory, update_victory_objectives
 from garden import display_garden
 from save import save_game
+from clients import display_waiting_clients, check_waiting_clients
 
 RED = "\033[91m"
 GREEN = "\033[92m"
@@ -20,7 +21,7 @@ def menu(witch, garden):
         print("[1] Craft")
         print("[2] Récolte")
         print("[3] Améliorations")
-        print("[4] Ingrédients - Stock magasin - Bourse - Niveau")
+        print("[4] Ingrédients récoltés - Stock magasin - Bourse - Niveau")
         print("[5] Jardin")
         print("[6] Récupérer des articles en réserve")
         print("[7] Progression")
@@ -33,6 +34,9 @@ def menu(witch, garden):
         if choix == "1":
             display_inventory(witch)
             print("")
+            check_waiting_clients(witch)
+            display_waiting_clients(witch)
+            print()
             available_crafts(witch, garden)
             game_tick(witch, garden)
 
