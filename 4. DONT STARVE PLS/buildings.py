@@ -63,8 +63,8 @@ TOOLS = {
         "cost": {"🪵": 8, "🪨": 3},
         "desc": "Plus de 🥩  récoltée."
     },
-    "scythe": {
-        "label": "Faux 𓌜",
+    "machete": {
+        "label": "Machette 🔪",
         "cost": {"🪵": 8, "🪨": 8},
         "desc": "Plus de 🌿  récoltées."
     }

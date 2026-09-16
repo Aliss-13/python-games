@@ -1,6 +1,6 @@
 # 🌲 DON'T STARVE PLS
 
-« Tu vas mourir ici mon petit pote… »
+```« Tu vas mourir ici mon petit pote… »```
 
 DON'T STARVE PLS est un jeu de survie développé en Python et jouable dans le terminal.
 
@@ -47,9 +47,11 @@ Parce que survivre éternellement dans une forêt hostile n'était visiblement p
 
 Trois jauges déterminent ton état :
 
+```python
 🍽️ Satiété
 ⚡ Endurance
 🧠 Santé mentale
+```
 
 Si l'une d'elles tombe à zéro, c'est terminé.
 
@@ -81,6 +83,7 @@ Tonton Ned avait pourtant prévenu.
 
 Le monde est composé de plusieurs **zones** :
 
+```python
 🕳️ Grotte
 🏔️ Montagne
 🌲 Forêt
@@ -88,6 +91,7 @@ Le monde est composé de plusieurs **zones** :
 🏜️ Désert
 🌴 Jungle
 🌊 Rivière
+```
 
 L'exploration et les déplacements consomment des ressources et des actions. 
 
@@ -121,6 +125,7 @@ Parce qu'il fallait bien une raison supplémentaire de retourner casser des cail
 
 Les ressources récoltées peuvent être utilisées pour fabriquer différents équipements.
 
+```python
 🔨 Structures
 🔥 Feu de camp
 🛖 Abri
@@ -131,22 +136,27 @@ Les ressources récoltées peuvent être utilisées pour fabriquer différents �
 🐮 Élevage
 🥛 Laiterie
 🧀 Fromagerie
+```
 
 Les **structures** permettent d'améliorer les conditions de survie et certaines produisent même des ressources automatiquement.
 
+```python
 🪓 Outils
 🪓 Hache
 ⛏️ Pioche
 🗡️ Couteau de chasse
-𓌜 Faux
+🔪 Machette
+```
 
 Les **outils** améliorent les quantités récoltées.
 
+```python
 🧥 Vêtements
 🎩 Chapeau
 🧥 Manteau
 🧤 Gants
 🥾 Bottes
+```
 
 Les **vêtements** permettent notamment de réduire certains effets du froid ou le coût des actions.
 
@@ -155,10 +165,12 @@ Les **vêtements** permettent notamment de réduire certains effets du froid ou 
 
 Les ressources peuvent également être transformées afin de débloquer de nouvelles possibilités :
 
+```python
 🌿 → 🪢 Corde
 🪢 → 🟩 Tissu
 🥩 → 🍖 Nourriture cuite
 🥛 → 🧀 Fromage
+```
 
 Certaines transformations nécessitent d'avoir construit les structures correspondantes.
 
@@ -167,10 +179,12 @@ Certaines transformations nécessitent d'avoir construit les structures correspo
 
 Plusieurs aliments peuvent être consommés avec des effets différents :
 
+```python
 🥩 nourriture crue
 🍖 nourriture cuite
 🥛 lait
 🧀 fromage
+```
 
 Chaque aliment peut modifier :
 
@@ -201,12 +215,13 @@ Le jeu propose trois grands objectifs :
 
 ❄️ **Survivre à l'hiver**
 
+```python
     Prépare-toi avant son arrivée.
 
     « La nourriture et les plantes vont disparaître…
     Puis la chaleur…
     Puis la confiance en tes décisions… »
-
+```
 
 🗺️ **Explorer le monde** : découvre toutes les zones de la carte et leurs environs.
 
@@ -214,7 +229,7 @@ Le jeu propose trois grands objectifs :
 ⚓ **Construire le Hollandais Volant** 
 
 Retrouve les pièces nécessaires, rassemble les ressources et construis le navire permettant de quitter ce monde.
-🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.
+```🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.```
 
 
 ## 💾 Sauvegarde
@@ -240,6 +255,7 @@ Le système fonctionne également avec la version exécutable du jeu.
 
 Le projet est organisé en plusieurs modules afin de séparer les différentes responsabilités :
 
+```python
 DON'T STARVE PLS/
 │
 ├── main.py
@@ -250,6 +266,7 @@ DON'T STARVE PLS/
 ├── buildings.py
 ├── food.py
 └── save.py
+```
 
 Quelques responsabilités principales :
 
@@ -284,6 +301,7 @@ Une **version exécutable** peut également être disponible dans les Releases d
 
 ## 🎮 Quelques caractéristiques du jeu
 
+```python
 🌲 exploration
 🪵 récolte de ressources
 🍖 gestion de la nourriture
@@ -299,6 +317,7 @@ Une **version exécutable** peut également être disponible dans les Releases d
 💾 sauvegarde JSON
 🧠 santé mentale
 🧀 fromage
+```
 
 Parce qu'un jeu de survie sans fromage serait tout simplement une erreur de conception.
 

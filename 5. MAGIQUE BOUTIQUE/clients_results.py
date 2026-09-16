@@ -21,7 +21,7 @@ class Result:
         else:
             self.items = items or []
 
-        if isinstance(items, str):
+        if isinstance(recipes, str):
             self.recipes = [recipes]
         else:
             self.recipes = recipes or []

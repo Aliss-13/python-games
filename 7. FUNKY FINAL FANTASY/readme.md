@@ -294,7 +294,13 @@ Le projet a été progressivement refactorisé afin d’améliorer sa maintenabi
 - **display.py** : affichage des combats, de l’inventaire, des quêtes et de la progression
 
 
-## Lancer le jeu : python main.py
+## Lancer le jeu
+
+Prérequis : **Python 3**
+
+Lancement : depuis le dossier du projet, exécuter python **main.py**.
+
+Une **version exécutable** peut également être disponible dans les Releases du dépôt.
 
 
 ## Auteur : Lisa S.

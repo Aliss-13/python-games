@@ -35,7 +35,6 @@ def menu(witch, garden):
             display_inventory(witch)
             print("")
             check_waiting_clients(witch)
-            display_waiting_clients(witch)
             print()
             available_crafts(witch, garden)
             game_tick(witch, garden)
@@ -88,7 +87,7 @@ def menu(witch, garden):
 
 
         elif choix == "9":
-            print("Au revoir.")
+            print("🪄 À plus dans le bus ! ·. · ★")
             return False
         
 

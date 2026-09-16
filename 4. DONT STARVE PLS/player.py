@@ -14,7 +14,7 @@ class Player:
         self.inventory = {"🪵" : 0, "🪨" : 0, "🌿" : 0, "🪢" : 0, "🟩" : 0, "💰": 0}
         self.food = {"🥩" : 0, "🍖" : 0, "🥛" : 0, "🧀" : 3}
         self.stuff = {"tête" : None, "corps" : None, "mains" : None, "pieds" : None}
-        self.tools = {"axe": False, "pickaxe": False, "knife": False, "scythe" : False}
+        self.tools = {"axe": False, "pickaxe": False, "knife": False, "machete" : False}
         self.structures = {
             "campfire": False, 
             "shelter" : False, 
@@ -261,7 +261,7 @@ class Player:
                 amount += 1
             if resource == "🪨" and self.tools.get("pickaxe"):
                 amount += 1
-            if resource == "🌿" and self.tools.get("scythe"):
+            if resource == "🌿" and self.tools.get("machete"):
                 amount += 1
             if resource == "🥩" and self.tools.get("knife"):
                 amount += 1

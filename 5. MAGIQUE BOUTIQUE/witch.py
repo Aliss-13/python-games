@@ -302,7 +302,7 @@ def display_shop_stock(witch):
         empty = False
 
     if empty:
-        print("Aucun ingrédient.")
+        print("Aucun article en réserve.")
 
 
 def display_shop_shelves(witch):
@@ -328,4 +328,4 @@ def display_shop_shelves(witch):
         empty = False
 
     if empty:
-        print("Aucun objet en vente.")
+        print("Aucun article en vente.")
