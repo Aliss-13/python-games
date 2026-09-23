@@ -146,9 +146,9 @@ def menu_tour(context, character):
         # SKILL
         if choix == "s":
             menu_skill(context, character)
-            return
+            # on reste dans le tour
 
-     
+
         # INVENTAIRE
         elif choix == "i":
             menu_character_inventory(context.game, character)
