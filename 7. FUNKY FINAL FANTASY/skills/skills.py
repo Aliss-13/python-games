@@ -181,16 +181,11 @@ def heal_target(context, target):
     if real_healing > 0:
         print(f"{target.name} gagne {real_healing} PV → PV : {target.life}/{stats_target['life_max']} !")
 
-
-
-
-
-
 #-------------------------------------------------------------------------------------------------------------------------
 
 COST_TYPES = [
     "mana",
-    "life"
+    "PV"
 ]
 
 SKILL_UNLOCKS = {

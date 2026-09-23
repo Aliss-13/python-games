@@ -24,3 +24,6 @@ FOREST_SHOPS = {
         level=3
     )
 }
+
+def shop_locked():
+    print("La boutique est encore verrouillée.")

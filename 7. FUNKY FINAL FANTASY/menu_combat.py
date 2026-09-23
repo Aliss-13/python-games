@@ -1,11 +1,11 @@
 from display import display_equipment, display_inventory
-from display import section, separator, LIGHT_PINK, RESET
+from display import section, separator, LIGHT_PINK, RESET, RED
 
 from inventory.inventory import equip_from_inventory, use_item, sell_item
 
 from skills.class_skillcontext import SkillContext
 from skills.skill_engine import execute_skill
-from skills.skills import get_target_name
+from skills.skills import get_target_name, COST_TYPES
 
 # =================================================== GAMESTATE MENUS ===================================================
 
@@ -89,10 +89,16 @@ def menu_skill(context, character):
     print(f"\nActions de {character.name}")
 
     for i, skill in enumerate(character.skills, start=1):
+
+        if skill.cost_type is None:
+            cost_display = "Gratuit"
+        else:
+            cost_display = f"Coût : {skill.cost} {skill.cost_type}"
+
         print(
-            f"{i}. {skill.name:<25} "
-            f"Coût : {skill.cost} "
-            f"Cible : {get_target_name(skill)}"
+            f"{i}. {LIGHT_PINK}{skill.name:<20}{RESET}"
+            f"{cost_display:<20}"
+            f"{RED}Cible : {get_target_name(skill)}{RESET}"
         )
 
     print("0. Retour")

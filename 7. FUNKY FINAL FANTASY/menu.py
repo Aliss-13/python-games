@@ -5,6 +5,7 @@ from combat import handle_explore
 from class_savemanager import SaveManager
 from npcs.utils_npcs import get_available_npcs
 from quests.talk_to_npcs import talk_to_npc
+from inventory.class_shop import shop_locked
 
 from inventory.inventory import menu_shop
 
@@ -15,7 +16,7 @@ def menu_zone(game):
         actions = {
             "1": ("Explorer", lambda: handle_explore(game)),
             "2": ("Discuter avec les habitants", lambda: socialize(game)),
-            "3": ("Boutique (verrouillée)", None),
+            "3": ("Boutique (verrouillée)", lambda:shop_locked()),
             "4": ("Equipe", lambda: display_player_team(game.player_team)),
             "5": ("Inventaire", lambda: menu_inventory(game)),
             "6": ("Progression", lambda: display_zone_progress(game.current_zone, game)),

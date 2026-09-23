@@ -41,6 +41,7 @@ SLOTS = {
 
 RED = "\033[91m"
 GREEN = "\033[92m"
+LIGHT_GREEN = "\033[38;5;120m"
 YELLOW = "\033[33m"
 LIGHT_YELLOW = "\033[93m"
 CYAN = "\033[96m"
@@ -170,15 +171,17 @@ def display_inventory(inventory):
 
 
 def display_equipment(character):
-    print(f"\nÉquipement de {character.name} :")
+    print(f"\n🧰 {LIGHT_PINK}Équipement de {character.name}{RESET}")
 
     for slot, item in character.equipment.items():
 
         if item is None:
-            continue
+            print(f"> {SLOTS.get(slot, slot)} → vide", end="")
+            print()
 
-        print(f"{SLOTS.get(slot, slot)} → {display_item_details(item)}", end="")
-        print()
+        else:
+            print(f"> {SLOTS.get(slot, slot)} → {display_item_details(item)}")
+            print()
         
 #--------------------------------------------------- ENNEMIS et LOOTS ---------------------------------------------------
 
@@ -193,9 +196,9 @@ def display_enemy(enemy):
     print(f"{couleur}{enemy.name}{reset}")
 
     if stats['mana_max'] > 0:
-        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])}")
+        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])} - {CYAN}{stats['mana_max']} mana{RESET}")
 
-    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])}")
+    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])} - {LIGHT_GREEN}{stats['life_max']} PV{RESET}")
 
     print(
             f"Puissance : {enemy.base_stats['power']} - "
@@ -211,9 +214,9 @@ def display_enemy_light(enemy):
     stats = get_stats(enemy)
 
     if stats['mana_max'] > 0:
-        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])}")
+        print(f"{display_gauges_simple("🪄 ", enemy.mana, stats['mana_max'])} - {CYAN}{stats['mana_max']} mana{RESET}")
 
-    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])}")
+    print(f"{display_gauges_simple("🫀 ", enemy.life, stats['life_max'])} - {LIGHT_GREEN}{stats['life_max']} PV{RESET}")
 
     print(
         f"Puissance : {enemy.base_stats['power']} - "
@@ -278,9 +281,9 @@ def display_character(character):
     stats = get_stats(character)
 
     if stats['mana_max'] > 0:
-        print(f"{display_gauges_simple("🪄 ", character.mana, stats['mana_max'])}")
+        print(f"{display_gauges_simple("🪄 ", character.mana, stats['mana_max'])} - {CYAN}{stats['mana_max']} mana{RESET}")
     
-    print(f"{display_gauges_simple("🫀 ", character.life, stats['life_max'])}")
+    print(f"{display_gauges_simple("🫀 ", character.life, stats['life_max'])} - {LIGHT_GREEN}{stats['life_max']} PV{RESET}")
     print(
             f"Puissance : {character.base_stats['power']} - "
             f"Vitesse : {character.base_stats['speed']} - "
