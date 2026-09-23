@@ -1,5 +1,5 @@
 # 🧙‍♀️ Magique Boutique
-« What sorcery is this ???? »
+```« What sorcery is this ???? »```
 
 Magique Boutique est un jeu de gestion développé en Python, dans lequel vous incarnez une sorcière qui ouvre sa propre boutique d'objets magiques.
 
