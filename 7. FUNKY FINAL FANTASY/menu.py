@@ -21,7 +21,7 @@ def menu_zone(game):
             "5": ("Inventaire", lambda: menu_inventory(game)),
             "6": ("Progression", lambda: display_zone_progress(game.current_zone, game)),
             "7": ("Sauvegarder", lambda: SaveManager.save(game)),
-            "8": ("Quitter", None)
+            "0": ("Quitter", None)
         }
 
         if game.unlocked_shops:
@@ -29,7 +29,7 @@ def menu_zone(game):
 
         print("\n")
         
-        for key, (name, _) in sorted(actions.items()):
+        for key, (name, _) in actions.items():
             print(f"[{key}] {name}")
 
         choix = input("> ")

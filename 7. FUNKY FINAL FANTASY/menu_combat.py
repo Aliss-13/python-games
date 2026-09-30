@@ -48,7 +48,9 @@ def menu_inventory(game):
 
 
 def menu_character_inventory(game, character):
+
     display_equipment(character)
+
     while True:
         
         display_inventory(game.inventory)
@@ -56,7 +58,7 @@ def menu_character_inventory(game, character):
         print("[1] Équiper")
         print("[2] Utiliser objet")
         print("[3] Vendre objet")
-        print("[4] Retour")
+        print("[0] Retour")
 
         choix = input("> ")
 
@@ -76,7 +78,7 @@ def menu_character_inventory(game, character):
 
             sell_item(game, choix)
 
-        elif choix == "4":
+        elif choix == "0":
             return
 
         else:
@@ -88,18 +90,17 @@ def menu_skill(context, character):
 
     print(f"\nActions de {character.name}")
 
-    for i, skill in enumerate(character.skills, start=1):
-
-        if skill.cost_type is None:
-            cost_display = "Gratuit"
-        else:
-            cost_display = f"Coût : {skill.cost} {skill.cost_type}"
-
+    for i, skill in enumerate(character.skills, start=1): 
+        if skill.cost_type is None: 
+            cost_display = "Gratuit" 
+        else: 
+            cost_display = f"Coût : {skill.cost} {skill.cost_type}" 
+        
         print(
-            f"{i}. {LIGHT_PINK}{skill.name:<20}{RESET}"
-            f"{cost_display:<20}"
-            f"{RED}Cible : {get_target_name(skill)}{RESET}"
-        )
+            f"{i}. {LIGHT_PINK}{skill.name}{RESET} "
+            f"- {cost_display} "
+            f"- {RED}Cible : {get_target_name(skill)}{RESET}"
+            )
 
     print("0. Retour")
 
@@ -128,8 +129,10 @@ def menu_skill(context, character):
                 skill=skill
             )
 
-            execute_skill(skill_context)
-            return
+            skill_used = execute_skill(skill_context)
+
+            if skill_used:
+                return True
 
 
 def menu_tour(context, character):
@@ -145,9 +148,10 @@ def menu_tour(context, character):
        
         # SKILL
         if choix == "s":
-            menu_skill(context, character)
-            # on reste dans le tour
+            skill_used = menu_skill(context, character)
 
+            if skill_used:
+                return
 
         # INVENTAIRE
         elif choix == "i":

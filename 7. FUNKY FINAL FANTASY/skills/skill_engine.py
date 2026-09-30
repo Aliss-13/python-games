@@ -3,7 +3,7 @@ from skills.skills import apply_skill_effects, apply_skill_healing, pay_skill_co
 def execute_skill(context):
 
     if not pay_skill_cost(context):
-        return
+        return False
 
     display_skill_message(context)
 
@@ -18,3 +18,5 @@ def execute_skill(context):
 
         if handler:
             handler(context)
+
+    return True
