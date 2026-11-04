@@ -38,8 +38,10 @@ class Player:
             "inventory": self.inventory,
             "food" : self.food,
             "stuff": self.stuff,
+            "tools": self.tools,
             "structures": self.structures,
-            "tools": self.tools
+            "flying_dutchman" : self.flying_dutchman
+            
         }
 
     def from_dict(self, data):
@@ -53,6 +55,7 @@ class Player:
         self.stuff = data["stuff"]
         self.structures = data["structures"]
         self.tools = data["tools"]
+        self.flying_dutchman = data.get("flying_dutchman", False)
 
 #============================ Le joueur est-il en vie ? ===========================================
     def is_alive(self):
@@ -89,17 +92,17 @@ class Player:
 
             if self.stuff["corps"] == "manteau":
                 cold_penalty -= 2
-                satiety_penalty += 2
+                satiety_penalty -= 2
 
             cold_penalty = max(0, cold_penalty)
 
             self.stamina -= cold_penalty
-            self.satiety += satiety_penalty
+            self.satiety -= satiety_penalty
 
             if not self.is_alive():
                 return False
 
-            print(f"❄️  Le froid t'épuise (-{cold_penalty}) endurance, +{satiety_penalty} faim.")
+            print(f"❄️  Le froid t'épuise (-{cold_penalty}) endurance, -{satiety_penalty} satiété.")
 
             return True
 
@@ -131,7 +134,6 @@ class Player:
         if world.time_of_day == "jour":
 
             if self.structures.get("banjo"):
-                self.mentalhealth += 5
                 self.mentalhealth = min(self.mentalhealth + 5, self.mentalhealth_max)
                 print("🪕 +5 santé mentale (banjo) « Ça me rappelle un film... »")
 
@@ -142,7 +144,6 @@ class Player:
         if world.time_of_day == "nuit":
 
             if self.structures.get("portable_shower"):
-                self.mentalhealth += 10
                 self.mentalhealth = min(self.mentalhealth + 10, self.mentalhealth_max)
                 print("🚿 +10 santé mentale (douche portative) « Ça fait du bien une bonne douche ! »")
 
@@ -158,12 +159,10 @@ class Player:
                 print("Tu as trop faim pour dormir.")
                 return False
             
-            self.stamina += 50
             self.stamina = min(self.stamina + 50, self.stamina_max)
             self.satiety -= 10
-            self.mentalhealth += 10
             self.mentalhealth = min(self.mentalhealth + 10, self.mentalhealth_max)
-            print("Tu dors à l'abri 🛖  (-10 satiété, +10 santé mentale, max endurance)")
+            print("Tu dors à l'abri 🛖  (-10 satiété, +10 santé mentale, +50 endurance)")
             display.display_bars_simple(self)
         
         else:
@@ -171,10 +170,8 @@ class Player:
                 print("Tu as trop faim pour dormir.")
                 return False
             
-            self.stamina += 30
             self.stamina = min(self.stamina + 30, self.stamina_max)
             self.satiety -= 20
-            self.mentalhealth += 5
             self.mentalhealth = min(self.mentalhealth + 5, self.mentalhealth_max)
             print(f"Tu dors dans le froid 🌙 (+20 faim, +30 endurance)")
             display.display_bars_simple(self)
@@ -189,13 +186,51 @@ class Player:
             if random.randint(1, 100) <= 40:
                 self.inventory["💰"] += 1
                 print("✨ Pépite d'or trouvée !")
-    
 
-    def gather(self, resource, world, min_amount=1, max_amount=3):
-       
-        # effort
+
+    def bonus_outils(self, amount, resource):
+
+        if resource == "🪵" and self.tools.get("axe"):
+            amount += 1
+        if resource == "🪨" and self.tools.get("pickaxe"):
+            amount += 1
+        if resource == "🌿" and self.tools.get("machete"):
+            amount += 1
+        if resource == "🥩" and self.tools.get("knife"):
+            amount += 1
+        
+        if resource in self.food:
+            self.food[resource] += amount
+            
+        if resource in self.inventory:
+            self.inventory[resource] += amount
+
+        return amount
+
+
+    def nuit_danger(self, world):
+
+        if world.time_of_day == "nuit":
+            if random.randint(1, 100) < 40:
+                attack_damage = 10
+        
+                if self.structures["faraday_cage"]:
+                    attack_damage -= 7
+        
+                self.stamina -= attack_damage
+                print(f"Tu es attaqué pendant la récolte (-{attack_damage} endurance) !")
+                display.display_bars_simple(self)
+        
+                if not self.is_alive():
+                    return False
+        
+                return True
+
+    def effort_calcul(self):
+        
         effort_cost = 5
 
+        # effet des vêtements
         if self.stuff["mains"] == "gants":
             effort_cost -= 1
 
@@ -204,6 +239,7 @@ class Player:
 
         effort_cost = max(0, effort_cost)
 
+        # action impossible
         if self.stamina < effort_cost: 
             print("Tu n'as pas assez d'énergie pour récolter quoi que ce soit.")
             return False
@@ -211,39 +247,48 @@ class Player:
         if self.satiety < effort_cost:
             print("Tu as trop faim pour récolter quoi que ce soit.")
             return False
-            
+        
+        # consommation
         self.stamina -= effort_cost
         self.satiety -= effort_cost
-        
-        # coût de l'action
+
+        return effort_cost
+
+
+    def adaptation_ressources_biome(self, resource, world):
+        biome = world.areas[world.current_area]
+        success_rate = biome.get(resource, 10)
+        return success_rate
+
+
+    def gather(self, resource, world, min_amount=1, max_amount=3):
+
+       # coût de l'action
         cost = 1
 
         if not world.spend_action(cost):
             return
+
         
+        # effort
+        effort_cost = self.effort_calcul()
+
+        if effort_cost is False:
+            return
+
+
         world.check_cycle(self)
+
         
         # adaptation des ressources au terrain
-        biome = world.areas[world.current_area]
-        success_rate = biome.get(resource, 10)
+        success_rate = self.adaptation_ressources_biome(resource, world)
+
         
-
         # nuit danger
-        if world.time_of_day == "nuit":
-            if random.randint(1, 100) < 40:
-                attack_damage = 10
+        survie = self.nuit_danger(world)
 
-                if self.structures["faraday_cage"]:
-                    attack_damage -= 7
-
-                self.stamina -= attack_damage
-                print(f"Tu es attaqué pendant la récolte (-{attack_damage} endurance) !")
-                display.display_bars_simple(self)
-                
-                if not self.is_alive():
-                    return False
-                
-                return True
+        if survie is False:
+            return
 
 
         # réussite de la récolte
@@ -257,21 +302,7 @@ class Player:
 
 
             # bonus outils
-            if resource == "🪵" and self.tools.get("axe"):
-                amount += 1
-            if resource == "🪨" and self.tools.get("pickaxe"):
-                amount += 1
-            if resource == "🌿" and self.tools.get("machete"):
-                amount += 1
-            if resource == "🥩" and self.tools.get("knife"):
-                amount += 1
-
-            if resource in self.food:
-                self.food[resource] += amount
-
-            if resource in self.inventory:
-                self.inventory[resource] += amount
-
+            amount = self.bonus_outils(amount, resource)
 
             # chance loot rare : or
             self.roll_rare_loot(resource)
@@ -303,7 +334,7 @@ class Player:
             print("Entrée invalide.")
             return
         
-        if self.inventory["🌿"] < 3:
+        if self.inventory["🌿"] < 3 * quantite:
             print("Pas assez de 🌿.")
             return
 
@@ -330,12 +361,12 @@ class Player:
             print("Entrée invalide.")
             return
         
-        if self.inventory["🪢"] < 3:
+        if self.inventory["🪢"] < 3 * quantite:
             print("Pas assez de 🪢.")
             return
 
-        self.inventory["🪢"] -= 3
-        self.inventory["🟩"] += 1
+        self.inventory["🪢"] -= 3*quantite
+        self.inventory["🟩"] += quantite
 
         print(f"Tissu : (+{quantite} 🟩)")
 

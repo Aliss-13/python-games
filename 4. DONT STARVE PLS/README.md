@@ -1,6 +1,8 @@
 # 🌲 DON'T STARVE PLS
 
-```« Tu vas mourir ici mon petit pote… »```
+```text
+« Tu vas mourir ici mon petit pote… »
+```
 
 DON'T STARVE PLS est un jeu de survie développé en Python et jouable dans le terminal.
 
@@ -47,7 +49,7 @@ Parce que survivre éternellement dans une forêt hostile n'était visiblement p
 
 Trois jauges déterminent ton état :
 
-```python
+```text
 🍽️ Satiété
 ⚡ Endurance
 🧠 Santé mentale
@@ -83,7 +85,7 @@ Tonton Ned avait pourtant prévenu.
 
 Le monde est composé de plusieurs **zones** :
 
-```python
+```text
 🕳️ Grotte
 🏔️ Montagne
 🌲 Forêt
@@ -125,8 +127,9 @@ Parce qu'il fallait bien une raison supplémentaire de retourner casser des cail
 
 Les ressources récoltées peuvent être utilisées pour fabriquer différents équipements.
 
-```python
-🔨 Structures
+```text
+Structures
+
 🔥 Feu de camp
 🛖 Abri
 🧵 Machine à coudre
@@ -140,8 +143,9 @@ Les ressources récoltées peuvent être utilisées pour fabriquer différents �
 
 Les **structures** permettent d'améliorer les conditions de survie et certaines produisent même des ressources automatiquement.
 
-```python
-🪓 Outils
+```text
+Outils
+
 🪓 Hache
 ⛏️ Pioche
 🗡️ Couteau de chasse
@@ -150,8 +154,9 @@ Les **structures** permettent d'améliorer les conditions de survie et certaines
 
 Les **outils** améliorent les quantités récoltées.
 
-```python
-🧥 Vêtements
+```text
+Vêtements
+
 🎩 Chapeau
 🧥 Manteau
 🧤 Gants
@@ -165,7 +170,7 @@ Les **vêtements** permettent notamment de réduire certains effets du froid ou 
 
 Les ressources peuvent également être transformées afin de débloquer de nouvelles possibilités :
 
-```python
+```text
 🌿 → 🪢 Corde
 🪢 → 🟩 Tissu
 🥩 → 🍖 Nourriture cuite
@@ -179,12 +184,13 @@ Certaines transformations nécessitent d'avoir construit les structures correspo
 
 Plusieurs aliments peuvent être consommés avec des effets différents :
 
-```python
+```text
 🥩 nourriture crue
 🍖 nourriture cuite
 🥛 lait
 🧀 fromage
 ```
+Parce qu'un jeu de survie sans fromage serait tout simplement une erreur de conception.
 
 Chaque aliment peut modifier :
 
@@ -203,8 +209,10 @@ La nuit, les conditions difficiles et certaines situations affectent également 
 
 À l'inverse, certaines constructions permettent de la restaurer.
 
+```text
 🪕 +5 santé mentale
 « Ça me rappelle un film… »
+```
 
 On ne juge pas les méthodes thérapeutiques de ce survivant.
 
@@ -215,12 +223,12 @@ Le jeu propose trois grands objectifs :
 
 ❄️ **Survivre à l'hiver**
 
-```python
-    Prépare-toi avant son arrivée.
+```text
+Prépare-toi avant son arrivée.
 
-    « La nourriture et les plantes vont disparaître…
-    Puis la chaleur…
-    Puis la confiance en tes décisions… »
+« La nourriture et les plantes vont disparaître…
+Puis la chaleur…
+Puis la confiance en tes décisions… »
 ```
 
 🗺️ **Explorer le monde** : découvre toutes les zones de la carte et leurs environs.
@@ -229,7 +237,9 @@ Le jeu propose trois grands objectifs :
 ⚓ **Construire le Hollandais Volant** 
 
 Retrouve les pièces nécessaires, rassemble les ressources et construis le navire permettant de quitter ce monde.
-```🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.```
+```text
+🎵🤘 Ohé ohé capitaine abandonné ! 🤘🎶 Hum. Pardon.
+```
 
 
 ## 💾 Sauvegarde
@@ -255,7 +265,7 @@ Le système fonctionne également avec la version exécutable du jeu.
 
 Le projet est organisé en plusieurs modules afin de séparer les différentes responsabilités :
 
-```python
+```text
 DON'T STARVE PLS/
 │
 ├── main.py
@@ -279,6 +289,42 @@ Quelques responsabilités principales :
 - **save.py** → sauvegarde et chargement JSON
 - **main.py** → lancement du jeu et boucle principale
 
+## ⚙️ Conception technique et simulation
+
+### 🌍 Simulation d'un environnement évolutif
+
+Le jeu repose sur plusieurs systèmes interdépendants qui influencent les conditions de survie du joueur.
+
+- **Gestion temporelle :** alternance jour/nuit et cycle des saisons, avec des conséquences sur les actions et les ressources disponibles.
+- **Gestion d'état :** suivi des statistiques du joueur, de son équipement, de son inventaire et de la progression du monde.
+- **Interactions entre systèmes :** les conditions environnementales, les équipements et les actions du joueur influencent les possibilités de survie.
+
+### 🎲 Génération aléatoire et récolte
+
+Le système de récolte utilise le module `random` pour introduire une part d'aléatoire dans l'obtention des ressources.
+
+Les résultats peuvent varier selon plusieurs paramètres :
+
+- La zone explorée
+- La saison
+- Le type de ressource
+- Les outils possédés
+
+Ces mécanismes permettent de faire évoluer les possibilités de récolte selon le contexte de jeu.
+
+### 🛠️ Fabrication et gestion des dépendances
+
+Les systèmes de fabrication reposent sur des conditions de disponibilité des ressources et des équipements.
+
+La création de certains objets ou la transformation de certaines ressources nécessite la présence de matériaux et de structures spécifiques.
+
+Cette logique permet de construire une progression fondée sur la collecte, la fabrication et le déblocage de nouvelles possibilités.
+
+### 💾 Persistance de l'état du jeu
+
+Le module `save.py` assure la sauvegarde et le chargement des données au format JSON.
+
+Il permet de conserver les informations nécessaires à la reprise d'une partie, notamment les statistiques du joueur, son inventaire, les constructions et la progression dans le monde.
 
 ## 🛠️ Technologies
 
@@ -292,35 +338,25 @@ Quelques responsabilités principales :
 - gestion d'un état de jeu persistant
 
 
-## 🚀 Installation
+## 🚀 Installation et lancement
 
-Prérequis : **Python 3**
-Lancement : depuis le dossier du projet, exécuter python **main.py**.
-Une **version exécutable** peut également être disponible dans les Releases du dépôt.
+### Prérequis
 
+- Python 3
 
-## 🎮 Quelques caractéristiques du jeu
+### Lancement
 
-```python
-🌲 exploration
-🪵 récolte de ressources
-🍖 gestion de la nourriture
-❤️ gestion de trois jauges de survie
-🌦️ cycle des saisons et alternance jour/nuit
-🛠️ fabrication
-🏕️ construction
-🧥 équipement
-🎲 récoltes aléatoires
-✨ butin rare
-🗺️ carte à explorer
-⚓ quête du Hollandais Volant
-💾 sauvegarde JSON
-🧠 santé mentale
-🧀 fromage
+Depuis un terminal, se placer dans le dossier du projet, puis exécuter :
+
+```bash
+python main.py
 ```
 
-Parce qu'un jeu de survie sans fromage serait tout simplement une erreur de conception.
+Le jeu démarre directement dans le terminal.
 
+### Version exécutable
+
+Une version exécutable pour Windows peut également être disponible dans la section **Releases** du dépôt GitHub.
 
 ## 📚 Ce que ce projet m'a permis de pratiquer
 
