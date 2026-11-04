@@ -150,80 +150,78 @@ Les clients en attente ne sont pas sérialisés directement : seules les informa
 Cela permet notamment de conserver leur arrival_time et de reprendre correctement leur temps d'attente après un chargement.
 
 
-# 🛠️ Aspects techniques
+## 🛠️ Aspects techniques
 
-Le projet a été développé en Python avec une architecture organisée en plusieurs modules spécialisés.
+Le projet a été développé en Python avec une architecture modulaire et plusieurs systèmes de jeu interdépendants.
 
-Quelques éléments techniques mis en œuvre :
+### ⏱️ Gestion du temps réel
 
-- programmation orientée objet ;
-- séparation des responsabilités entre modules ;
-- gestion d'état du jeu ;
-- sérialisation et désérialisation JSON ;
-- sauvegarde et chargement ;
-- génération et gestion de stocks ;
-- systèmes de progression ;
-- gestion d'événements ;
-- systèmes temporels avec time ;
-- files d'attente avec expiration ;
-- génération aléatoire ;
-- systèmes de récompenses ;
-- suivi d'objectifs et de quêtes ;
-- validation des entrées utilisateur ;
-- gestion des erreurs et des anciennes sauvegardes.
+- Calcul de la production du jardin à partir du temps écoulé depuis la dernière actualisation. 
+La production repose sur le calcul du temps écoulé pendant la partie. Le temps passé hors jeu n'est volontairement pas pris en compte afin de préserver l'équilibre des stocks et de la progression.
+
+- Gestion des ventes automatiques selon des intervalles temporels.
+
+- Gestion de la patience des clients grâce à leur heure d'arrivée (`arrival_time`).
+
+- Actualisation des événements temporels sans boucle de surveillance permanente pour la production du jardin.
+
+### 💾 Gestion d'état et persistance
+
+- Sauvegarde et chargement de l'état du jeu au format JSON.
+- Sérialisation des informations nécessaires à la reconstruction des clients en attente.
+- Conservation des stocks, de la progression, des améliorations et de l'historique des ventes.
+- Gestion de la compatibilité avec d'anciennes sauvegardes.
+
+### 🧩 Logique métier et interactions
+
+- Vérification des ressources nécessaires à la fabrication.
+- Gestion des stocks entre réserve et rayons.
+- Déclenchement d'événements et de récompenses selon la progression.
+- Suivi des objectifs et des quêtes à partir des actions réalisées.
+- Validation des entrées utilisateur et gestion des erreurs.
+
+### 🏗️ Organisation du code
+
+- Programmation orientée objet.
+- Séparation des responsabilités entre modules.
+- Distinction entre données de configuration et état évolutif du jeu.
+- Refactorisation progressive pour améliorer la lisibilité et la maintenance.
 
 
 ## Architecture
 
-Le projet sépare notamment les responsabilités entre plusieurs modules :
+Le projet est réparti en plusieurs modules Python, chacun ayant des responsabilités spécifiques :
 
-```python
-main.py
+```text
+MAGIQUE BOUTIQUE/
+│
+├── main.py
 │
 ├── menu.py
 │
-├── witch.py
-│   └── état principal du joueur
+├── witch.py                        # état principal du joueur
 │
-├── garden.py
-│   └── production des ingrédients
+├── garden.py                       # production des ingrédients
+├── garden_ingredients.py           # données des ingrédients
 │
-├── garden_ingredients.py
-│   └── données des ingrédients
+├── recipes.py                      # données des recettes
+├── recipes_actions.py              # fabrication, stocks et améliorations
 │
-├── recipes.py
-│   └── données des recettes
+├── clients.py                      # clients et événements
+├── clients_choices.py              # choix proposés aux clients
+├── clients_results.py              # résultats et récompenses
+├── clients_queue.py                # gestion des clients en attente
 │
-├── recipes_actions.py
-│   └── fabrication, stocks et améliorations
+├── progression.py                  # niveaux, ventes, quêtes et victoire
 │
-├── clients.py
-│   └── clients et événements
+├── save.py                         # sauvegarde / chargement
 │
-├── clients_choices.py
-│   └── choix proposés aux clients
+├── sale_dialogues.py               # dialogues de vente
 │
-├── clients_results.py
-│   └── résultats et récompenses
-│
-├── clients_queue.py
-│   └── gestion des clients en attente
-│
-├── progression.py
-│   └── niveaux, ventes, quêtes et victoire
-│
-├── save.py
-│   └── sauvegarde / chargement
-│
-├── sale_dialogues.py
-│   └── dialogues de vente
-│
-└── colors_and_names.py
-    └── affichage et métadonnées
-
+└── colors_and_names.py             # affichage et métadonnées
 ```
 
-Cette séparation permet notamment de faire évoluer les différents systèmes indépendamment et de limiter les responsabilités de chaque module.
+Cette organisation facilite la maintenance et l'évolution des différents systèmes en répartissant les responsabilités entre les modules.
 
 
 ## 🧪 Un projet qui sert aussi de terrain d'expérimentation
@@ -246,11 +244,17 @@ Le projet a notamment évolué par itérations successives, avec plusieurs phase
 
 ## 🚀 Installation
 
-Prérequis : **Python 3**
+### Prérequis
 
-Lancement : depuis le dossier du projet, exécuter python **main.py**.
+Python 3
 
-Une **version exécutable** peut également être disponible dans les Releases du dépôt.
+### Lancement
+
+Depuis le dossier du projet :
+
+```bash
+python main.py
+```
 
 
 ## 🧙‍♀️ Quelques créations
