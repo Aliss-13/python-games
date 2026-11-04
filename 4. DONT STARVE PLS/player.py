@@ -248,10 +248,6 @@ class Player:
             print("Tu as trop faim pour récolter quoi que ce soit.")
             return False
         
-        # consommation
-        self.stamina -= effort_cost
-        self.satiety -= effort_cost
-
         return effort_cost
 
 
@@ -263,18 +259,16 @@ class Player:
 
     def gather(self, resource, world, min_amount=1, max_amount=3):
 
-       # coût de l'action
+       # coût de l'action et de l'effort
         cost = 1
-
-        if not world.spend_action(cost):
-            return
-
-        
-        # effort
         effort_cost = self.effort_calcul()
 
-        if effort_cost is False:
+        if effort_cost is False or not world.spend_action(cost):
             return
+
+        # consommation
+        self.stamina -= effort_cost
+        self.satiety -= effort_cost
 
 
         world.check_cycle(self)
