@@ -43,7 +43,7 @@ A survival game where players explore, gather resources, craft equipment, and ma
 
 **Technical highlights:** inventory management, crafting, survival statistics, and seasonal systems.
 
-### 🥕 [Potager Pompelop](https://github.com/Aliss-13/python-games/tree/main/3.%20POTAGER%20POMPELOP) - You got to pompélop!
+### 🥕 [Potager Pompélop](https://github.com/Aliss-13/python-games/tree/main/3.%20POTAGER%20POMPELOP) - You got to pompélop!
 
 A farming and management simulation where players grow crops, fulfill orders, earn money, and unlock upgrades.
 
